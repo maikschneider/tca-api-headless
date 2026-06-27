@@ -67,6 +67,9 @@
 	},
 	"extra": {
 		"typo3/cms": {
+			"Package": {
+				"providesPackages": {}
+			},
 			"cms-package-dir": "{$vendor-dir}/typo3/cms",
 			"extension-key": "tca_api_headless",
 			"version": "0.1.0",
