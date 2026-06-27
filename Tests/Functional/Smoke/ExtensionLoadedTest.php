@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace MaikSchneider\TcaApiHeadless\Tests\Functional\Smoke;
 
 use MaikSchneider\TcaApiHeadless\Tests\Functional\AbstractHeadlessTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 final class ExtensionLoadedTest extends AbstractHeadlessTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function extensionIsLoaded(): void
     {
         self::assertTrue(
@@ -20,9 +19,7 @@ final class ExtensionLoadedTest extends AbstractHeadlessTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function tcaApiDependencyIsLoaded(): void
     {
         self::assertTrue(
