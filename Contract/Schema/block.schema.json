@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/maikschneider/tca-api-headless/Contract/Schema/block.schema.json",
+  "title": "Content block",
+  "description": "A single content block. Every block shares this envelope; only `data` varies by type.",
+  "type": "object",
+  "required": ["type", "id", "data"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "Semantic block type (text, media, header, list, table, uploads, …). Unknown source content elements fall back to their raw CType."
+    },
+    "id": {
+      "type": "integer",
+      "description": "Source record uid — for keys/debugging only."
+    },
+    "variant": {
+      "type": "string",
+      "description": "Optional appearance/layout hint. The only styling hook on a block."
+    },
+    "data": {
+      "type": "object",
+      "description": "Type-specific payload. Rich text fields are Portable Text arrays."
+    },
+    "regions": {
+      "type": "object",
+      "description": "Present only on container blocks; same shape as page.regions.",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "$ref": "block.schema.json" }
+      }
+    }
+  },
+  "$defs": {
+    "image": {
+      "type": "object",
+      "required": ["src"],
+      "properties": {
+        "src": { "type": "string" },
+        "width": { "type": ["integer", "null"] },
+        "height": { "type": ["integer", "null"] },
+        "alt": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] },
+        "crop": { "type": ["string", "null"] }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["href"],
+      "properties": {
+        "href": { "type": "string" },
+        "type": { "type": ["string", "null"], "description": "page, url, mail, file, …" },
+        "target": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
