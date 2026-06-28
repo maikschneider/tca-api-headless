@@ -36,6 +36,9 @@ final class PageComposerTest extends AbstractHeadlessTestCase
         self::assertSame('Team', $payload['meta']['title']);
         self::assertSame('en', $payload['meta']['language']);
         self::assertSame('/team', $payload['meta']['slug']);
+        // SEO + schema.org meta (EXT:seo defaults).
+        self::assertSame('index,follow', $payload['meta']['seo']['robots']);
+        self::assertSame('WebPage', $payload['meta']['schema']['@type']);
         self::assertInstanceOf(\stdClass::class, $payload['regions']);
     }
 

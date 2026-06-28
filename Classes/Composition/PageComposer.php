@@ -7,6 +7,7 @@ namespace MaikSchneider\TcaApiHeadless\Composition;
 use MaikSchneider\TcaApiHeadless\Block\BlockContext;
 use MaikSchneider\TcaApiHeadless\Block\BlockSerializerRegistry;
 use MaikSchneider\TcaApiHeadless\Contract\Contract;
+use MaikSchneider\TcaApiHeadless\Meta\SeoMetaBuilder;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -26,6 +27,7 @@ final class PageComposer
         private readonly ConnectionPool $connectionPool,
         private readonly RegionResolver $regionResolver,
         private readonly BlockSerializerRegistry $blockSerializerRegistry,
+        private readonly SeoMetaBuilder $seoMetaBuilder,
     ) {
     }
 
@@ -39,6 +41,8 @@ final class PageComposer
             return null;
         }
 
+        $seoMeta = $this->seoMetaBuilder->build($page, $language);
+
         return [
             'contract' => Contract::VERSION,
             'type' => 'page',
@@ -47,6 +51,8 @@ final class PageComposer
                 'title' => (string)($page['title'] ?? ''),
                 'language' => $language->getLocale()->getLanguageCode(),
                 'slug' => (string)($page['slug'] ?? ''),
+                'seo' => $seoMeta['seo'],
+                'schema' => $seoMeta['schema'],
             ],
             'regions' => $this->composeRegions($pageId, $language),
         ];
