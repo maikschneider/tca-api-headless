@@ -19,3 +19,6 @@ services:
   # Public for retrieval from the container in functional tests.
   MaikSchneider\TcaApiHeadless\Composition\PageComposer:
     public: true
+
+  MaikSchneider\TcaApiHeadless\Navigation\NavigationBuilder:
+    public: true

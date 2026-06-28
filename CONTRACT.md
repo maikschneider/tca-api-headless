@@ -68,6 +68,31 @@ blocks and produced by `tca-api`'s `ImageProcessor` / `TypoLinkProcessor`.
 | `uploads` | `uploads` | `{ headline?, files: { src, title?, size? }[] }` |
 | *fallback* | any other | `{ … safe subset of mapped fields … }` |
 
+## Navigation
+
+A separate endpoint returns the page tree, independent of any current page so it
+stays cacheable and shared. `active`/`current` state is computed on the frontend
+from the `id` and the current route.
+
+```
+GET /_headless/navigation?root=1&depth=3
+```
+
+```jsonc
+{
+  "contract": "1.0",
+  "type": "navigation",
+  "root": 1,
+  "items": [
+    { "id": 2, "title": "Team", "link": { /* link */ }, "children": [ /* items */ ] }
+  ]
+}
+```
+
+Schema: [`navigation.schema.json`](Contract/Schema/navigation.schema.json). Page
+structure is read in the default language with translated titles overlaid;
+language-aware link URLs are a later enhancement.
+
 ## Versioning
 
 - `contract: "1.0"` at the page root. Bumped only on **breaking** changes.

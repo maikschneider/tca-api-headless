@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MaikSchneider\TcaApiHeadless\Http;
 
 use MaikSchneider\TcaApiHeadless\Composition\PageComposer;
+use MaikSchneider\TcaApiHeadless\Contract\Contract;
+use MaikSchneider\TcaApiHeadless\Navigation\NavigationBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -24,6 +26,7 @@ final class PageContentMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly PageComposer $pageComposer,
+        private readonly NavigationBuilder $navigationBuilder,
     ) {
     }
 
@@ -51,14 +54,28 @@ final class PageContentMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
+        $resolvedLanguage = $language instanceof SiteLanguage ? $language : $site->getDefaultLanguage();
+
         if (preg_match('#^/page/(\d+)$#', $route, $matches) === 1) {
-            $resolvedLanguage = $language instanceof SiteLanguage ? $language : $site->getDefaultLanguage();
             $payload = $this->pageComposer->compose((int)$matches[1], $resolvedLanguage);
             if ($payload === null) {
                 return new JsonResponse(['error' => 'Page not found'], 404);
             }
 
             return new JsonResponse($payload);
+        }
+
+        if ($route === '/navigation') {
+            $queryParams = $request->getQueryParams();
+            $rootPageId = isset($queryParams['root']) ? (int)$queryParams['root'] : $site->getRootPageId();
+            $depth = isset($queryParams['depth']) ? (int)$queryParams['depth'] : 3;
+
+            return new JsonResponse([
+                'contract' => Contract::VERSION,
+                'type' => 'navigation',
+                'root' => $rootPageId,
+                'items' => $this->navigationBuilder->build($rootPageId, $depth, $resolvedLanguage),
+            ]);
         }
 
         // Inside our namespace but no matching route.
