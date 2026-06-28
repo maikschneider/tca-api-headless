@@ -1,35 +1,35 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/maikschneider/tca-api-headless/Contract/Schema/navigation.schema.json",
-  "title": "Navigation",
-  "description": "The navigation tree emitted for a page subtree.",
-  "type": "object",
-  "required": ["contract", "type", "root", "items"],
-  "properties": {
-    "contract": { "type": "string", "const": "1.0" },
-    "type": { "type": "string", "const": "navigation" },
-    "root": { "type": "integer", "description": "The root page uid the tree was built from." },
-    "items": {
-      "type": "array",
-      "items": { "$ref": "#/$defs/item" }
-    }
-  },
-  "$defs": {
-    "item": {
-      "type": "object",
-      "required": ["id", "title", "children"],
-      "properties": {
-        "id": { "type": "integer", "description": "Page uid — use to compute active state on the frontend." },
-        "title": { "type": "string", "description": "nav_title, falling back to title." },
-        "link": {
-          "description": "Resolved link to the page, or null when it cannot be resolved.",
-          "type": ["object", "null"]
-        },
-        "children": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/item" }
-        }
-      }
-    }
-  }
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"$id": "https://github.com/maikschneider/tca-api-headless/Contract/Schema/navigation.schema.json",
+"title": "Navigation",
+"description": "The navigation tree emitted for a page subtree.",
+"type": "object",
+"required": ["contract", "type", "root", "items"],
+"properties": {
+	"contract": { "type": "string", "const": "1.0" },
+	"type": { "type": "string", "const": "navigation" },
+	"root": { "type": "integer", "description": "The root page uid the tree was built from." },
+	"items": {
+	  "type": "array",
+	  "items": { "$ref": "#/$defs/item" }
+	}
+},
+"$defs": {
+	"item": {
+	  "type": "object",
+	  "required": ["id", "title", "children"],
+	  "properties": {
+		"id": { "type": "integer", "description": "Page uid — use to compute active state on the frontend." },
+		"title": { "type": "string", "description": "nav_title, falling back to title." },
+		"link": {
+		  "description": "Resolved link to the page, or null when it cannot be resolved.",
+		  "type": ["object", "null"]
+		},
+		"children": {
+		  "type": "array",
+		  "items": { "$ref": "#/$defs/item" }
+		}
+	  }
+	}
+}
 }

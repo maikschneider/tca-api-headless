@@ -40,14 +40,14 @@ final class SeoMetaBuilder
             'canonical' => $this->canonical($page),
             'robots' => $robots,
             'og' => $this->openGraph($page, $seoTitle, $description),
-        ], static fn($value): bool => $value !== null && $value !== []);
+        ], static fn ($value): bool => $value !== null && $value !== []);
 
         $schema = array_filter([
             '@context' => 'https://schema.org',
             '@type' => 'WebPage',
             'name' => $title,
             'description' => $description !== '' ? $description : null,
-        ], static fn($value): bool => $value !== null);
+        ], static fn ($value): bool => $value !== null);
 
         return ['seo' => $seo, 'schema' => $schema];
     }
@@ -83,7 +83,7 @@ final class SeoMetaBuilder
             'image' => $this->ogImage((int)($page['uid'] ?? 0)),
         ];
 
-        return array_filter($og, static fn($value): bool => $value !== null);
+        return array_filter($og, static fn ($value): bool => $value !== null);
     }
 
     /**

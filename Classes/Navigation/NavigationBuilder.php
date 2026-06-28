@@ -105,7 +105,7 @@ final class NavigationBuilder
      */
     private function overlayTitles(array $rows, int $languageId): array
     {
-        $uids = array_map(static fn(array $row): int => (int)$row['uid'], $rows);
+        $uids = array_map(static fn (array $row): int => (int)$row['uid'], $rows);
 
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
         $queryBuilder->getRestrictions()

@@ -5,3 +5,57 @@ parameters:
 			identifier: arrayValues.list
 			count: 1
 			path: Classes/Block/BlockSerializerRegistry.php
+
+		-
+			message: '#^Instanceof between TYPO3\\CMS\\Core\\Resource\\FileReference and TYPO3\\CMS\\Core\\Resource\\FileReference will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: Classes/Block/Serializer/MediaBlockSerializer.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<list\<string\>\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: Classes/Block/Serializer/TableBlockSerializer.php
+
+		-
+			message: '#^Instanceof between TYPO3\\CMS\\Core\\Resource\\FileReference and TYPO3\\CMS\\Core\\Resource\\FileReference will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: Classes/Block/Serializer/UploadsBlockSerializer.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: Classes/Cache/CacheInvalidationHook.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: Classes/Cache/CacheInvalidationHook.php
+
+		-
+			message: '#^Instanceof between TYPO3\\CMS\\Core\\Resource\\FileReference and TYPO3\\CMS\\Core\\Resource\\FileReference will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: Classes/Meta/SeoMetaBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<array\<string, mixed\>\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 2
+			path: Classes/RichText/HtmlToPortableText.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<string\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: Classes/RichText/HtmlToPortableText.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertNull\(\) with null will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: Tests/Unit/Link/TypoLinkResolverTest.php
