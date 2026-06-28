@@ -1,0 +1,5 @@
+"pages"
+,"uid","pid","title","slug","sys_language_uid","l10n_parent","deleted","hidden"
+,1,0,"Home","/home",0,0,0,0
+,2,1,"Team","/team",0,0,0,0
+,3,1,"Team (DE)","/de/team",1,2,0,0

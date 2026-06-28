@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  MaikSchneider\TcaApiHeadless\:
+    resource: '../Classes/*'
+
+  # Public for retrieval from the container in functional tests.
+  MaikSchneider\TcaApiHeadless\Composition\PageComposer:
+    public: true
