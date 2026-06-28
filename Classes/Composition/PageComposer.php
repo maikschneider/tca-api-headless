@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MaikSchneider\TcaApiHeadless\Composition;
 
+use MaikSchneider\TcaApiHeadless\Block\BlockContext;
+use MaikSchneider\TcaApiHeadless\Block\BlockSerializerRegistry;
 use MaikSchneider\TcaApiHeadless\Contract\Contract;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -22,6 +24,8 @@ final class PageComposer
 {
     public function __construct(
         private readonly ConnectionPool $connectionPool,
+        private readonly RegionResolver $regionResolver,
+        private readonly BlockSerializerRegistry $blockSerializerRegistry,
     ) {}
 
     /**
@@ -43,9 +47,25 @@ final class PageComposer
                 'language' => $language->getLocale()->getLanguageCode(),
                 'slug' => (string)($page['slug'] ?? ''),
             ],
-            // No regions yet — emitted as an empty object, not an array.
-            'regions' => new \stdClass(),
+            'regions' => $this->composeRegions($pageId, $language),
         ];
+    }
+
+    /**
+     * @return array<string, list<array<string, mixed>>>|\stdClass Region map, or an empty object when there is no content.
+     */
+    private function composeRegions(int $pageId, SiteLanguage $language): array|\stdClass
+    {
+        $context = new BlockContext($language, $pageId);
+        $regions = [];
+        foreach ($this->regionResolver->resolve($pageId, $language) as $regionName => $rows) {
+            foreach ($rows as $row) {
+                $regions[$regionName][] = $this->blockSerializerRegistry->serialize($row, $context);
+            }
+        }
+
+        // Emit an empty object (not an array) when the page has no content.
+        return $regions === [] ? new \stdClass() : $regions;
     }
 
     /**

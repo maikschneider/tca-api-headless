@@ -62,4 +62,41 @@ final class PageComposerTest extends AbstractHeadlessTestCase
             $this->get(PageComposer::class)->compose(999, $this->defaultSite()->getDefaultLanguage()),
         );
     }
+
+    #[Test]
+    public function emptyPageHasObjectRegions(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
+
+        $payload = $this->get(PageComposer::class)->compose(1, $this->defaultSite()->getDefaultLanguage());
+
+        self::assertNotNull($payload);
+        self::assertInstanceOf(\stdClass::class, $payload['regions']);
+    }
+
+    #[Test]
+    public function composesRegionsFromContentElements(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
+
+        $payload = $this->get(PageComposer::class)->compose(2, $this->defaultSite()->getDefaultLanguage());
+
+        self::assertNotNull($payload);
+        $regions = $payload['regions'];
+        self::assertIsArray($regions);
+        self::assertArrayHasKey('main', $regions);
+        self::assertArrayHasKey('left', $regions);
+
+        // colPos 0 → "main", ordered by sorting.
+        self::assertCount(2, $regions['main']);
+        self::assertSame('text', $regions['main'][0]['type']);
+        self::assertSame(1, $regions['main'][0]['id']);
+        self::assertSame('Welcome', $regions['main'][0]['data']['headline']);
+        self::assertSame(2, $regions['main'][1]['id']);
+
+        // colPos 1 → "left".
+        self::assertCount(1, $regions['left']);
+        self::assertSame('Sidebar', $regions['left'][0]['data']['headline']);
+    }
 }
