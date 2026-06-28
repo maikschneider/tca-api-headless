@@ -111,9 +111,14 @@ final class HtmlToPortableText
     private function block(string $style, \DOMNode $node, ?string $listItem = null): array
     {
         $markDefs = [];
-        $children = $this->spans($node, [], $markDefs);
-        if ($children === []) {
-            $children = [$this->span('', [])];
+        if ($node instanceof \DOMText) {
+            // A bare text node has no children to walk — use its content directly.
+            $children = [$this->span($node->textContent, [])];
+        } else {
+            $children = $this->spans($node, [], $markDefs);
+            if ($children === []) {
+                $children = [$this->span('', [])];
+            }
         }
 
         $block = [
