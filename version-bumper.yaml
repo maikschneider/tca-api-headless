@@ -1,0 +1,18 @@
+presets:
+  - composer-package
+
+additionalFiles:
+  - path: ext_emconf.php
+    pattern: "'version' => '%version%'"
+  - path: composer.json
+    pattern: '"version": "%version%"'
+  - path: Documentation/guides.xml
+    pattern: 'release="%version%"'
+  - path: Documentation/guides.xml
+    pattern: 'version="%version%"'
+  - path: Documentation/Introduction/Index.rst
+    pattern: "alpha state** (version %version%)"
+
+releaseOptions:
+  commitMessage: "[RELEASE] Release of tca-api-headless {%version%}"
+  tagName: "v{%version%}"
