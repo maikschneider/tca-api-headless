@@ -24,7 +24,8 @@ final class PageContentMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private readonly PageComposer $pageComposer,
-    ) {}
+    ) {
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

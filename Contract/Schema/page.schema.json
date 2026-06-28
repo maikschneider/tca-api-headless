@@ -1,43 +1,67 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/maikschneider/tca-api-headless/Contract/Schema/page.schema.json",
-  "title": "Headless page",
-  "description": "The composed JSON payload emitted for a single TYPO3 page.",
-  "type": "object",
-  "required": ["contract", "type", "id", "meta", "regions"],
-  "additionalProperties": false,
-  "properties": {
-    "contract": {
-      "type": "string",
-      "description": "Contract version, bumped only on breaking changes.",
-      "const": "1.0"
-    },
-    "type": {
-      "type": "string",
-      "const": "page"
-    },
-    "id": {
-      "type": "integer",
-      "description": "The page uid."
-    },
-    "meta": {
-      "type": "object",
-      "required": ["title", "language", "slug"],
-      "properties": {
-        "title": { "type": "string" },
-        "language": { "type": "string", "description": "Two-letter language code." },
-        "slug": { "type": "string" },
-        "seo": { "type": "object" },
-        "schema": { "type": "object", "description": "schema.org JSON-LD." }
-      }
-    },
-    "regions": {
-      "type": "object",
-      "description": "Named content regions, mapped from backend_layout colPos. Each value is an ordered array of blocks.",
-      "additionalProperties": {
-        "type": "array",
-        "items": { "$ref": "block.schema.json" }
-      }
-    }
-  }
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://github.com/maikschneider/tca-api-headless/Contract/Schema/page.schema.json",
+	"title": "Headless page",
+	"description": "The composed JSON payload emitted for a single TYPO3 page.",
+	"type": "object",
+	"required": [
+		"contract",
+		"type",
+		"id",
+		"meta",
+		"regions"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"contract": {
+			"type": "string",
+			"description": "Contract version, bumped only on breaking changes.",
+			"const": "1.0"
+		},
+		"type": {
+			"type": "string",
+			"const": "page"
+		},
+		"id": {
+			"type": "integer",
+			"description": "The page uid."
+		},
+		"meta": {
+			"type": "object",
+			"required": [
+				"title",
+				"language",
+				"slug"
+			],
+			"properties": {
+				"title": {
+					"type": "string"
+				},
+				"language": {
+					"type": "string",
+					"description": "Two-letter language code."
+				},
+				"slug": {
+					"type": "string"
+				},
+				"seo": {
+					"type": "object"
+				},
+				"schema": {
+					"type": "object",
+					"description": "schema.org JSON-LD."
+				}
+			}
+		},
+		"regions": {
+			"type": "object",
+			"description": "Named content regions, mapped from backend_layout colPos. Each value is an ordered array of blocks.",
+			"additionalProperties": {
+				"type": "array",
+				"items": {
+					"$ref": "block.schema.json"
+				}
+			}
+		}
+	}
 }

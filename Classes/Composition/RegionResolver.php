@@ -40,7 +40,8 @@ final class RegionResolver
 
     public function __construct(
         private readonly ConnectionPool $connectionPool,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, list<array<string, mixed>>> Region name → ordered content rows.

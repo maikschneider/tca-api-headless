@@ -94,7 +94,7 @@
 			"@ci:yaml:lint"
 		],
 		"ci:typoscript:lint": "typoscript-lint --fail-on-warnings",
-		"ci:yaml:lint": "find ./ ! -path './vendor/*' ! -path '*/node_modules/*' \\( -name '*.yaml' -o -name '*.yml' \\) | xargs -r yaml-lint",
+		"ci:yaml:lint": "find ./ ! -path './vendor/*' ! -path '*/node_modules/*' \\( -name '*.yaml' -o -name '*.yml' \\) | xargs -r yaml-lint --parse-tags",
 		"composer:normalize": "@composer normalize --no-check-lock",
 		"editorconfig:lint": "ec --strict --fix --git-only -n",
 		"language:lint": "composer validate-translations Resources/Private/Language",
@@ -112,6 +112,6 @@
 			"@yaml:lint"
 		],
 		"typoscript:lint": "typoscript-lint",
-		"yaml:lint": "find ./ ! -path './vendor/*' ! -path '*/node_modules/*' \\( -name '*.yaml' -o -name '*.yml' \\) | xargs -r yaml-lint"
+		"yaml:lint": "find ./ ! -path './vendor/*' ! -path '*/node_modules/*' \\( -name '*.yaml' -o -name '*.yml' \\) | xargs -r yaml-lint --parse-tags"
 	}
 }

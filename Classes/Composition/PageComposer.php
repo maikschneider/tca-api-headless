@@ -26,7 +26,8 @@ final class PageComposer
         private readonly ConnectionPool $connectionPool,
         private readonly RegionResolver $regionResolver,
         private readonly BlockSerializerRegistry $blockSerializerRegistry,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, mixed>|null The page payload, or null when the page does not exist.

@@ -9,7 +9,7 @@ services:
 
   _instanceof:
     MaikSchneider\TcaApiHeadless\Block\BlockSerializerInterface:
-      tags: ['tca_api_headless.block_serializer']
+      tags: [ 'tca_api_headless.block_serializer' ]
 
   MaikSchneider\TcaApiHeadless\Block\BlockSerializerRegistry:
     public: true

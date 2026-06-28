@@ -16,13 +16,13 @@ final class BlockSerializerRegistryTest extends TestCase
 {
     private function context(): BlockContext
     {
-        return new BlockContext($this->createStub(SiteLanguage::class), 1);
+        return new BlockContext(self::createStub(SiteLanguage::class), 1);
     }
 
     #[Test]
     public function higherPrioritySerializerWinsOverFallback(): void
     {
-        $special = new class implements BlockSerializerInterface {
+        $special = new class() implements BlockSerializerInterface {
             public function supports(array $row): bool
             {
                 return ($row['CType'] ?? '') === 'text';

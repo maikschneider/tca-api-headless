@@ -1,2 +1,7 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$array \(list\<MaikSchneider\\TcaApiHeadless\\Block\\BlockSerializerInterface\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: Classes/Block/BlockSerializerRegistry.php

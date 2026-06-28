@@ -14,5 +14,6 @@ final class BlockContext
     public function __construct(
         public readonly SiteLanguage $language,
         public readonly int $pageId,
-    ) {}
+    ) {
+    }
 }

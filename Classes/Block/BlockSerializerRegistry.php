@@ -21,7 +21,7 @@ final class BlockSerializerRegistry
     public function __construct(iterable $serializers)
     {
         $list = $serializers instanceof \Traversable ? iterator_to_array($serializers) : (array)$serializers;
-        usort($list, static fn(BlockSerializerInterface $a, BlockSerializerInterface $b): int => $b->getPriority() <=> $a->getPriority());
+        usort($list, static fn (BlockSerializerInterface $a, BlockSerializerInterface $b): int => $b->getPriority() <=> $a->getPriority());
         $this->serializers = array_values($list);
     }
 
