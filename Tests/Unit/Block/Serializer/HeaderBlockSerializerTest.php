@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Block\Serializer;
+namespace MaikSchneider\HeadlessPages\Tests\Unit\Block\Serializer;
 
-use MaikSchneider\TcaApiHeadless\Block\BlockContext;
-use MaikSchneider\TcaApiHeadless\Block\Serializer\HeaderBlockSerializer;
-use MaikSchneider\TcaApiHeadless\Link\TypoLinkResolver;
+use MaikSchneider\HeadlessPages\Block\BlockContext;
+use MaikSchneider\HeadlessPages\Block\Serializer\HeaderBlockSerializer;
+use MaikSchneider\HeadlessPages\Link\TypoLinkResolver;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\LinkHandling\LinkService;

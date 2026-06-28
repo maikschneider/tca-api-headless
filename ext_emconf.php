@@ -1,8 +1,8 @@
 <?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'TCA API Headless',
-    'description' => 'Headless JSON delivery for TYPO3 — composes pages into a clean Portable Text contract, built on tca-api.',
+    'title' => 'Headless Pages',
+    'description' => 'Composes editor-built TYPO3 pages into a clean Portable Text + schema.org JSON contract for headless frontends.',
     'category' => 'misc',
     'author' => 'Maik Schneider',
     'author_email' => 'schneider.maik@me.com',
@@ -11,7 +11,6 @@ $EM_CONF[$_EXTKEY] = [
     'constraints' => [
         'depends' => [
             'typo3' => '13.4.0-14.99.99',
-            'tca_api' => '0.4.0-0.99.99',
             'frontend' => '',
         ],
         'conflicts' => [],

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Link;
+namespace MaikSchneider\HeadlessPages\Tests\Unit\Link;
 
-use MaikSchneider\TcaApiHeadless\Link\TypoLinkResolver;
+use MaikSchneider\HeadlessPages\Link\TypoLinkResolver;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\LinkHandling\LinkService;

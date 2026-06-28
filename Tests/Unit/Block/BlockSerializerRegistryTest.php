@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Block;
+namespace MaikSchneider\HeadlessPages\Tests\Unit\Block;
 
-use MaikSchneider\TcaApiHeadless\Block\BlockContext;
-use MaikSchneider\TcaApiHeadless\Block\BlockSerializerInterface;
-use MaikSchneider\TcaApiHeadless\Block\BlockSerializerRegistry;
-use MaikSchneider\TcaApiHeadless\Block\Serializer\FallbackBlockSerializer;
+use MaikSchneider\HeadlessPages\Block\BlockContext;
+use MaikSchneider\HeadlessPages\Block\BlockSerializerInterface;
+use MaikSchneider\HeadlessPages\Block\BlockSerializerRegistry;
+use MaikSchneider\HeadlessPages\Block\Serializer\FallbackBlockSerializer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;

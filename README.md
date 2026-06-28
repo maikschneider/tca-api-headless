@@ -1,12 +1,12 @@
 <div align="center">
 
-# `TCA_API_HEADLESS` — Headless JSON delivery for TYPO3
+# `HEADLESS_PAGES` — Headless JSON delivery for TYPO3
 
 [![License](https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![TYPO3](https://img.shields.io/badge/TYPO3-13.4%20%7C%2014-orange.svg)](https://typo3.org/)
 [![PHP](https://img.shields.io/badge/PHP-%5E8.2-777BB4.svg)](https://php.net/)
 
-Composes TYPO3 pages into a clean, framework-agnostic JSON contract for decoupled frontends — built on top of [`tca-api`](https://github.com/maikschneider/tca-api).
+Composes editor-built TYPO3 pages into a clean, framework-agnostic JSON contract for decoupled frontends.
 
 </div>
 
@@ -14,7 +14,7 @@ Composes TYPO3 pages into a clean, framework-agnostic JSON contract for decouple
 
 ## What this is
 
-`tca_api_headless` turns an editor-composed TYPO3 page (page tree, content elements, layouts) into a single JSON payload a JavaScript frontend can render. It is the **presentation/composition** companion to `tca-api`, which provides the **data/resource** REST API.
+`headless_pages` turns an editor-composed TYPO3 page (page tree, content elements, layouts) into a single JSON payload a JavaScript frontend can render. It is a **standalone** extension — no runtime dependencies beyond TYPO3. It pairs naturally with a data/resource REST API such as [`tca-api`](https://github.com/maikschneider/tca-api) (optional, see [Requirements](#requirements)), but does not require one.
 
 It does **not** invent a bespoke wire format. The contract is assembled from relied-upon standards:
 
@@ -23,7 +23,7 @@ It does **not** invent a bespoke wire format. The contract is assembled from rel
 | Block / body content | [Portable Text](https://www.portabletext.org/specification/) — text blocks + custom block types |
 | Page meta / SEO | [schema.org](https://schema.org/) JSON-LD |
 | Block catalog (the contract artifact) | [JSON Schema](https://json-schema.org/) in `Contract/Schema/` |
-| Transport | reuses `tca-api`'s Hydra / JSON-LD foundation |
+| Transport | plain JSON over HTTP |
 
 The only thing this extension *owns* is the **vocabulary of block types** — because that mirrors your content elements.
 
@@ -47,12 +47,13 @@ Block types shipped in 0.1: `text`, `media`, `header`, `list`, `table`, `uploads
 |------------|---------|
 | PHP | ^8.2 |
 | TYPO3 | ^13.4 \|\| ^14.3 |
-| [`maikschneider/tca-api`](https://github.com/maikschneider/tca-api) | ^0.4 |
+
+Optional: [`maikschneider/tca-api`](https://github.com/maikschneider/tca-api) (`suggest`) — a complementary REST data API for exposing database tables alongside the composed pages.
 
 ## Installation
 
 ```bash
-composer require maikschneider/tca-api-headless
+composer require maikschneider/headless-pages
 ```
 
 ## Development

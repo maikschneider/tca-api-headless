@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Meta;
+namespace MaikSchneider\HeadlessPages\Tests\Unit\Meta;
 
-use MaikSchneider\TcaApiHeadless\Link\TypoLinkResolver;
-use MaikSchneider\TcaApiHeadless\Meta\SeoMetaBuilder;
+use MaikSchneider\HeadlessPages\Link\TypoLinkResolver;
+use MaikSchneider\HeadlessPages\Meta\SeoMetaBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\LinkHandling\LinkService;

@@ -12,7 +12,7 @@ What it does
 ============
 
 Editors build pages in TYPO3 as usual — page tree, content elements, layouts.
-TCA_API_HEADLESS turns a page into a single JSON payload a JavaScript frontend can
+HEADLESS_PAGES turns a page into a single JSON payload a JavaScript frontend can
 render, exposing:
 
 *   page meta with SEO and schema.org data,
@@ -20,12 +20,14 @@ render, exposing:
 *   each content element serialized into a typed block,
 *   a separate navigation endpoint for the page tree.
 
-How it relates to tca-api
-=========================
+A standalone extension
+======================
 
-``tca-api`` exposes database tables as a Hydra JSON-LD REST API (the *data* layer).
-``tca_api_headless`` composes pages and content elements into a presentation
-contract (the *composition* layer) and is built on top of it.
+``headless_pages`` has no runtime dependencies beyond TYPO3. It operates on the
+*composition* layer — turning pages and content elements into a presentation
+contract. For the *data* layer (exposing database tables as a REST API) it pairs
+naturally with `tca-api <https://github.com/maikschneider/tca-api>`__, but that is
+an optional complement, not a requirement.
 
 Block types
 ===========

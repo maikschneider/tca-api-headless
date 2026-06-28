@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Cache;
+namespace MaikSchneider\HeadlessPages\Cache;
 
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 

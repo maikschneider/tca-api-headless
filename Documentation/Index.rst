@@ -1,14 +1,14 @@
 ..  _start:
 
 =================
-TCA_API_HEADLESS
+HEADLESS_PAGES
 =================
 
 :Extension key:
-   tca_api_headless
+   headless_pages
 
 :Package name:
-   maikschneider/tca-api-headless
+   maikschneider/headless-pages
 
 :Version:
    |release|
@@ -28,10 +28,11 @@ TCA_API_HEADLESS
 
 ----
 
-TCA_API_HEADLESS composes editor-built TYPO3 pages into a clean, framework-agnostic
-JSON contract for decoupled frontends. It is the presentation/composition companion
-to `tca-api <https://github.com/maikschneider/tca-api>`__, which provides the
-data/resource REST API.
+HEADLESS_PAGES composes editor-built TYPO3 pages into a clean, framework-agnostic
+JSON contract for decoupled frontends. It is a standalone extension and pairs
+naturally with a data/resource REST API such as
+`tca-api <https://github.com/maikschneider/tca-api>`__ (optional), but does not
+require one.
 
 The contract is assembled from relied-upon standards — `Portable Text`_ for block
 content, `schema.org`_ for SEO, `JSON Schema`_ for the published block catalog — so

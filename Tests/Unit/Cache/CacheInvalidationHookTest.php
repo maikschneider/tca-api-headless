@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Cache;
+namespace MaikSchneider\HeadlessPages\Tests\Unit\Cache;
 
-use MaikSchneider\TcaApiHeadless\Cache\CacheInvalidationHook;
+use MaikSchneider\HeadlessPages\Cache\CacheInvalidationHook;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;

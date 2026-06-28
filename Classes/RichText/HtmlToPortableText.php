@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\RichText;
+namespace MaikSchneider\HeadlessPages\RichText;
 
 /**
  * Converts RTE HTML (a tt_content bodytext) into a Portable Text array.

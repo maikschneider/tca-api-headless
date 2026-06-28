@@ -14,5 +14,5 @@ additionalFiles:
     pattern: "alpha state** (version %version%)"
 
 releaseOptions:
-  commitMessage: "[RELEASE] Release of tca-api-headless {%version%}"
+  commitMessage: "[RELEASE] Release of headless-pages {%version%}"
   tagName: "v{%version%}"

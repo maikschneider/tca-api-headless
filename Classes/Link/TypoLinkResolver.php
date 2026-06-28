@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Link;
+namespace MaikSchneider\HeadlessPages\Link;
 
 use TYPO3\CMS\Core\LinkHandling\LinkService;
 use TYPO3\CMS\Core\Routing\RouterInterface;

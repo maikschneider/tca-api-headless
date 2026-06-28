@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Block;
+namespace MaikSchneider\HeadlessPages\Block;
 
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 

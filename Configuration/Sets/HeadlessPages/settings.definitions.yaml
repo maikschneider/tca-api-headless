@@ -1,20 +1,20 @@
 categories:
 
-  TcaApiHeadless:
-    label: 'TCA API Headless'
+  HeadlessPages:
+    label: 'Headless Pages'
 
 settings:
 
-  tca_api_headless.enabled:
+  headless_pages.enabled:
     label: 'Enable headless page API'
     description: 'Enable or disable headless page composition for this site.'
-    category: TcaApiHeadless
+    category: HeadlessPages
     type: bool
     default: true
 
-  tca_api_headless.basePath:
+  headless_pages.basePath:
     label: 'Base path'
     description: 'URL path prefix for headless endpoints (e.g. /_headless/page/{id}). Must start with a slash and must not end with one.'
-    category: TcaApiHeadless
+    category: HeadlessPages
     type: string
     default: /_headless

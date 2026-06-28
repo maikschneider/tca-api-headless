@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Meta;
+namespace MaikSchneider\HeadlessPages\Meta;
 
-use MaikSchneider\TcaApiHeadless\Link\TypoLinkResolver;
+use MaikSchneider\HeadlessPages\Link\TypoLinkResolver;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;

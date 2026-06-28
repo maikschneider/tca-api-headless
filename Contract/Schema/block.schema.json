@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://github.com/maikschneider/tca-api-headless/Contract/Schema/block.schema.json",
+	"$id": "https://github.com/maikschneider/headless-pages/Contract/Schema/block.schema.json",
 	"title": "Content block",
 	"description": "A single content block. Every block shares this envelope; only `data` varies by type.",
 	"type": "object",

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Functional\Composition;
+namespace MaikSchneider\HeadlessPages\Tests\Functional\Composition;
 
-use MaikSchneider\TcaApiHeadless\Composition\PageComposer;
-use MaikSchneider\TcaApiHeadless\Tests\Functional\AbstractHeadlessTestCase;
+use MaikSchneider\HeadlessPages\Composition\PageComposer;
+use MaikSchneider\HeadlessPages\Tests\Functional\AbstractHeadlessTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -78,7 +78,7 @@ final class PageComposerTest extends AbstractHeadlessTestCase
 
         // Flushing the page tag invalidates the entry.
         GeneralUtility::makeInstance(CacheManager::class)
-            ->getCache('tca_api_headless')
+            ->getCache('headless_pages')
             ->flushByTag('pages_2');
 
         self::assertSame('Changed', $composer->compose(2, $language)['meta']['title']);

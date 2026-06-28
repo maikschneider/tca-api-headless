@@ -1,6 +1,6 @@
 {
-	"name": "maikschneider/tca-api-headless",
-	"description": "Headless JSON delivery for TYPO3 — composes pages into a clean Portable Text contract, built on tca-api.",
+	"name": "maikschneider/headless-pages",
+	"description": "Composes editor-built TYPO3 pages into a clean Portable Text + schema.org JSON contract for headless frontends.",
 	"license": "GPL-2.0-or-later",
 	"type": "typo3-cms-extension",
 	"keywords": [
@@ -19,14 +19,13 @@
 			"role": "Developer"
 		}
 	],
-	"homepage": "https://github.com/maikschneider/tca-api-headless",
+	"homepage": "https://github.com/maikschneider/headless-pages",
 	"support": {
-		"issues": "https://github.com/maikschneider/tca-api-headless/issues",
-		"source": "https://github.com/maikschneider/tca-api-headless"
+		"issues": "https://github.com/maikschneider/headless-pages/issues",
+		"source": "https://github.com/maikschneider/headless-pages"
 	},
 	"require": {
 		"php": "^8.2",
-		"maikschneider/tca-api": "^0.4",
 		"typo3/cms-core": "^13.4 || ^14.3"
 	},
 	"require-dev": {
@@ -44,14 +43,17 @@
 		"typo3/cms-seo": "^13.4 || ^14.0",
 		"typo3/testing-framework": "^9.5"
 	},
+	"suggest": {
+		"maikschneider/tca-api": "Complementary REST data API (Hydra JSON-LD) that exposes database tables — pairs well with headless page composition, but is not required."
+	},
 	"autoload": {
 		"psr-4": {
-			"MaikSchneider\\TcaApiHeadless\\": "Classes"
+			"MaikSchneider\\HeadlessPages\\": "Classes"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"MaikSchneider\\TcaApiHeadless\\Tests\\": "Tests"
+			"MaikSchneider\\HeadlessPages\\Tests\\": "Tests"
 		}
 	},
 	"config": {
@@ -71,7 +73,7 @@
 				"providesPackages": {}
 			},
 			"cms-package-dir": "{$vendor-dir}/typo3/cms",
-			"extension-key": "tca_api_headless",
+			"extension-key": "headless_pages",
 			"version": "0.1.0",
 			"web-dir": "public"
 		}

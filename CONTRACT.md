@@ -1,6 +1,6 @@
 # The headless page contract (v1.0)
 
-This is the JSON contract `tca_api_headless` emits for a composed TYPO3 page. It is
+This is the JSON contract `headless_pages` emits for a composed TYPO3 page. It is
 assembled from relied-upon standards — the only thing this extension *owns* is the
 **vocabulary of block types**, because that mirrors your content elements.
 
@@ -9,7 +9,7 @@ assembled from relied-upon standards — the only thing this extension *owns* is
 | Block / body content | [Portable Text](https://www.portabletext.org/specification/) | block `data` rich-text fields |
 | Page meta / SEO | [schema.org](https://schema.org/) JSON-LD | `meta.schema` |
 | Block catalog | [JSON Schema](https://json-schema.org/) | [`Contract/Schema/`](Contract/Schema/) |
-| Transport | Hydra / JSON-LD (via `tca-api`) | — |
+| Transport | plain JSON over HTTP | — |
 
 ## Page envelope
 
@@ -54,7 +54,7 @@ Schema: [`block.schema.json`](Contract/Schema/block.schema.json).
 ### Shared value objects
 
 `image` and `link` (defined in `block.schema.json` `$defs`) are reused across all
-blocks and produced by `tca-api`'s `ImageProcessor` / `TypoLinkProcessor`.
+blocks and produced from TYPO3's FAL (`FileReference`) and `LinkService`.
 
 ## Block types shipped in 0.1
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Block\Serializer;
+namespace MaikSchneider\HeadlessPages\Block\Serializer;
 
-use MaikSchneider\TcaApiHeadless\Block\BlockContext;
-use MaikSchneider\TcaApiHeadless\Block\BlockSerializerInterface;
-use MaikSchneider\TcaApiHeadless\RichText\HtmlToPortableText;
+use MaikSchneider\HeadlessPages\Block\BlockContext;
+use MaikSchneider\HeadlessPages\Block\BlockSerializerInterface;
+use MaikSchneider\HeadlessPages\RichText\HtmlToPortableText;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Resource\FileRepository;
 

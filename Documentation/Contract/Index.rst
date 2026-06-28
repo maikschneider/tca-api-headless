@@ -17,7 +17,7 @@ Layer                        Standard
 Block / body content         `Portable Text <https://www.portabletext.org/specification/>`__
 Page meta / SEO              `schema.org <https://schema.org/>`__
 Block catalog                `JSON Schema <https://json-schema.org/>`__
-Transport                    Hydra / JSON-LD (via tca-api)
+Transport                    plain JSON over HTTP
 ============================ ===================================================
 
 Block envelope

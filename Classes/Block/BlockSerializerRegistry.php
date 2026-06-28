@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Block;
+namespace MaikSchneider\HeadlessPages\Block;
 
 /**
  * Holds all block serializers, sorted by descending priority, and dispatches a

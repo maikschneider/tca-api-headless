@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Composition;
+namespace MaikSchneider\HeadlessPages\Composition;
 
-use MaikSchneider\TcaApiHeadless\Block\BlockContext;
-use MaikSchneider\TcaApiHeadless\Block\BlockSerializerRegistry;
-use MaikSchneider\TcaApiHeadless\Contract\Contract;
-use MaikSchneider\TcaApiHeadless\Meta\SeoMetaBuilder;
+use MaikSchneider\HeadlessPages\Block\BlockContext;
+use MaikSchneider\HeadlessPages\Block\BlockSerializerRegistry;
+use MaikSchneider\HeadlessPages\Contract\Contract;
+use MaikSchneider\HeadlessPages\Meta\SeoMetaBuilder;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;

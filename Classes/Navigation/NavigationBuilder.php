@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Navigation;
+namespace MaikSchneider\HeadlessPages\Navigation;
 
-use MaikSchneider\TcaApiHeadless\Link\TypoLinkResolver;
+use MaikSchneider\HeadlessPages\Link\TypoLinkResolver;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;

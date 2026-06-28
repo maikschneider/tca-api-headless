@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Contract;
+namespace MaikSchneider\HeadlessPages\Tests\Unit\Contract;
 
-use MaikSchneider\TcaApiHeadless\Contract\Contract;
+use MaikSchneider\HeadlessPages\Contract\Contract;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

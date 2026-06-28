@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Contract;
+namespace MaikSchneider\HeadlessPages\Contract;
 
 /**
  * Constants describing the headless page contract emitted by this extension.

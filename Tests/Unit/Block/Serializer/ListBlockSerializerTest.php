@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Block\Serializer;
+namespace MaikSchneider\HeadlessPages\Tests\Unit\Block\Serializer;
 
-use MaikSchneider\TcaApiHeadless\Block\BlockContext;
-use MaikSchneider\TcaApiHeadless\Block\Serializer\ListBlockSerializer;
-use MaikSchneider\TcaApiHeadless\RichText\HtmlToPortableText;
+use MaikSchneider\HeadlessPages\Block\BlockContext;
+use MaikSchneider\HeadlessPages\Block\Serializer\ListBlockSerializer;
+use MaikSchneider\HeadlessPages\RichText\HtmlToPortableText;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Block\Serializer;
+namespace MaikSchneider\HeadlessPages\Block\Serializer;
 
-use MaikSchneider\TcaApiHeadless\Block\BlockContext;
-use MaikSchneider\TcaApiHeadless\Block\BlockSerializerInterface;
+use MaikSchneider\HeadlessPages\Block\BlockContext;
+use MaikSchneider\HeadlessPages\Block\BlockSerializerInterface;
 
 /**
  * Catch-all serializer for content elements without a dedicated serializer.

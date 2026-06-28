@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Http;
+namespace MaikSchneider\HeadlessPages\Http;
 
-use MaikSchneider\TcaApiHeadless\Composition\PageComposer;
-use MaikSchneider\TcaApiHeadless\Contract\Contract;
-use MaikSchneider\TcaApiHeadless\Navigation\NavigationBuilder;
+use MaikSchneider\HeadlessPages\Composition\PageComposer;
+use MaikSchneider\HeadlessPages\Contract\Contract;
+use MaikSchneider\HeadlessPages\Navigation\NavigationBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -38,11 +38,11 @@ final class PageContentMiddleware implements MiddlewareInterface
         }
 
         $settings = $site->getSettings();
-        if (!$settings->get('tca_api_headless.enabled', true)) {
+        if (!$settings->get('headless_pages.enabled', true)) {
             return $handler->handle($request);
         }
 
-        $basePath = rtrim((string)$settings->get('tca_api_headless.basePath', '/_headless'), '/');
+        $basePath = rtrim((string)$settings->get('headless_pages.basePath', '/_headless'), '/');
         if ($basePath === '') {
             return $handler->handle($request);
         }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Block;
+namespace MaikSchneider\HeadlessPages\Block;
 
 /**
  * Turns a single tt_content row into one block of the headless contract.

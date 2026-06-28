@@ -8,9 +8,11 @@ Install via Composer:
 
 ..  code-block:: bash
 
-    composer require maikschneider/tca-api-headless
+    composer require maikschneider/headless-pages
 
-The extension requires ``maikschneider/tca-api`` and TYPO3 ``^13.4 || ^14.3``.
+The extension requires TYPO3 ``^13.4 || ^14.3`` and has no other runtime
+dependencies. ``maikschneider/tca-api`` is an optional complement (``suggest``)
+for exposing database tables as a REST API alongside the composed pages.
 
 Site set
 ========
@@ -20,7 +22,7 @@ Add the site set to your site's ``config/sites/<site>/config.yaml``:
 ..  code-block:: yaml
 
     dependencies:
-      - maikschneider/tca-api-headless
+      - maikschneider/headless-pages
 
 This exposes the following settings under
 :guilabel:`Site Management > Sites > Settings`:
@@ -28,6 +30,6 @@ This exposes the following settings under
 ============================== ============== =====================================
 Setting                        Default        Description
 ============================== ============== =====================================
-``tca_api_headless.enabled``   ``true``       Enable headless composition for the site
-``tca_api_headless.basePath``  ``/_headless`` URL prefix for the headless endpoints
+``headless_pages.enabled``   ``true``       Enable headless composition for the site
+``headless_pages.basePath``  ``/_headless`` URL prefix for the headless endpoints
 ============================== ============== =====================================

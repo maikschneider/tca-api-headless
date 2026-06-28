@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Functional\Navigation;
+namespace MaikSchneider\HeadlessPages\Tests\Functional\Navigation;
 
-use MaikSchneider\TcaApiHeadless\Navigation\NavigationBuilder;
-use MaikSchneider\TcaApiHeadless\Tests\Functional\AbstractHeadlessTestCase;
+use MaikSchneider\HeadlessPages\Navigation\NavigationBuilder;
+use MaikSchneider\HeadlessPages\Tests\Functional\AbstractHeadlessTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Site\Entity\Site;
 

@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace MaikSchneider\TcaApiHeadless\Tests\Functional;
+namespace MaikSchneider\HeadlessPages\Tests\Functional;
 
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Base class for all tca_api_headless functional tests.
+ * Base class for all headless_pages functional tests.
  *
- * Boots a real TYPO3 instance with the extension (and its tca-api dependency)
- * loaded, so composition can be exercised end-to-end against a database.
+ * Boots a real TYPO3 instance with the extension loaded, so composition can be
+ * exercised end-to-end against a database.
  */
 abstract class AbstractHeadlessTestCase extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = [
-        'maikschneider/tca-api',
-        'maikschneider/tca-api-headless',
+        'maikschneider/headless-pages',
     ];
 
     protected array $coreExtensionsToLoad = [

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://github.com/maikschneider/tca-api-headless/Contract/Schema/page.schema.json",
+	"$id": "https://github.com/maikschneider/headless-pages/Contract/Schema/page.schema.json",
 	"title": "Headless page",
 	"description": "The composed JSON payload emitted for a single TYPO3 page.",
 	"type": "object",
