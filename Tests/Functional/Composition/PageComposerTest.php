@@ -93,6 +93,8 @@ final class PageComposerTest extends AbstractHeadlessTestCase
         self::assertSame('text', $regions['main'][0]['type']);
         self::assertSame(1, $regions['main'][0]['id']);
         self::assertSame('Welcome', $regions['main'][0]['data']['headline']);
+        // The real TextBlockSerializer (not the fallback) is wired via DI: bodytext is Portable Text.
+        self::assertSame('Hello', $regions['main'][0]['data']['body'][0]['children'][0]['text']);
         self::assertSame(2, $regions['main'][1]['id']);
 
         // colPos 1 → "left".
