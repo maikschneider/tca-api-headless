@@ -16,9 +16,22 @@ services:
     arguments:
       $serializers: !tagged_iterator tca_api_headless.block_serializer
 
+  # ── Page payload cache ─────────────────────────────────────────────
+  cache.tca_api_headless:
+    class: TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+    factory: ['@TYPO3\CMS\Core\Cache\CacheManager', 'getCache']
+    arguments: ['tca_api_headless']
+
+  MaikSchneider\TcaApiHeadless\Cache\CacheInvalidationHook:
+    public: true
+    arguments:
+      $cache: '@cache.tca_api_headless'
+
   # Public for retrieval from the container in functional tests.
   MaikSchneider\TcaApiHeadless\Composition\PageComposer:
     public: true
+    arguments:
+      $cache: '@cache.tca_api_headless'
 
   MaikSchneider\TcaApiHeadless\Navigation\NavigationBuilder:
     public: true

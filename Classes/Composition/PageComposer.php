@@ -8,6 +8,7 @@ use MaikSchneider\TcaApiHeadless\Block\BlockContext;
 use MaikSchneider\TcaApiHeadless\Block\BlockSerializerRegistry;
 use MaikSchneider\TcaApiHeadless\Contract\Contract;
 use MaikSchneider\TcaApiHeadless\Meta\SeoMetaBuilder;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -28,6 +29,7 @@ final class PageComposer
         private readonly RegionResolver $regionResolver,
         private readonly BlockSerializerRegistry $blockSerializerRegistry,
         private readonly SeoMetaBuilder $seoMetaBuilder,
+        private readonly FrontendInterface $cache,
     ) {
     }
 
@@ -36,14 +38,21 @@ final class PageComposer
      */
     public function compose(int $pageId, SiteLanguage $language): ?array
     {
+        $cacheKey = sprintf('page_%d_%d', $pageId, $language->getLanguageId());
+        $cached = $this->cache->get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+
         $page = $this->fetchPage($pageId, $language);
         if ($page === null) {
             return null;
         }
 
         $seoMeta = $this->seoMetaBuilder->build($page, $language);
+        $regions = $this->composeRegions($pageId, $language);
 
-        return [
+        $payload = [
             'contract' => Contract::VERSION,
             'type' => 'page',
             'id' => $pageId,
@@ -54,8 +63,32 @@ final class PageComposer
                 'seo' => $seoMeta['seo'],
                 'schema' => $seoMeta['schema'],
             ],
-            'regions' => $this->composeRegions($pageId, $language),
+            'regions' => $regions,
         ];
+
+        $this->cache->set($cacheKey, $payload, $this->cacheTags($pageId, $regions));
+
+        return $payload;
+    }
+
+    /**
+     * @param array<string, list<array<string, mixed>>>|\stdClass $regions
+     * @return list<string>
+     */
+    private function cacheTags(int $pageId, array|\stdClass $regions): array
+    {
+        $tags = ['pages_' . $pageId];
+        if (is_array($regions)) {
+            foreach ($regions as $blocks) {
+                foreach ($blocks as $block) {
+                    if (isset($block['id'])) {
+                        $tags[] = 'tt_content_' . (int)$block['id'];
+                    }
+                }
+            }
+        }
+
+        return array_values(array_unique($tags));
     }
 
     /**

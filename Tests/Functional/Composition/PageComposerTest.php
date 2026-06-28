@@ -7,7 +7,10 @@ namespace MaikSchneider\TcaApiHeadless\Tests\Functional\Composition;
 use MaikSchneider\TcaApiHeadless\Composition\PageComposer;
 use MaikSchneider\TcaApiHeadless\Tests\Functional\AbstractHeadlessTestCase;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class PageComposerTest extends AbstractHeadlessTestCase
 {
@@ -54,6 +57,31 @@ final class PageComposerTest extends AbstractHeadlessTestCase
         self::assertSame('Team (DE)', $payload['meta']['title']);
         self::assertSame('de', $payload['meta']['language']);
         self::assertSame('/de/team', $payload['meta']['slug']);
+    }
+
+    #[Test]
+    public function cachesComposedPageAndInvalidatesByTag(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages.csv');
+        $composer = $this->get(PageComposer::class);
+        $language = $this->defaultSite()->getDefaultLanguage();
+
+        self::assertSame('Team', $composer->compose(2, $language)['meta']['title']);
+
+        // Mutate the record directly, bypassing cache invalidation.
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('pages')
+            ->update('pages', ['title' => 'Changed'], ['uid' => 2]);
+
+        // The cached payload is still served — proving the cache is used.
+        self::assertSame('Team', $composer->compose(2, $language)['meta']['title']);
+
+        // Flushing the page tag invalidates the entry.
+        GeneralUtility::makeInstance(CacheManager::class)
+            ->getCache('tca_api_headless')
+            ->flushByTag('pages_2');
+
+        self::assertSame('Changed', $composer->compose(2, $language)['meta']['title']);
     }
 
     #[Test]
