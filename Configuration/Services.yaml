@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  _instanceof:
+    MaikSchneider\TcaApi\OperationHandler\OperationHandlerInterface:
+      tags: ['tca_api.operation_handler']
+
+  MaikSchneider\TcaApiHeadless\:
+    resource: '../Classes/*'

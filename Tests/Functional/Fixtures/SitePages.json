@@ -1,0 +1,382 @@
+{
+	"responses": {
+		"/_api/pages": {
+			"status": 200,
+			"body": {
+				"@context": "http://www.w3.org/ns/hydra/context.jsonld",
+				"@type": "hydra:Collection",
+				"@id": "/_api/pages",
+				"hydra:totalItems": 5,
+				"hydra:member": [
+					{
+						"@type": "Pages",
+						"@id": "/_api/pages/1",
+						"uid": 1,
+						"title": "Home",
+						"slug": "/"
+					},
+					{
+						"@type": "Pages",
+						"@id": "/_api/pages/2",
+						"uid": 2,
+						"title": "About",
+						"slug": "/about"
+					},
+					{
+						"@type": "Pages",
+						"@id": "/_api/pages/3",
+						"uid": 3,
+						"title": "Storage",
+						"slug": "/storage"
+					},
+					{
+						"@type": "Pages",
+						"@id": "/_api/pages/10",
+						"uid": 10,
+						"title": "Other home",
+						"slug": "/"
+					},
+					{
+						"@type": "Pages",
+						"@id": "/_api/pages/11",
+						"uid": 11,
+						"title": "Other page",
+						"slug": "/other-page"
+					}
+				],
+				"hydra:view": {
+					"@type": "hydra:PartialCollectionView",
+					"hydra:first": "/_api/pages?itemsPerPage=20&page=1",
+					"hydra:last": "/_api/pages?itemsPerPage=20&page=1",
+					"hydra:previous": null,
+					"hydra:next": null
+				}
+			}
+		},
+		"/_api/pages/1": {
+			"status": 200,
+			"body": {
+				"@type": "Pages",
+				"@id": "/_api/pages/1",
+				"uid": 1,
+				"title": "Home",
+				"slug": "/",
+				"doktype": 1
+			}
+		},
+		"/_api/pages/2": {
+			"status": 200,
+			"body": {
+				"@type": "Pages",
+				"@id": "/_api/pages/2",
+				"uid": 2,
+				"title": "About",
+				"slug": "/about",
+				"doktype": 1
+			}
+		},
+		"/_api/pages/10": {
+			"status": 200,
+			"body": {
+				"@type": "Pages",
+				"@id": "/_api/pages/10",
+				"uid": 10,
+				"title": "Other home",
+				"slug": "/",
+				"doktype": 1
+			}
+		}
+	},
+	"paths": {
+		"/_api/pages": {
+			"get": {
+				"summary": "List Pages collection",
+				"operationId": "listPages",
+				"tags": [
+					"Pages"
+				],
+				"x-typo3-access-role": "PUBLIC",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"minimum": 1,
+							"default": 1
+						}
+					},
+					{
+						"name": "itemsPerPage",
+						"in": "query",
+						"schema": {
+							"type": "integer",
+							"minimum": 1,
+							"default": 20
+						}
+					},
+					{
+						"name": "fields",
+						"in": "query",
+						"description": "Sparse fieldset: only return the specified columns and virtual properties (plus @type, @id, uid)",
+						"explode": true,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/PagesCollection"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/HydraError"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/HydraError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/HydraError"
+								}
+							}
+						}
+					}
+				},
+				"security": []
+			}
+		},
+		"/_api/pages/{uid}": {
+			"parameters": [
+				{
+					"name": "uid",
+					"in": "path",
+					"required": true,
+					"schema": {
+						"type": "integer"
+					}
+				}
+			],
+			"get": {
+				"summary": "Get single Pages",
+				"operationId": "showPages",
+				"tags": [
+					"Pages"
+				],
+				"x-typo3-access-role": "PUBLIC",
+				"parameters": [
+					{
+						"name": "fields",
+						"in": "query",
+						"description": "Sparse fieldset: only return the specified columns and virtual properties (plus @type, @id, uid)",
+						"explode": true,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/PagesRead"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/HydraError"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/HydraError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/ld+json": {
+								"schema": {
+									"$ref": "#/components/schemas/HydraError"
+								}
+							}
+						}
+					}
+				},
+				"security": []
+			}
+		}
+	},
+	"schemas": {
+		"PagesRead": {
+			"type": "object",
+			"properties": {
+				"@type": {
+					"type": "string",
+					"example": "Pages"
+				},
+				"@id": {
+					"type": "string"
+				},
+				"uid": {
+					"type": "integer"
+				},
+				"title": {
+					"type": "string"
+				},
+				"slug": {
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"doktype": {
+					"type": "integer"
+				}
+			}
+		},
+		"PagesCollection": {
+			"type": "object",
+			"properties": {
+				"@context": {
+					"type": "string"
+				},
+				"@type": {
+					"type": "string",
+					"example": "hydra:Collection"
+				},
+				"@id": {
+					"type": "string"
+				},
+				"hydra:totalItems": {
+					"type": "integer"
+				},
+				"hydra:member": {
+					"type": "array",
+					"items": {
+						"$ref": "#/components/schemas/PagesRead"
+					}
+				},
+				"hydra:view": {
+					"type": "object",
+					"properties": {
+						"@type": {
+							"type": "string"
+						},
+						"hydra:first": {
+							"type": "string"
+						},
+						"hydra:last": {
+							"type": "string"
+						},
+						"hydra:previous": {
+							"oneOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"hydra:next": {
+							"oneOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "null"
+								}
+							]
+						}
+					}
+				},
+				"hydra:search": {
+					"type": "object",
+					"properties": {
+						"@type": {
+							"type": "string",
+							"example": "hydra:IriTemplate"
+						},
+						"hydra:template": {
+							"type": "string"
+						},
+						"hydra:variableRepresentation": {
+							"type": "string",
+							"example": "BasicRepresentation"
+						},
+						"hydra:mapping": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"@type": {
+										"type": "string",
+										"example": "IriTemplateMapping"
+									},
+									"variable": {
+										"type": "string"
+									},
+									"property": {
+										"type": "string"
+									},
+									"required": {
+										"type": "boolean"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

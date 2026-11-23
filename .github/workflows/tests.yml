@@ -1,0 +1,97 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  # Every base branch, so stacked pull requests are tested before they are retargeted to main.
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Unit (PHP ${{ matrix.php-version }}, TYPO3 ${{ matrix.typo3-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3-version: ["13.4", "14.3"]
+        php-version: ["8.2", "8.3", "8.4"]
+        include:
+          - php-version: "8.2"
+            phpunit-version: "^11.5"
+          - php-version: "8.3"
+            phpunit-version: "^12.5"
+          - php-version: "8.4"
+            phpunit-version: "^12.5"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer update --no-progress --with=typo3/cms-core:"^${{ matrix.typo3-version }}" --with=phpunit/phpunit:"${{ matrix.phpunit-version }}"
+
+      - name: Log versions
+        run: |
+          php --version
+          composer show typo3/cms-core
+          composer show phpunit/phpunit
+          composer show maikschneider/tca-api
+
+      - name: Run unit tests
+        run: vendor/bin/phpunit --testsuite Unit
+
+  functional-tests:
+    name: Functional (PHP ${{ matrix.php-version }}, TYPO3 ${{ matrix.typo3-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3-version: ["13.4", "14.3"]
+        php-version: ["8.2", "8.3", "8.4"]
+        include:
+          - php-version: "8.2"
+            phpunit-version: "^11.5"
+          - php-version: "8.3"
+            phpunit-version: "^12.5"
+          - php-version: "8.4"
+            phpunit-version: "^12.5"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
+
+      - name: Configure and start DDEV
+        run: |
+          ddev config --project-type=typo3 --php-version=${{ matrix.php-version }}
+          ddev start
+
+      - name: Install Composer dependencies
+        run: |
+          ddev composer config --global github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+          ddev composer update --no-progress --with=typo3/cms-core:"^${{ matrix.typo3-version }}" --with=phpunit/phpunit:"${{ matrix.phpunit-version }}"
+
+      - name: Log versions
+        run: |
+          ddev exec php --version
+          ddev composer show typo3/cms-core
+          ddev composer show phpunit/phpunit
+          ddev composer show maikschneider/tca-api
+
+      - name: Init TYPO3
+        run: ddev init-typo3
+
+      - name: Run functional tests
+        run: ddev exec vendor/bin/phpunit --testsuite Functional
