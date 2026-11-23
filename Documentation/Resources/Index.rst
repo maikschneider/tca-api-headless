@@ -59,8 +59,8 @@ OpenAPI document describes per type:
     (schema ``PortableText``): paragraphs, headings ``h1`` to ``h6``, block
     quotes and nested bullet or numbered lists; the decorators ``strong``,
     ``em``, ``underline``, ``strike-through`` and ``code``; links as ``link``
-    annotations. Other markup is reduced to its text; scripts and styles are
-    dropped.
+    annotations. Other markup is reduced to its text (a table inside rich text
+    becomes one paragraph per cell); scripts and styles are dropped.
 
 ``bullets``
     One string per line (schema ``HeadlessBulletList``). For a definition list

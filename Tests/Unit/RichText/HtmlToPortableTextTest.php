@@ -89,6 +89,9 @@ final class HtmlToPortableTextTest extends UnitTestCase
 
         self::assertCount(1, $result);
         self::assertSame([[[], "first\n"], [['strong'], 'second']], $this->spans($result[0]));
+
+        $mixed = $this->subject->convert('<ul><li><p>First</p>Second <div>Third</div></li></ul>');
+        self::assertSame([[[], "First\nSecond\nThird"]], $this->spans($mixed[0]));
     }
 
     #[Test]

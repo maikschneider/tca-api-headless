@@ -206,7 +206,7 @@ final class HtmlToPortableText
      * @param list<string> $marks
      * @param list<array{_key: string, _type: string, href: string}> $markDefs
      * @param bool $preformatted inside pre: whitespace is kept as is
-     * @return list<array{marks: list<string>, text: string, pre: bool}>
+     * @return list<array{marks: list<string>, text: string, pre: bool, break?: bool}>
      */
     private function spans(\DOMNode $node, array $marks, array &$markDefs, bool $preformatted = false): array
     {
@@ -242,13 +242,14 @@ final class HtmlToPortableText
             }
         }
 
-        // A block element inside inline content (a paragraph in a list item) starts a new line.
-        $spans = self::isBlock($tag) ? [['marks' => $marks, 'text' => "\n", 'pre' => false]] : [];
+        // A block element inside inline content (a paragraph in a list item) is a line of its own.
+        $break = ['marks' => $marks, 'text' => "\n", 'pre' => false, 'break' => true];
+        $spans = [];
         foreach ($node->childNodes as $child) {
             $spans = [...$spans, ...$this->spans($child, $marks, $markDefs, $preformatted || $tag === 'pre')];
         }
 
-        return $spans;
+        return self::isBlock($tag) ? [$break, ...$spans, $break] : $spans;
     }
 
     /**
@@ -256,14 +257,17 @@ final class HtmlToPortableText
      * and merges neighbouring spans with the same marks. Preformatted text keeps
      * its whitespace apart from trailing whitespace at the end of the block.
      *
-     * @param list<array{marks: list<string>, text: string, pre: bool}> $spans
-     * @return list<array{marks: list<string>, text: string, pre: bool}>
+     * @param list<array{marks: list<string>, text: string, pre: bool, break?: bool}> $spans
+     * @return list<array{marks: list<string>, text: string, pre: bool, break?: bool}>
      */
     private function trimmed(array $spans): array
     {
         $merged = [];
         $atLineStart = true;
         foreach ($spans as $span) {
+            if (($span['break'] ?? false) && $atLineStart) {
+                continue;
+            }
             if ($span['pre']) {
                 // HTML ignores a line break right after the opening pre tag.
                 $span['text'] = $merged === [] ? (preg_replace('/^\n/', '', $span['text']) ?? '') : $span['text'];
