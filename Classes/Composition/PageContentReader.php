@@ -5,12 +5,7 @@ declare(strict_types=1);
 namespace MaikSchneider\TcaApiHeadless\Composition;
 
 use MaikSchneider\TcaApi\Configuration\ApiDefinition;
-use MaikSchneider\TcaApi\DataAccess\DataRepository;
-use MaikSchneider\TcaApi\DataAccess\EmbedPreloader;
-use MaikSchneider\TcaApi\Filter\ExactFilter;
-use MaikSchneider\TcaApi\Filter\FilterContext;
 use MaikSchneider\TcaApi\Registry\ApiRegistry;
-use MaikSchneider\TcaApi\Serializer\ResourceSerializer;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteSettings;
@@ -32,9 +27,7 @@ final readonly class PageContentReader
 
     public function __construct(
         private ApiRegistry $apiRegistry,
-        private DataRepository $dataRepository,
-        private EmbedPreloader $embedPreloader,
-        private ResourceSerializer $serializer,
+        private RecordReader $recordReader,
     ) {
     }
 
@@ -63,12 +56,12 @@ final readonly class PageContentReader
         }
 
         $entries = [];
-        foreach ($this->readPass($pageUid, $catalog, $request) as [$row, $content]) {
+        foreach ($this->recordReader->readByPid($catalog, [$pageUid], $request) as [$row, $content]) {
             $entries[] = [$row, array_diff_key($content, self::LINKED_DATA_KEYS)];
         }
         $fallbackTypes = self::fallbackTypes($catalog, $site->getSettings());
         if ($fallbackTypes !== []) {
-            foreach ($this->readPass($pageUid, $this->fallbackDefinition($catalog, $fallbackTypes), $request) as [$row, $content]) {
+            foreach ($this->recordReader->readByPid($this->fallbackDefinition($catalog, $fallbackTypes), [$pageUid], $request) as [$row, $content]) {
                 $entries[] = [$row, array_intersect_key($content, self::FALLBACK_KEYS)];
             }
         }
@@ -79,37 +72,6 @@ final readonly class PageContentReader
             static fn (array $entry): array => ['colPos' => (int)$entry[0]['colPos'], 'content' => $entry[1]],
             $entries,
         );
-    }
-
-    /**
-     * @return list<array{array<string, mixed>, array<string, mixed>}> raw row and serialized record
-     */
-    private function readPass(int $pageUid, ApiDefinition $config, ServerRequestInterface $request): array
-    {
-        $language = $request->getAttribute('tca_api.language');
-        $constraints = [
-            [ExactFilter::class, new FilterContext($pageUid, $config->table, 't.pid', ['type' => 'int'], $request, $config)],
-            [FrontendGroupFilter::class, new FilterContext(null, $config->table, 't.fe_group', [], $request, $config)],
-        ];
-
-        $rows = $this->dataRepository->findCollection($config->table, $constraints, 0, 0, ['sorting' => 'asc'], $config, $language);
-        if ($rows === []) {
-            return [];
-        }
-
-        $allowedResources = $request->getAttribute('tca_api.allowed_resources');
-        $preloaded = $this->embedPreloader->preload(
-            $rows,
-            $config,
-            $language,
-            [],
-            'show',
-            \is_array($allowedResources) ? array_values(array_filter($allowedResources, \is_string(...))) : [],
-        ) + ['__request' => $request];
-        $apiPrefix = (string)$request->getAttribute('tca_api.api_prefix', '/_api');
-        $serialized = $this->serializer->serializeCollection($rows, $config, $apiPrefix . '/' . $config->resourceName, [], $preloaded, 'show');
-
-        return array_map(null, $rows, $serialized);
     }
 
     /**

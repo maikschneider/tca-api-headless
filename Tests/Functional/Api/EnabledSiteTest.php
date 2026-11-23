@@ -68,6 +68,9 @@ final class EnabledSiteTest extends AbstractApiTestCase
             'title' => 'About',
             'nav_title' => 'About us',
             'slug' => '/about',
+            'doktype' => 1,
+            'url' => 'http://localhost/about',
+            'children' => [],
         ], $this->json($response));
     }
 

@@ -54,7 +54,7 @@ The site set defines these site settings. Change them in the backend module
     :default: 2
 
     Number of page levels below the requested page in a navigation response.
-    Used by the navigation tree, which is in development.
+    ``1`` lists only its subpages, ``0`` none.
 
 ..  confval:: tca_api_headless.fallbackCTypes
     :name: tca-api-headless-fallbackctypes

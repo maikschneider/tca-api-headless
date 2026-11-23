@@ -111,8 +111,48 @@ Navigation
 ==========
 
 ``GET /_api/headless_navigation/{uid}``
-    The navigation entry of a page of the requesting site, with ``title``,
-    ``nav_title`` and ``slug``. The same rules as for pages apply.
+    A page of the requesting site with its absolute ``url`` in the request
+    language and its subpages as ``children``, down to
+    :confval:`tca-api-headless-navigation-depth` levels. Every entry has
+    ``title``, ``nav_title``, ``slug``, ``doktype``, ``url`` and ``children``
+    (empty on the last level). The same rules as for pages apply to the
+    requested page.
+
+..  code-block:: json
+    :caption: GET /de/_api/headless_navigation/70
+
+    {
+        "@type": "HeadlessNavigation",
+        "@id": "/_api/headless_navigation/70",
+        "uid": 70,
+        "title": "Navigation",
+        "nav_title": "",
+        "slug": "/navigation",
+        "doktype": 1,
+        "url": "https://example.org/de/navigation",
+        "children": [
+            {
+                "@type": "HeadlessNavigation",
+                "@id": "/_api/headless_navigation/71",
+                "uid": 71,
+                "title": "Produkte",
+                "nav_title": "Unsere Produkte",
+                "slug": "/navigation/produkte",
+                "doktype": 1,
+                "url": "https://example.org/de/navigation/produkte",
+                "children": []
+            }
+        ]
+    }
+
+Subpages are listed like in a frontend menu, in the order of the page tree:
+standard pages, links and shortcuts (doktype 1, 3, 4) that are visible now and
+not hidden in menus, in the request language (titles and URLs of the
+translation), and login-protected pages only for members of their groups. A
+left-out page hides its subpages, too. The page trees of other sites are left
+out. ``url`` is the page's own URL, also for links and shortcuts; ``doktype``
+tells them apart. The tree is read with one query per level, plus one for the
+translations in other languages than the default.
 
 ..  _resources-content:
 

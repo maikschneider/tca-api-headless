@@ -1,0 +1,18 @@
+base: 'http://tca-api-headless.ddev.site/nested/'
+dependencies:
+  - maikschneider/tca-api
+languages:
+  -
+    title: English
+    enabled: true
+    locale: en_US
+    hreflang: ''
+    base: /
+    websiteTitle: ''
+    navigationTitle: English
+    fallbackType: strict
+    fallbacks: ''
+    flag: en-us-gb
+    languageId: 0
+rootPageId: 80
+websiteTitle: ''

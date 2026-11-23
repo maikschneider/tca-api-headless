@@ -15,6 +15,7 @@ return [
         'title' => ['groups' => ['show']],
         'nav_title' => ['groups' => ['show']],
         'slug' => ['groups' => ['show']],
+        'doktype' => ['groups' => ['show']],
     ],
     'cache' => [
         'enabled' => false,

@@ -1,0 +1,31 @@
+"pages"
+,"uid","pid","title","nav_title","slug","doktype","is_siteroot","sorting","sys_language_uid","l10n_parent","nav_hide","hidden","starttime","endtime","fe_group","extendToSubpages","l18n_cfg","shortcut"
+,70,1,"Navigation","","/navigation",1,0,4096,0,0,0,0,0,0,"",0,0,0
+,71,70,"Products","Our products","/navigation/products",1,0,256,0,0,0,0,0,0,"",0,0,0
+,74,71,"Product A","","/navigation/products/a",1,0,256,0,0,0,0,0,0,"",0,0,0
+,77,74,"Product A details","","/navigation/products/a/details",1,0,256,0,0,0,0,0,0,"",0,0,0
+,75,71,"Not in menu","","/navigation/products/not-in-menu",1,0,512,0,0,1,0,0,0,"",0,0,0
+,78,75,"Below not in menu","","/navigation/products/not-in-menu/below",1,0,256,0,0,0,0,0,0,"",0,0,0
+,72,70,"Shortcut","","/navigation/shortcut",4,0,512,0,0,0,0,0,0,"",0,0,71
+,73,70,"External","","/navigation/external",3,0,768,0,0,0,0,0,0,"",0,0,0
+,76,70,"Storage","","/navigation/storage",254,0,1024,0,0,0,0,0,0,"",0,0,0
+,79,70,"Members","","/navigation/members",1,0,1280,0,0,0,0,0,0,"1",0,0,0
+,81,79,"Members child","","/navigation/members/child",1,0,256,0,0,0,0,0,0,"",0,0,0
+,82,70,"Scheduled","","/navigation/scheduled",1,0,1536,0,0,0,0,4102444800,0,"",0,0,0
+,83,70,"Expired","","/navigation/expired",1,0,1792,0,0,0,0,0,946684800,"",0,0,0
+,84,70,"Hidden","","/navigation/hidden",1,0,2048,0,0,0,1,0,0,"",0,0,0
+,80,70,"Nested site","","/",1,1,2304,0,0,0,0,0,0,"",0,0,0
+,85,70,"English only","","/navigation/english-only",1,0,2560,0,0,0,0,0,0,"",0,0,0
+,86,70,"Not in German menu","","/navigation/not-in-german-menu",1,0,2816,0,0,0,0,0,0,"",0,0,0
+,87,70,"German only","","/navigation/german-only",1,0,3072,0,0,0,0,0,0,"",0,1,0
+,90,1,"Navigation","","/navigation",1,0,4096,1,70,0,0,0,0,"",0,0,0
+,91,70,"Produkte","Unsere Produkte","/navigation/produkte",1,0,256,1,71,0,0,0,0,"",0,0,0
+,92,71,"Produkt A","","/navigation/produkte/a",1,0,256,1,74,0,0,0,0,"",0,0,0
+,93,70,"Abkürzung","","/navigation/abkuerzung",4,0,512,1,72,0,0,0,0,"",0,0,71
+,94,70,"Extern","","/navigation/extern",3,0,768,1,73,0,0,0,0,"",0,0,0
+,95,70,"Mitglieder","","/navigation/mitglieder",1,0,1280,1,79,0,0,0,0,"1",0,0,0
+,96,79,"Mitglieder-Unterseite","","/navigation/mitglieder/unterseite",1,0,256,1,81,0,0,0,0,"",0,0,0
+,97,70,"Nicht im Menü","","/navigation/nicht-im-menue",1,0,2816,1,86,1,0,0,0,"",0,0,0
+,98,70,"Nur Deutsch","","/navigation/nur-deutsch",1,0,3072,1,87,0,0,0,0,"",0,0,0
+,31,30,"Second child","","/second-child",1,0,256,0,0,0,0,0,0,"",0,0,0
+,32,31,"Second grandchild","","/second-child/grandchild",1,0,256,0,0,0,0,0,0,"",0,0,0
