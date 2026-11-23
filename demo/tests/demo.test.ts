@@ -5,6 +5,7 @@
 //                   "member": ddev fe-session member
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
 import type { Subprocess } from 'bun';
+import { demoHref, jsonLd, typo3Origin } from '../src/lib/api';
 
 const port = 4399;
 const demo = `http://127.0.0.1:${port}`;
@@ -48,6 +49,7 @@ describe('public pages', () => {
     expect(home.html).toContain('<a href="/about">About us</a>');
     expect(home.html).toContain('<table>');
     expect(home.html).not.toContain('Members area');
+    expect(home.html).toContain(`<a href="${typo3Origin}/fileadmin/brochure.pdf">the brochure</a>`);
 
     const about = await render('/about');
     expect(about.status).toBe(200);
@@ -103,5 +105,21 @@ describe('login-protected pages', () => {
     expect(access.html).toContain('For members');
     expect(access.html).toContain('alt="Members image"');
     expect(access.html).toContain('<a href="/access/members">Members</a>');
+  });
+});
+
+describe('helpers', () => {
+  test('keep page links in the demo and file links with TYPO3', () => {
+    expect(demoHref(`${typo3Origin}/de/ueber-uns?a=1#b`)).toBe('/de/ueber-uns?a=1#b');
+    expect(demoHref(`${typo3Origin}/fileadmin/manual.pdf`)).toBe(`${typo3Origin}/fileadmin/manual.pdf`);
+    expect(demoHref('https://example.org/about')).toBe('https://example.org/about');
+  });
+
+  test('JSON-LD cannot close its script element', () => {
+    const name = '</script><script>alert(1)</script>';
+    const json = jsonLd({ name });
+
+    expect(json).not.toContain('<');
+    expect(JSON.parse(json).name).toBe(name);
   });
 });

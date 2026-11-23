@@ -1,6 +1,6 @@
 ---
 import type { HeadlessNavigationRead, HeadlessPagesRead } from '../api/schema';
-import { demoHref, languages, type Language } from '../lib/api';
+import { demoHref, jsonLd, languages, type Language } from '../lib/api';
 import Navigation from '../components/Navigation.astro';
 
 export type Props = { language: Language; page: HeadlessPagesRead; navigation: HeadlessNavigationRead };
@@ -19,7 +19,7 @@ const home = demoHref(navigation.url);
     <meta name="robots" content={meta.robots} />
     {meta.schema.description && <meta name="description" content={meta.schema.description} />}
     {meta.canonical && <link rel="canonical" href={meta.canonical} />}
-    <script type="application/ld+json" set:html={JSON.stringify(meta.schema)} />
+    <script type="application/ld+json" set:html={jsonLd(meta.schema)} />
   </head>
   <body>
     <header>

@@ -24,11 +24,22 @@ export function route(pathname: string): { language: Language; path: string } {
   return { language: 'en', path: pathname || '/' };
 }
 
-/** A TYPO3 URL of the site as a path of the demo; other URLs stay as they are. */
+// Files stay with TYPO3: its default storage and processed images.
+const typo3FilePaths = ['/fileadmin/', '/typo3temp/'];
+
+/** A page URL of the TYPO3 site as a path of the demo; other URLs stay as they are. */
 export function demoHref(url: string): string {
   const target = new URL(url);
+  if (target.origin !== typo3Origin || typo3FilePaths.some((path) => target.pathname.startsWith(path))) {
+    return url;
+  }
 
-  return target.origin === typo3Origin ? target.pathname + target.search + target.hash : url;
+  return target.pathname + target.search + target.hash;
+}
+
+/** JSON for a script element: `<` is escaped, so no value can close the element. */
+export function jsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
 /** Files are served by TYPO3, whose public URLs may be root-relative. */
