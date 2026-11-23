@@ -181,6 +181,17 @@ final class HtmlToPortableTextTest extends UnitTestCase
     }
 
     #[Test]
+    public function preformattedTextKeepsItsWhitespace(): void
+    {
+        $result = $this->subject->convert("<pre><code>if (ready) {\n    run();\n}\n</code></pre><p>a   b</p><ul><li>see <pre>x  y</pre></li></ul>");
+
+        self::assertCount(3, $result);
+        self::assertSame([[['code'], "if (ready) {\n    run();\n}"]], $this->spans($result[0]));
+        self::assertSame([[[], 'a b']], $this->spans($result[1]));
+        self::assertSame("see\nx  y", implode('', array_column($result[2]['children'], 'text')));
+    }
+
+    #[Test]
     public function aLineBreakBecomesANewline(): void
     {
         $result = $this->subject->convert("<p>line1<br>\n  line2</p>");
