@@ -7,8 +7,9 @@ namespace MaikSchneider\TcaApiHeadless\RichText;
 /**
  * Converts RTE HTML into Portable Text.
  *
- * Blocks: p (normal), h1-h6, blockquote, ul/ol items (bullet/number, nested
- * lists raise the level). Container elements such as div are unwrapped, inline
+ * Blocks: p (normal), h1-h6, ul/ol items (bullet/number, nested lists raise
+ * the level); paragraphs and lists inside a blockquote get the style blockquote.
+ * Container elements such as div are unwrapped, inline
  * content outside a block becomes a normal block. Decorators: strong/b, em/i,
  * u (underline), s/strike/del (strike-through), code. Links become link
  * annotations; br becomes a line break. Script and style elements are dropped,
@@ -20,17 +21,15 @@ namespace MaikSchneider\TcaApiHeadless\RichText;
 final class HtmlToPortableText
 {
     private const BLOCK_STYLES = [
-        'p' => 'normal',
         'h1' => 'h1',
         'h2' => 'h2',
         'h3' => 'h3',
         'h4' => 'h4',
         'h5' => 'h5',
         'h6' => 'h6',
-        'blockquote' => 'blockquote',
     ];
 
-    private const CONTAINERS = ['div', 'section', 'article', 'header', 'footer', 'main', 'aside', 'figure', 'li', 'ul', 'ol', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'dl', 'dt', 'dd', 'pre', 'hr', 'address', 'figcaption', 'nav'];
+    private const CONTAINERS = ['p', 'blockquote', 'div', 'section', 'article', 'header', 'footer', 'main', 'aside', 'figure', 'li', 'ul', 'ol', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'td', 'th', 'dl', 'dt', 'dd', 'pre', 'hr', 'address', 'figcaption', 'nav'];
 
     private const DECORATORS = [
         'strong' => 'strong',
@@ -75,48 +74,54 @@ final class HtmlToPortableText
 
     /**
      * Blocks of a container: block elements become blocks, runs of inline
-     * content between them become normal blocks.
+     * content between them become paragraphs.
      *
+     * @param string $paragraphStyle style of paragraphs, list items and loose inline content
      * @return list<array<string, mixed>>
      */
-    private function blocks(\DOMNode $container, int $listLevel): array
+    private function blocks(\DOMNode $container, int $listLevel, string $paragraphStyle = 'normal'): array
     {
         $blocks = [];
         $inline = [];
         foreach ($container->childNodes as $node) {
             $tag = $node instanceof \DOMElement ? strtolower($node->tagName) : null;
-            if ($tag === null || (!isset(self::BLOCK_STYLES[$tag]) && !\in_array($tag, self::CONTAINERS, true))) {
+            if ($tag === null || !self::isBlock($tag)) {
                 $inline[] = $node;
                 continue;
             }
 
-            $blocks = [...$blocks, ...$this->textBlock($inline, 'normal'), ...$this->blockElement($node, $tag, $listLevel)];
+            $blocks = [
+                ...$blocks,
+                ...$this->textBlock($inline, $paragraphStyle),
+                ...$this->blockElement($node, $tag, $listLevel, $paragraphStyle),
+            ];
             $inline = [];
         }
 
-        return [...$blocks, ...$this->textBlock($inline, 'normal')];
+        return [...$blocks, ...$this->textBlock($inline, $paragraphStyle)];
     }
 
     /**
      * @return list<array<string, mixed>>
      */
-    private function blockElement(\DOMElement $element, string $tag, int $listLevel): array
+    private function blockElement(\DOMElement $element, string $tag, int $listLevel, string $paragraphStyle): array
     {
-        if (isset(self::BLOCK_STYLES[$tag])) {
-            return $this->textBlock(iterator_to_array($element->childNodes, false), self::BLOCK_STYLES[$tag]);
-        }
-
-        if ($tag === 'ul' || $tag === 'ol') {
-            return $this->listItems($element, $tag === 'ol' ? 'number' : 'bullet', $listLevel);
-        }
-
-        return $this->blocks($element, $listLevel);
+        return match ($tag) {
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6' => $this->textBlock(iterator_to_array($element->childNodes, false), self::BLOCK_STYLES[$tag]),
+            'p' => $this->textBlock(iterator_to_array($element->childNodes, false), $paragraphStyle),
+            'blockquote' => $this->blocks($element, $listLevel, 'blockquote'),
+            'ul', 'ol' => $this->listItems($element, $tag === 'ol' ? 'number' : 'bullet', $listLevel, $paragraphStyle),
+            default => $this->blocks($element, $listLevel, $paragraphStyle),
+        };
     }
 
     /**
+     * Each li becomes one block; paragraphs inside an item are separated by a
+     * line break, nested lists follow with a higher level.
+     *
      * @return list<array<string, mixed>>
      */
-    private function listItems(\DOMElement $list, string $listItem, int $level): array
+    private function listItems(\DOMElement $list, string $listItem, int $level, string $paragraphStyle): array
     {
         $blocks = [];
         foreach ($list->childNodes as $item) {
@@ -129,19 +134,24 @@ final class HtmlToPortableText
             foreach ($item->childNodes as $node) {
                 $tag = $node instanceof \DOMElement ? strtolower($node->tagName) : null;
                 if ($tag === 'ul' || $tag === 'ol') {
-                    $nested = [...$nested, ...$this->listItems($node, $tag === 'ol' ? 'number' : 'bullet', $level + 1)];
+                    $nested = [...$nested, ...$this->listItems($node, $tag === 'ol' ? 'number' : 'bullet', $level + 1, $paragraphStyle)];
                 } else {
                     $inline[] = $node;
                 }
             }
 
-            foreach ($this->textBlock($inline, 'normal') as $block) {
+            foreach ($this->textBlock($inline, $paragraphStyle) as $block) {
                 $blocks[] = [...$block, 'listItem' => $listItem, 'level' => $level];
             }
             $blocks = [...$blocks, ...$nested];
         }
 
         return $blocks;
+    }
+
+    private static function isBlock(string $tag): bool
+    {
+        return isset(self::BLOCK_STYLES[$tag]) || \in_array($tag, self::CONTAINERS, true);
     }
 
     /**
@@ -214,7 +224,8 @@ final class HtmlToPortableText
             }
         }
 
-        $spans = [];
+        // A block element inside inline content (a paragraph in a list item) starts a new line.
+        $spans = self::isBlock($tag) ? [['marks' => $marks, 'text' => "\n"]] : [];
         foreach ($node->childNodes as $child) {
             $spans = [...$spans, ...$this->spans($child, $marks, $markDefs)];
         }
@@ -234,7 +245,9 @@ final class HtmlToPortableText
         $merged = [];
         $atLineStart = true;
         foreach ($spans as $span) {
-            if ($atLineStart || str_ends_with($merged[array_key_last($merged)]['text'] ?? '', ' ')) {
+            if ($merged === []) {
+                $span['text'] = ltrim($span['text'], " \n");
+            } elseif ($atLineStart || str_ends_with($merged[array_key_last($merged)]['text'], ' ')) {
                 $span['text'] = ltrim($span['text'], ' ');
             }
             if ($span['text'] === '') {

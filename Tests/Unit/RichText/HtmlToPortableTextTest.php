@@ -67,6 +67,31 @@ final class HtmlToPortableTextTest extends UnitTestCase
     }
 
     #[Test]
+    public function aBlockquoteKeepsItsParagraphsAndLists(): void
+    {
+        $result = $this->subject->convert('<blockquote><p>First.</p><p>Second.</p><ul><li>item</li></ul></blockquote><p>After</p>');
+
+        self::assertSame([
+            ['blockquote', null, 'First.'],
+            ['blockquote', null, 'Second.'],
+            ['blockquote', 'bullet', 'item'],
+            ['normal', null, 'After'],
+        ], array_map(
+            static fn (array $block): array => [$block['style'], $block['listItem'] ?? null, $block['children'][0]['text']],
+            $result,
+        ));
+    }
+
+    #[Test]
+    public function paragraphsInAListItemAreSeparatedByALineBreak(): void
+    {
+        $result = $this->subject->convert('<ul><li><p>first</p><p><strong>second</strong></p></li></ul>');
+
+        self::assertCount(1, $result);
+        self::assertSame([[[], "first\n"], [['strong'], 'second']], $this->spans($result[0]));
+    }
+
+    #[Test]
     public function inlineFormattingBecomesDecorators(): void
     {
         $result = $this->subject->convert('<p>a <strong>b</strong> <em>c</em> <b><i>d</i></b> <u>e</u> <s>f</s> <del>g</del> <code>h</code></p>');
