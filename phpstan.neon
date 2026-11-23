@@ -17,4 +17,7 @@ parameters:
 
 		typo3:
 				requestGetAttributeMapping:
+						tca_api.allowed_resources: array|null
+						tca_api.api_prefix: string|null
+						tca_api.language: TYPO3\CMS\Core\Site\Entity\SiteLanguage|null
 						tca_api.uid: int|null

@@ -1,0 +1,18 @@
+{
+	"name": "maikschneider/tca-api-headless-query-counter",
+	"description": "Functional test fixture: counts the database queries of an operation handler",
+	"license": "GPL-2.0-or-later",
+	"type": "typo3-cms-extension",
+	"require": {
+		"maikschneider/tca-api-headless": "*"
+	},
+	"extra": {
+		"typo3/cms": {
+			"Package": {
+				"providesPackages": {}
+			},
+			"extension-key": "query_counter",
+			"version": "1.0.0"
+		}
+	}
+}

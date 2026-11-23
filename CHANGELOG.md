@@ -10,3 +10,5 @@ All notable changes to this project are documented in this file. The format foll
 - TCA API resources `headless_pages` and `headless_navigation` (`show`) and `headless_content` (no endpoint of its own). They are served only on sites with the site set, and only for pages of the requesting site.
 - `bodytext` of content elements is structured by `CType` and typed in the OpenAPI document: Portable Text for text and text & media, list items for bullets, rows for tables. Links in rich text are absolute and follow the request language.
 - `headless_content` sends `bullets_type`, `table_caption` and `table_header_position`.
+- `headless_pages` delivers the page's content elements as `regions`, named by the backend layout's column identifiers (also inherited from a parent page) or the `regions` site setting, and typed in the OpenAPI document. Content types listed in `fallbackCTypes` are sent with `uid`, `CType` and `header`.
+- Login-protected pages and content elements are delivered to the members of their frontend user groups.

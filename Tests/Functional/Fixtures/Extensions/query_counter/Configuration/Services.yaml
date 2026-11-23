@@ -1,0 +1,6 @@
+services:
+  MaikSchneider\TcaApiHeadless\Tests\Functional\QueryCounting\StartCountingBeforeOperation:
+    tags:
+      - name: event.listener
+        identifier: 'query-counter/start-before-operation'
+        event: MaikSchneider\TcaApi\Event\BeforeOperationEvent
