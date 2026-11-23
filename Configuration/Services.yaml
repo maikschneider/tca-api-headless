@@ -10,3 +10,7 @@ services:
 
   MaikSchneider\TcaApiHeadless\:
     resource: '../Classes/*'
+
+  # tca-api creates column processors with GeneralUtility::makeInstance().
+  MaikSchneider\TcaApiHeadless\Processing\BodytextProcessor:
+    public: true

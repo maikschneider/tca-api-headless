@@ -1,7 +1,9 @@
 "pages"
-,"uid","pid","title","nav_title","slug","doktype","is_siteroot","sorting"
-,1,0,"Home","","/",1,1,256
-,2,1,"About","About us","/about",1,0,256
-,3,1,"Storage","","/storage",254,0,512
-,10,0,"Other home","","/",1,1,512
-,11,10,"Other page","","/other-page",1,0,256
+,"uid","pid","title","nav_title","slug","doktype","is_siteroot","sorting","sys_language_uid","l10n_parent"
+,1,0,"Home","","/",1,1,256,0,0
+,2,1,"About","About us","/about",1,0,256,0,0
+,3,1,"Storage","","/storage",254,0,512,0,0
+,10,0,"Other home","","/",1,1,512,0,0
+,11,10,"Other page","","/other-page",1,0,256,0,0
+,20,0,"Start","","/",1,1,256,1,1
+,21,1,"Über uns","","/ueber-uns",1,0,256,1,2
