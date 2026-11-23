@@ -49,8 +49,9 @@ _progress "Updating database schema"
     "$typo3Binary" extension:setup
 _done
 
-# The page tree of the functional tests, served by two sites: "main" with the
-# add-on's site set, "other" with TCA API only.
+# The page tree of the functional tests, served by the sites of
+# Tests/Functional/Fixtures/Sites: "main" and "second" with the add-on's site
+# set, "other" and "nested" with TCA API only.
 for file in "$fixturePath"/*.csv; do
     _progress "Importing $(basename "$file")"
     python3 - "$file" <<'PYEOF' | mysql $dbCredentials "$dbName"
@@ -80,7 +81,7 @@ cp "$fixturePath"/Files/* "${projectPath}/public/fileadmin/"
 _done
 
 _progress "Creating sites"
-for site in main other second; do
+for site in main other second nested; do
     mkdir -p "${projectPath}/config/sites/${site}"
     sed "s#http://${site}.localhost/#${DDEV_PRIMARY_URL}/${site}/#; s#http://localhost/#${DDEV_PRIMARY_URL}/#" \
         "${fixturePath}/Sites/${site}/config.yaml" > "${projectPath}/config/sites/${site}/config.yaml"
