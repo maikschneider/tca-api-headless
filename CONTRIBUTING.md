@@ -28,6 +28,14 @@ ddev exec vendor/bin/phpunit --testsuite Unit
 ddev exec vendor/bin/phpunit --testsuite Functional
 ```
 
+The HTTP tests in `Tests/Http` send real requests to the DDEV site set up by `ddev init-typo3` and validate every body against the OpenAPI document written by the CLI. They run with [Bun](https://bun.sh) on the host:
+
+```bash
+ddev exec mkdir -p var/http
+ddev exec vendor/bin/typo3 tca-api:openapi main --output var/http/openapi.json
+cd Tests/Http && bun install && bun test
+```
+
 Switch the TYPO3 version with `ddev composer update -W --with=typo3/cms-core:^13.4` (or `^14.3`).
 
 ## Code Quality Standards

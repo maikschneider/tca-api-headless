@@ -19,3 +19,4 @@ config/system
 .claude
 .codegraph
 Plans/*.md
+node_modules/

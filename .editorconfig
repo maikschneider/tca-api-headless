@@ -35,6 +35,11 @@ indent_style = tab
 
 # package.json
 [package.json]
+indent_style = space
+indent_size = 2
+
+# Written by bun install
+[bun.lock]
 indent_size = 2
 
 # TypoScript
