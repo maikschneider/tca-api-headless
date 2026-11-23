@@ -59,6 +59,47 @@ Pages
 A page of another site, a page of another doktype (for example a folder) and a
 missing page answer with the same ``404 Not Found``.
 
+Page by path
+------------
+
+``GET /_api/headless_pages?path={path}``
+    Looks up the page the frontend serves at ``path`` and returns it as a
+    collection of at most one page with ``@id`` and ``uid``. Fetch the page
+    itself in a second request, below the same language base
+    (``/de/_api/headless_pages/2`` for the example).
+
+``path`` is relative to the base of the site language, so ``/de/ueber-uns``
+becomes ``GET /de/_api/headless_pages?path=/ueber-uns``. The site router
+resolves it like a frontend request, route enhancers included: the leading and
+trailing slash are optional, letter case counts, and in a language without
+fallback only its own slugs match. ``/`` is the site root.
+
+..  code-block:: json
+    :caption: GET /de/_api/headless_pages?path=/ueber-uns
+
+    {
+        "@context": "http://www.w3.org/ns/hydra/context.jsonld",
+        "@type": "hydra:Collection",
+        "@id": "/_api/headless_pages",
+        "hydra:totalItems": 1,
+        "hydra:member": [
+            {"@type": "HeadlessPages", "@id": "/_api/headless_pages/2", "uid": 2}
+        ],
+        "hydra:view": {
+            "@type": "hydra:PartialCollectionView",
+            "hydra:first": "/_api/headless_pages?path=%2Fueber-uns&page=1",
+            "hydra:last": "/_api/headless_pages?path=%2Fueber-uns&page=1",
+            "hydra:previous": null,
+            "hydra:next": null
+        }
+    }
+
+The ``uid`` is the one of the default language, like in every other response.
+A path without a page, or with a page the request may not see (see above, and
+login-protected pages below), returns an empty collection. Without a ``path``
+(missing, empty or not a single string) the request answers with
+``400 Bad Request``: pages are never listed.
+
 SEO fields and meta
 -------------------
 

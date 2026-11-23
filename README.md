@@ -14,6 +14,7 @@ Add the site set `maikschneider/tca-api-headless` to every site that delivers he
 
 ```bash
 curl https://example.org/_api/headless_pages/1
+curl 'https://example.org/de/_api/headless_pages?path=/ueber-uns'
 ```
 
 ## Documentation

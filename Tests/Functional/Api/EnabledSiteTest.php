@@ -107,10 +107,9 @@ final class EnabledSiteTest extends AbstractApiTestCase
     }
 
     #[Test]
-    #[DataProvider('pageResources')]
-    public function pagesCannotBeListed(string $resource): void
+    public function theNavigationCannotBeListed(): void
     {
-        self::assertSame(405, $this->request('http://localhost/_api/' . $resource)->getStatusCode());
+        self::assertSame(405, $this->request('http://localhost/_api/headless_navigation?path=/')->getStatusCode());
     }
 
     #[Test]

@@ -9,7 +9,8 @@ return [
         'table' => 'pages',
         'resourceName' => 'headless_pages',
         'resourceType' => 'HeadlessPages',
-        'operations' => ['show'],
+        // "list" is the lookup of one page by its path, see HeadlessPageHandler.
+        'operations' => ['list', 'show'],
         'recordTypes' => [1, 3, 4],
         'enabledSetting' => 'tca_api_headless.enabled',
     ],

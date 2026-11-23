@@ -95,3 +95,67 @@ jobs:
 
       - name: Run functional tests
         run: ddev exec vendor/bin/phpunit --testsuite Functional
+
+  # Real requests against the DDEV site, validated against the CLI's OpenAPI document.
+  http-tests:
+    name: HTTP (PHP ${{ matrix.php-version }}, TYPO3 ${{ matrix.typo3-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - typo3-version: "13.4"
+            php-version: "8.2"
+          - typo3-version: "14.3"
+            php-version: "8.4"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
+
+      - name: Configure and start DDEV
+        run: |
+          ddev config --project-type=typo3 --php-version=${{ matrix.php-version }}
+          ddev start
+
+      - name: Install Composer dependencies
+        run: |
+          ddev composer config --global github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+          ddev composer update --no-progress --with=typo3/cms-core:"^${{ matrix.typo3-version }}"
+
+      - name: Log versions
+        run: |
+          ddev exec php --version
+          ddev composer show typo3/cms-core
+          ddev composer show maikschneider/tca-api
+
+      # DDEV writes its database and trusted hosts configuration only on a start
+      # that finds the settings.php created by the init, hence the restart.
+      - name: Init TYPO3
+        run: |
+          ddev init-typo3
+          ddev restart
+
+      - name: Write the OpenAPI document with the CLI
+        run: |
+          mkdir -p var/http
+          ddev exec vendor/bin/typo3 tca-api:openapi main --output var/http/openapi.json
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install test dependencies
+        working-directory: Tests/Http
+        run: bun install --frozen-lockfile
+
+      - name: Run HTTP tests
+        working-directory: Tests/Http
+        run: |
+          # The sites of init-typo3 use DDEV's primary URL, served with a mkcert certificate.
+          export TYPO3_BASE_URL="$(ddev exec printenv DDEV_PRIMARY_URL)"
+          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+          echo "Base URL: ${TYPO3_BASE_URL}, CA: ${NODE_EXTRA_CA_CERTS}"
+          bun test
