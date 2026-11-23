@@ -1,3 +1,4 @@
 "sys_file"
 ,"uid","pid","storage","identifier","identifier_hash","folder_hash","name","extension","mime_type","type","size"
 ,1,0,1,"/brochure.pdf","4c2b6e8b4c08bbd52b5e3b2a6b1d4c9a5f7d0e11","42099b4af021e53fd8fd4e056c2568d7c2e3ffa8","brochure.pdf","pdf","application/pdf",5,1024
+,2,0,1,"/og-image.png","7d737afcf7c562a0f979d19d0b471f43d8aefb0a","42099b4af021e53fd8fd4e056c2568d7c2e3ffa8","og-image.png","png","image/png",2,84

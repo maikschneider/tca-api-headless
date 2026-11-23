@@ -52,7 +52,8 @@ final class ComposePageQueryCountTest extends AbstractApiTestCase
         $counts = $this->queryCounts();
 
         self::assertCount(1, array_unique($counts), json_encode($counts, JSON_THROW_ON_ERROR));
-        self::assertLessThanOrEqual(11, max($counts), json_encode($counts, JSON_THROW_ON_ERROR));
+        // Two of them are the page's own: its og_image and its URL for the canonical.
+        self::assertLessThanOrEqual(12, max($counts), json_encode($counts, JSON_THROW_ON_ERROR));
     }
 
     #[Test]

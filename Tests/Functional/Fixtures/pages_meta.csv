@@ -1,0 +1,12 @@
+"pages"
+,"uid","pid","title","slug","doktype","sorting","sys_language_uid","l10n_parent","seo_title","description","no_index","no_follow","canonical_link","og_image"
+,40,1,"Meta defaults","/meta-defaults",1,2048,0,0,"","",0,0,"",0
+,41,1,"Meta explicit","/meta-explicit",1,2304,0,0,"Explicit SEO title","Explicit description",0,0,"https://example.com/canonical",1
+,42,1,"Not indexed","/not-indexed",1,2560,0,0,"","",1,1,"https://example.com/ignored",0
+,43,1,"Canonical page","/canonical-page",1,2816,0,0,"","",0,0,"t3://page?uid=2",0
+,44,1,"Not followed","/not-followed",1,3072,0,0,"","",0,1,"t3://page?uid=41",0
+,45,1,"Meta Standard","/meta-standard",1,2048,1,40,"","",0,0,"",0
+,46,1,"Nicht indexiert","/nicht-indexiert",1,2560,1,42,"","",1,1,"https://example.com/ignored",0
+,47,1,"Kanonische Seite","/kanonische-seite",1,2816,1,43,"","",0,0,"t3://page?uid=2",0
+,48,1,"Nicht gefolgt","/nicht-gefolgt",1,3072,1,44,"","",0,1,"t3://page?uid=41",0
+,49,1,"Record canonical","/record-canonical",1,3328,0,0,"","",0,0,"t3://record?identifier=tx_news&uid=1",0

@@ -10,6 +10,7 @@ Requirements
 *   TYPO3 13.4 or 14.3
 *   PHP 8.2 or later
 *   `TCA API <https://github.com/maikschneider/tca-api>`__ 2.4 or later
+*   EXT:seo (``typo3/cms-seo``) for the SEO fields of pages
 
 Composer
 ========

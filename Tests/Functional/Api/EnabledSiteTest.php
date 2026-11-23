@@ -23,6 +23,25 @@ final class EnabledSiteTest extends AbstractApiTestCase
             'uid' => 2,
             'title' => 'About',
             'slug' => '/about',
+            'seo_title' => '',
+            'description' => null,
+            'no_index' => 0,
+            'no_follow' => 0,
+            'canonical_link' => null,
+            'og_title' => '',
+            'og_description' => null,
+            'og_image' => [],
+            'meta' => [
+                'robots' => 'index,follow',
+                'canonical' => 'http://localhost/about',
+                'schema' => [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'WebPage',
+                    'url' => 'http://localhost/about',
+                    'name' => 'About',
+                    'inLanguage' => 'en-US',
+                ],
+            ],
             'regions' => [],
         ], $this->json($response));
     }

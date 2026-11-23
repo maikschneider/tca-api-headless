@@ -20,6 +20,8 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  */
 abstract class AbstractApiTestCase extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = ['seo'];
+
     protected array $testExtensionsToLoad = [
         'maikschneider/tca-api',
         'maikschneider/tca-api-headless',

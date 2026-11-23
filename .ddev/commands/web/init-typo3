@@ -74,6 +74,11 @@ PYEOF
     _done
 done
 
+_progress "Copying files"
+mkdir -p "${projectPath}/public/fileadmin"
+cp "$fixturePath"/Files/* "${projectPath}/public/fileadmin/"
+_done
+
 _progress "Creating sites"
 for site in main other second; do
     mkdir -p "${projectPath}/config/sites/${site}"
