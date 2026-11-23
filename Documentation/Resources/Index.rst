@@ -13,21 +13,52 @@ Pages
 
 ``GET /_api/headless_pages/{uid}``
     A standard page, link or shortcut (doktype 1, 3 or 4) of the requesting
-    site.
+    site, with its content elements grouped by region.
 
 ..  code-block:: json
-    :caption: GET /_api/headless_pages/2
+    :caption: GET /_api/headless_pages/4
 
     {
         "@type": "HeadlessPages",
-        "@id": "/_api/headless_pages/2",
-        "uid": 2,
-        "title": "About",
-        "slug": "/about"
+        "@id": "/_api/headless_pages/4",
+        "uid": 4,
+        "title": "Composed",
+        "slug": "/composed",
+        "regions": {
+            "main": [
+                {"uid": 201, "CType": "header", "header": "First in main"},
+                {"uid": 202, "CType": "html", "header": "Listed fallback"}
+            ],
+            "left": [
+                {"uid": 204, "CType": "header", "header": "Left"}
+            ]
+        }
     }
 
 A page of another site, a page of another doktype (for example a folder) and a
 missing page answer with the same ``404 Not Found``.
+
+Regions
+-------
+
+``regions`` maps region names to the visible content elements of the page in
+the language of the request, in their backend order. Region names come from the
+page's backend layout or the site setting :confval:`tca-api-headless-regions`;
+``colPos`` is not sent. A page without content has an empty object.
+Content elements of the :ref:`content types <resources-content>` carry the
+columns of their type; types allowed by
+:confval:`tca-api-headless-fallbackctypes` carry ``uid``, ``CType`` and
+``header`` only, all other types are left out.
+
+Login-protected pages
+---------------------
+
+Pages and content elements restricted to frontend user groups (:guilabel:`Access`
+tab) are delivered like in the frontend: a page to the members of one of its
+groups, also when a parent page extends its groups to subpages, and a content
+element only to members of its groups. Send the frontend user's session cookie
+with the request. For everybody else the page answers with ``404 Not Found`` and
+the content element is left out.
 
 Navigation
 ==========
@@ -35,6 +66,8 @@ Navigation
 ``GET /_api/headless_navigation/{uid}``
     The navigation entry of a page of the requesting site, with ``title``,
     ``nav_title`` and ``slug``. The same rules as for pages apply.
+
+..  _resources-content:
 
 Content
 =======
@@ -44,7 +77,8 @@ media, images, header, bullet list, table and file links (``text``,
 ``textmedia``, ``image``, ``header``, ``bullets``, ``table``, ``uploads``). Each
 type has its own schema in the OpenAPI document, discriminated by ``CType``.
 The resource has no endpoint of its own; requests to it answer with
-``405 Method Not Allowed``.
+``405 Method Not Allowed``. Content elements are delivered inside a page's
+``regions``, without ``@id`` and ``@type``.
 
 ..  _resources-bodytext:
 

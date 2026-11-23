@@ -75,10 +75,13 @@ PYEOF
 done
 
 _progress "Creating sites"
-for site in main other; do
+for site in main other second; do
     mkdir -p "${projectPath}/config/sites/${site}"
     sed "s#http://${site}.localhost/#${DDEV_PRIMARY_URL}/${site}/#; s#http://localhost/#${DDEV_PRIMARY_URL}/#" \
         "${fixturePath}/Sites/${site}/config.yaml" > "${projectPath}/config/sites/${site}/config.yaml"
+    if [ -f "${fixturePath}/Sites/${site}/settings.yaml" ]; then
+        cp "${fixturePath}/Sites/${site}/settings.yaml" "${projectPath}/config/sites/${site}/settings.yaml"
+    fi
 done
 "$typo3Binary" cache:flush
 _done

@@ -1,0 +1,24 @@
+"tt_content"
+,"uid","pid","sorting","colPos","CType","header","bodytext","hidden","starttime","fe_group","sys_language_uid","l18n_parent"
+,200,4,512,0,"text","Second in main","<p>Second</p>",0,0,"",0,0
+,201,4,256,0,"header","First in main","",0,0,"",0,0
+,202,4,768,0,"html","Listed fallback","<b>raw</b>",0,0,"",0,0
+,203,4,1024,0,"div","Unlisted fallback","",0,0,"",0,0
+,204,4,128,1,"text","Left","<p>Left</p>",0,0,"",0,0
+,205,4,256,2,"header","Right","",0,0,"",0,0
+,206,4,256,3,"header","Border","",0,0,"",0,0
+,207,4,256,9,"header","Unmapped column","",0,0,"",0,0
+,208,4,1100,0,"header","Hidden","",1,0,"",0,0
+,209,4,1200,0,"header","Scheduled","",0,4102444800,"",0,0
+,210,4,1280,0,"header","Members only","",0,0,"1",0,0
+,211,22,512,0,"text","Zweiter im Hauptbereich","<p>Zweiter</p>",0,0,"",1,200
+,212,4,2048,0,"header","All languages","",0,0,"",-1,0
+,220,6,256,0,"header","Content column","",0,0,"",0,0
+,221,6,256,5,"header","Aside column","",0,0,"",0,0
+,222,6,256,2,"header","Column without identifier","",0,0,"",0,0
+,223,6,256,1,"header","Not in the layout","",0,0,"",0,0
+,225,5,256,0,"header","Section content","",0,0,"",0,0
+,230,7,256,0,"header","Members page content","",0,0,"",0,0
+,231,9,256,0,"header","Members area content","",0,0,"",0,0
+,240,30,256,0,"html","Not listed on this site","",0,0,"",0,0
+,241,30,512,0,"header","Second site header","",0,0,"",0,0

@@ -23,6 +23,7 @@ final class EnabledSiteTest extends AbstractApiTestCase
             'uid' => 2,
             'title' => 'About',
             'slug' => '/about',
+            'regions' => [],
         ], $this->json($response));
     }
 

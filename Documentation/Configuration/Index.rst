@@ -41,9 +41,12 @@ The site set defines these site settings. Change them in the backend module
     :type: stringlist
     :default: ['0:main', '1:left', '2:right', '3:border']
 
-    Region names of pages without a backend layout, one entry per column as
-    ``colPos:region``. Pages with a backend layout use the identifiers of its
-    columns. Used by the page composition, which is in development.
+    Region names as ``colPos:region``, one entry per column. Pages without a
+    backend layout use this map for all columns. Pages with a backend layout,
+    their own or inherited through :guilabel:`Backend Layout (subpages of this
+    page)`, use the ``identifier`` of the layout's columns and this map only
+    for a column without one. Content in a column without a region name is
+    left out. A malformed entry makes the page request fail.
 
 ..  confval:: tca_api_headless.navigation.depth
     :name: tca-api-headless-navigation-depth
@@ -59,8 +62,10 @@ The site set defines these site settings. Change them in the backend module
     :default: []
 
     Content types outside the built-in catalog that a page delivers with
-    ``uid``, ``CType`` and ``header`` only. Content elements of other types are
-    left out. Used by the page composition, which is in development.
+    ``uid``, ``CType`` and ``header`` only (schema
+    ``HeadlessContentFallbackRead``, its ``CType`` an enum of this list).
+    Content elements of other types are left out. Every entry must be a
+    ``CType`` defined in TCA.
 
 Caching
 =======
