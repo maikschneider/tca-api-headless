@@ -13,7 +13,8 @@ Pages
 
 ``GET /_api/headless_pages/{uid}``
     A standard page, link or shortcut (doktype 1, 3 or 4) of the requesting
-    site, with its content elements grouped by region.
+    site, with its SEO fields, its meta and its content elements grouped by
+    region.
 
 ..  code-block:: json
     :caption: GET /_api/headless_pages/4
@@ -24,6 +25,26 @@ Pages
         "uid": 4,
         "title": "Composed",
         "slug": "/composed",
+        "seo_title": "",
+        "description": "A composed page",
+        "no_index": 0,
+        "no_follow": 0,
+        "canonical_link": null,
+        "og_title": "",
+        "og_description": null,
+        "og_image": [],
+        "meta": {
+            "robots": "index,follow",
+            "canonical": "https://example.org/composed",
+            "schema": {
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                "url": "https://example.org/composed",
+                "name": "Composed",
+                "inLanguage": "en-US",
+                "description": "A composed page"
+            }
+        },
         "regions": {
             "main": [
                 {"uid": 201, "CType": "header", "header": "First in main"},
@@ -37,6 +58,32 @@ Pages
 
 A page of another site, a page of another doktype (for example a folder) and a
 missing page answer with the same ``404 Not Found``.
+
+SEO fields and meta
+-------------------
+
+The page sends the EXT:seo fields ``seo_title``, ``description``, ``no_index``,
+``no_follow``, ``canonical_link``, ``og_title``, ``og_description`` and
+``og_image`` in the language of the request. ``og_image`` is processed like
+EXT:seo's ``og:image`` (crop variant ``social``, at most 2000 pixels wide) and
+has an absolute ``publicUrl``.
+
+``meta`` is derived from these fields (schema ``HeadlessPagesMeta``):
+
+``robots``
+    ``index`` or ``noindex``, then ``follow`` or ``nofollow``.
+
+``canonical``
+    The absolute URL of ``canonical_link`` (a page link points to the page in
+    the request language), otherwise the absolute URL of the page itself in
+    the request language. Like EXT:seo, a page with ``no_index`` has none
+    (``null``). A canonical link that is no web URL, or a page that isn't
+    available in the language, counts as unset.
+
+``schema``
+    A schema.org ``WebPage`` as JSON-LD: ``url`` (the canonical URL, or the
+    page URL without one), ``name`` (``seo_title`` or ``title``),
+    ``inLanguage`` and, if set, ``description``.
 
 Regions
 -------

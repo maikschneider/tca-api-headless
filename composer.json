@@ -29,7 +29,8 @@
 		"maikschneider/tca-api": "^2.4",
 		"typo3/cms-backend": "^13.4 || ^14.3",
 		"typo3/cms-core": "^13.4 || ^14.3",
-		"typo3/cms-frontend": "^13.4 || ^14.3"
+		"typo3/cms-frontend": "^13.4 || ^14.3",
+		"typo3/cms-seo": "^13.4 || ^14.3"
 	},
 	"require-dev": {
 		"armin/editorconfig-cli": "^2.1",
