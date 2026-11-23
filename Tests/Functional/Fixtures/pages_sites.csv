@@ -1,0 +1,5 @@
+"pages"
+,"uid","pid","title","nav_title","slug","doktype","is_siteroot","sorting","sys_language_uid","l10n_parent"
+,500,0,"Pages only","","/",1,1,1024,0,0
+,505,0,"Navigation only","","/",1,1,1280,0,0
+,506,505,"Navigation only child","","/child",1,0,256,0,0

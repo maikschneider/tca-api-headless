@@ -1,0 +1,16 @@
+base: 'http://navigation-only.localhost/'
+dependencies:
+  - maikschneider/tca-api-headless
+languages:
+  -
+    title: English
+    enabled: true
+    locale: en_US
+    hreflang: ''
+    base: /
+    websiteTitle: ''
+    navigationTitle: English
+    flag: en-us-gb
+    languageId: 0
+rootPageId: 505
+websiteTitle: ''

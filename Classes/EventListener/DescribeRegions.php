@@ -53,11 +53,14 @@ final class DescribeRegions
             $item = ['oneOf' => [$item, ['$ref' => self::SCHEMA_PREFIX . $fallbackSchema]]];
         }
 
-        $document['components']['schemas'][$pageSchema]['properties']['regions'] = [
+        $page = &$document['components']['schemas'][$pageSchema];
+        $page['properties']['regions'] = [
             'type' => 'object',
             'description' => 'Content elements by region, in their order on the page.',
             'additionalProperties' => ['type' => 'array', 'items' => $item],
         ];
+        $page['required'] = array_values(array_unique([...$page['required'] ?? [], 'regions']));
+        unset($page);
         $event->setDocument($document);
     }
 }

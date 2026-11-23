@@ -51,7 +51,8 @@ _done
 
 # The page tree of the functional tests, served by the sites of
 # Tests/Functional/Fixtures/Sites: "main" and "second" with the add-on's site
-# set, "other" and "nested" with TCA API only.
+# set, "other" and "nested" with TCA API only, "pages-only" and
+# "navigation-only" with the set but one of its resources.
 for file in "$fixturePath"/*.csv; do
     _progress "Importing $(basename "$file")"
     python3 - "$file" <<'PYEOF' | mysql $dbCredentials "$dbName"
@@ -81,7 +82,7 @@ cp "$fixturePath"/Files/* "${projectPath}/public/fileadmin/"
 _done
 
 _progress "Creating sites"
-for site in main other second nested; do
+for site in main other second nested pages-only navigation-only; do
     mkdir -p "${projectPath}/config/sites/${site}"
     sed "s#http://${site}.localhost/#${DDEV_PRIMARY_URL}/${site}/#; s#http://localhost/#${DDEV_PRIMARY_URL}/#" \
         "${fixturePath}/Sites/${site}/config.yaml" > "${projectPath}/config/sites/${site}/config.yaml"
