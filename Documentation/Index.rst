@@ -62,6 +62,10 @@ OpenAPI document describes every response.
 
         The endpoints and their responses.
 
+    ..  card:: :ref:`Contract <contract>`
+
+        The OpenAPI document and generated client types.
+
 ..  Table of Contents
 
 ..  toctree::
@@ -73,3 +77,4 @@ OpenAPI document describes every response.
     Installation/Index
     Configuration/Index
     Resources/Index
+    Contract/Index

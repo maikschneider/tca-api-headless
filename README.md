@@ -19,7 +19,7 @@ curl 'https://example.org/de/_api/headless_pages?path=/ueber-uns'
 
 ## Documentation
 
-See [Documentation/](Documentation/Index.rst) for the site settings and the resources.
+See [Documentation/](Documentation/Index.rst) for the site settings, the resources and the OpenAPI contract. [demo/](demo/README.md) holds an Astro frontend built on the generated types.
 
 ## License
 

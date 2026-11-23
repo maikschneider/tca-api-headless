@@ -144,9 +144,13 @@ Login-protected pages
 Pages and content elements restricted to frontend user groups (:guilabel:`Access`
 tab) are delivered like in the frontend: a page to the members of one of its
 groups, also when a parent page extends its groups to subpages, and a content
-element only to members of its groups. Send the frontend user's session cookie
-with the request. For everybody else the page answers with ``404 Not Found`` and
-the content element is left out.
+element only to members of its groups. A translation with groups of its own
+restricts the page or content element in its language further. Send the
+frontend user's session cookie with the request. For everybody else the page
+answers with ``404 Not Found`` and the content element is left out.
+
+Below a hidden or scheduled page that extends to subpages, pages answer with
+``404 Not Found`` as well, like in the frontend.
 
 Navigation
 ==========
