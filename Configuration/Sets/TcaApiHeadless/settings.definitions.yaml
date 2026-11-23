@@ -1,0 +1,29 @@
+categories:
+
+  TcaApiHeadless: ~
+
+settings:
+
+  tca_api_headless.enabled:
+    category: TcaApiHeadless
+    type: bool
+    default: true
+
+  tca_api_headless.regions:
+    category: TcaApiHeadless
+    type: stringlist
+    default:
+      - '0:main'
+      - '1:left'
+      - '2:right'
+      - '3:border'
+
+  tca_api_headless.navigation.depth:
+    category: TcaApiHeadless
+    type: int
+    default: 2
+
+  tca_api_headless.fallbackCTypes:
+    category: TcaApiHeadless
+    type: stringlist
+    default: []

@@ -1,0 +1,18 @@
+{
+	"name": "maikschneider/tca-api-headless-site-pages",
+	"description": "Functional test fixture: a site's own pages resource next to the add-on",
+	"license": "GPL-2.0-or-later",
+	"type": "typo3-cms-extension",
+	"require": {
+		"maikschneider/tca-api": "*"
+	},
+	"extra": {
+		"typo3/cms": {
+			"Package": {
+				"providesPackages": {}
+			},
+			"extension-key": "site_pages",
+			"version": "1.0.0"
+		}
+	}
+}

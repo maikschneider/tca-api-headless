@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:tca_api_headless/Configuration/Sets/TcaApiHeadless/labels.xlf" date="2026-11-23T00:00:00Z" product-name="tca_api_headless">
+		<header/>
+		<body>
+			<trans-unit id="label" resname="label">
+				<source>TCA API Headless</source>
+			</trans-unit>
+			<trans-unit id="categories.TcaApiHeadless" resname="categories.TcaApiHeadless">
+				<source>TCA API Headless</source>
+			</trans-unit>
+			<trans-unit id="settings.tca_api_headless.enabled" resname="settings.tca_api_headless.enabled">
+				<source>Enable headless delivery</source>
+			</trans-unit>
+			<trans-unit id="settings.description.tca_api_headless.enabled" resname="settings.description.tca_api_headless.enabled">
+				<source>Serve the headless_pages, headless_content and headless_navigation resources on this site.</source>
+			</trans-unit>
+			<trans-unit id="settings.tca_api_headless.regions" resname="settings.tca_api_headless.regions">
+				<source>Regions of pages without a backend layout</source>
+			</trans-unit>
+			<trans-unit id="settings.description.tca_api_headless.regions" resname="settings.description.tca_api_headless.regions">
+				<source>One entry per column as colPos:region, e.g. 0:main. Pages with a backend layout use the identifiers of its columns.</source>
+			</trans-unit>
+			<trans-unit id="settings.tca_api_headless.navigation.depth" resname="settings.tca_api_headless.navigation.depth">
+				<source>Navigation depth</source>
+			</trans-unit>
+			<trans-unit id="settings.description.tca_api_headless.navigation.depth" resname="settings.description.tca_api_headless.navigation.depth">
+				<source>Number of page levels below the requested page in a navigation response.</source>
+			</trans-unit>
+			<trans-unit id="settings.tca_api_headless.fallbackCTypes" resname="settings.tca_api_headless.fallbackCTypes">
+				<source>Fallback content types</source>
+			</trans-unit>
+			<trans-unit id="settings.description.tca_api_headless.fallbackCTypes" resname="settings.description.tca_api_headless.fallbackCTypes">
+				<source>Content types outside the built-in catalog that are delivered with uid, CType and header only. Content of other types is left out.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
