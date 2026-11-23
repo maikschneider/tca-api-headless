@@ -153,4 +153,9 @@ jobs:
 
       - name: Run HTTP tests
         working-directory: Tests/Http
-        run: bun test
+        run: |
+          # The sites of init-typo3 use DDEV's primary URL, served with a mkcert certificate.
+          export TYPO3_BASE_URL="$(ddev exec printenv DDEV_PRIMARY_URL)"
+          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+          echo "Base URL: ${TYPO3_BASE_URL}, CA: ${NODE_EXTRA_CA_CERTS}"
+          bun test
