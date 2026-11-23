@@ -1,0 +1,27 @@
+{
+  "name": "tca-api-headless-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "types": "tca-api-client generate ../var/http/openapi.json src/api/schema.d.ts",
+    "types:compare": "tca-api-client compare ../var/http/openapi.json src/api/schema.d.ts",
+    "check": "astro check",
+    "build": "astro build",
+    "start": "node dist/server/entry.mjs",
+    "dev": "astro dev"
+  },
+  "dependencies": {
+    "@astrojs/node": "11.1.14",
+    "@xima-media/tca-api-client": "0.1.1",
+    "astro": "7.4.13",
+    "astro-portabletext": "1.0.1",
+    "openapi-fetch": "0.17.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@types/bun": "1.3.0",
+    "@types/node": "24.19.2",
+    "openapi-typescript": "7.13.0",
+    "typescript": "6.0.3"
+  }
+}

@@ -5,6 +5,8 @@
 //
 //   TYPO3_BASE_URL  site base (default http://tca-api-headless.ddev.site)
 //   OPENAPI_SPEC    spec written by the CLI (default var/http/openapi.json)
+//   FE_SESSION      frontend session cookie value of the fixture user "member"
+//                   (ddev fe-session member)
 import { describe, expect, test } from 'bun:test';
 import Ajv2020, { type ValidateFunction } from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
@@ -36,8 +38,8 @@ function validatorFor(apiPath: string, status: number): ValidateFunction {
 }
 
 /** GET a URL path, assert the status and that the body matches the spec. */
-async function get(path: string, status = 200): Promise<Json> {
-  const response = await fetch(base + path);
+async function get(path: string, status = 200, headers: Record<string, string> = {}): Promise<Json> {
+  const response = await fetch(base + path, { headers });
   const text = await response.text();
   expect(response.status, `${path}: ${text.slice(0, 300)}`).toBe(status);
   expect(response.headers.get('content-type')).toBe('application/ld+json');
@@ -192,5 +194,33 @@ describe('contract', () => {
     for (const [apiPath, body] of broken) {
       expect(validatorFor(apiPath, 200)(body), apiPath).toBe(false);
     }
+  });
+});
+
+describe('login-protected pages', () => {
+  const member = { Cookie: `fe_typo_user=${process.env.FE_SESSION ?? ''}` };
+
+  test('are served with the session of a member only', async () => {
+    expect(process.env.FE_SESSION ?? '').not.toBe('');
+
+    await get('/_api/headless_pages/401', 404);
+    await get('/de/_api/headless_pages/401', 404);
+    expect(await lookUp('', '/access/members')).toEqual([]);
+
+    expect((await get('/_api/headless_pages/401', 200, member)).title).toBe('Members');
+    expect((await get('/de/_api/headless_pages/401', 200, member)).title).toBe('Mitglieder');
+    const lookup = await get(`/_api/headless_pages?path=${encodeURIComponent('/access/members')}`, 200, member);
+    expect(lookup['hydra:member'].map((page: Json) => page.uid)).toEqual([401]);
+  });
+
+  test('compose content and navigation for a member only', async () => {
+    const headers = (page: Json): string[] => page.regions.main.map((content: Json) => content.header);
+    const titles = (entry: Json): string[] => entry.children.map((child: Json) => child.title);
+
+    expect(headers(await get('/_api/headless_pages/400'))).toEqual(['Public', 'Public in English']);
+    expect(headers(await get('/_api/headless_pages/400', 200, member))).toEqual(['Public', 'For members', 'Members image', 'Public in English']);
+    expect(headers(await get('/de/_api/headless_pages/400', 200, member))).toEqual(['Öffentlich', 'Für Mitglieder', 'Mitgliederbild', 'Nur für Mitglieder auf Deutsch']);
+    expect(titles(await get('/_api/headless_navigation/400'))).toEqual(['Hide at login', 'Translated for members']);
+    expect(titles(await get('/de/_api/headless_navigation/400', 200, member))).toEqual(['Mitglieder', 'Übersetzt für Mitglieder']);
   });
 });

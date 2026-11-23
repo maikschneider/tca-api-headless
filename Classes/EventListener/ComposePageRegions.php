@@ -30,6 +30,11 @@ final readonly class ComposePageRegions
         if ($event->getOperation() !== 'show' || $event->getConfig()->resourceName !== 'headless_pages' || !$site instanceof Site) {
             return;
         }
+        // Like the OpenAPI document, a site that doesn't serve the content resource gets no regions.
+        $served = (array)$event->getRequest()->getAttribute('tca_api.allowed_resources', []);
+        if ($served !== [] && !\in_array(PageContentReader::RESOURCE, $served, true)) {
+            return;
+        }
 
         $data = $event->getData();
         $pageUid = (int)$data['uid'];

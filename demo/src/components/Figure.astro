@@ -1,0 +1,21 @@
+---
+import type { FileObject } from '../api/schema';
+import { fileUrl } from '../lib/api';
+
+export type Props = { file: FileObject };
+
+const { file } = Astro.props;
+---
+
+{
+  file.publicUrl && (
+    <figure>
+      {file.mimeType?.startsWith('image/') ? (
+        <img src={fileUrl(file.publicUrl)} alt={file.metadata?.alternative ?? ''} width={file.width || undefined} height={file.height || undefined} loading="lazy" />
+      ) : (
+        <a href={fileUrl(file.publicUrl)}>{file.name}</a>
+      )}
+      {file.metadata?.description && <figcaption>{file.metadata.description}</figcaption>}
+    </figure>
+  )
+}

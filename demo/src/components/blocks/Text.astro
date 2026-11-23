@@ -1,0 +1,17 @@
+---
+import { PortableText } from 'astro-portabletext';
+import type { HeadlessContentTextmediaRead, HeadlessContentTextRead } from '../../api/schema';
+import PortableTextLink from '../PortableTextLink.astro';
+import Figure from '../Figure.astro';
+
+export type Props = { content: HeadlessContentTextRead | HeadlessContentTextmediaRead };
+
+const { content } = Astro.props;
+const assets = content.CType === 'textmedia' ? (content.assets ?? []) : [];
+---
+
+<section class="block">
+  {content.header && <h2>{content.header}</h2>}
+  <PortableText value={content.bodytext ?? []} components={{ mark: { link: PortableTextLink } }} />
+  {assets.map((file) => <Figure file={file} />)}
+</section>

@@ -1,0 +1,18 @@
+"pages"
+,"uid","pid","title","slug","doktype","sorting","sys_language_uid","l10n_parent","hidden","starttime","fe_group","extendToSubpages"
+,400,1,"Access","/access",1,8192,0,0,0,0,"",0
+,401,400,"Members","/access/members",1,256,0,0,0,0,"1",0
+,402,400,"Partners","/access/partners",1,512,0,0,0,0,"2",1
+,403,402,"Partner page","/access/partners/page",1,256,0,0,0,0,"",0
+,404,400,"Any login","/access/any-login",1,768,0,0,0,0,"-2",0
+,405,400,"Hide at login","/access/hide-at-login",1,1024,0,0,0,0,"-1",0
+,406,400,"Hidden section","/access/hidden-section",1,1280,0,0,1,0,"",1
+,407,406,"Hidden section page","/access/hidden-section/page",1,256,0,0,0,0,"",0
+,410,1,"Zugang","/zugang",1,8192,1,400,0,0,"",0
+,411,400,"Mitglieder","/zugang/mitglieder",1,256,1,401,0,0,"1",0
+,412,400,"Partner","/zugang/partner",1,512,1,402,0,0,"2",1
+,413,402,"Partnerseite","/zugang/partner/seite",1,256,1,403,0,0,"",0
+,408,400,"Translated for members","/access/translated-for-members",1,1536,0,0,0,0,"",0
+,418,400,"Übersetzt für Mitglieder","/zugang/uebersetzt-fuer-mitglieder",1,1536,1,408,0,0,"1",0
+,409,400,"Scheduled section","/access/scheduled-section",1,1792,0,0,0,4102444800,"",1
+,419,409,"Scheduled section page","/access/scheduled-section/page",1,256,0,0,0,0,"",0

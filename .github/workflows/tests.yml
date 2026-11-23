@@ -158,4 +158,33 @@ jobs:
           export TYPO3_BASE_URL="$(ddev exec printenv DDEV_PRIMARY_URL)"
           export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
           echo "Base URL: ${TYPO3_BASE_URL}, CA: ${NODE_EXTRA_CA_CERTS}"
+          FE_SESSION="$(ddev fe-session member | cut -d= -f2-)"
+          export FE_SESSION
+          bun test
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install demo dependencies
+        working-directory: demo
+        run: bun install --frozen-lockfile
+
+      - name: Compare the demo's types with the OpenAPI document
+        working-directory: demo
+        run: bun run types:compare
+
+      - name: Check and build the demo
+        working-directory: demo
+        run: |
+          bun run check
+          bun run build
+
+      - name: Render the demo
+        working-directory: demo
+        run: |
+          export TYPO3_BASE_URL="$(ddev exec printenv DDEV_PRIMARY_URL)"
+          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+          FE_SESSION="$(ddev fe-session member | cut -d= -f2-)"
+          export FE_SESSION
           bun test

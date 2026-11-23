@@ -1,0 +1,26 @@
+---
+import type { HeadlessNavigationRead } from '../api/schema';
+import { demoHref } from '../lib/api';
+
+export type Props = { entries: HeadlessNavigationRead[]; current: string };
+
+const { entries, current } = Astro.props;
+---
+
+{
+  entries.length > 0 && (
+    <ul>
+      {entries.map((entry) => {
+        const href = demoHref(entry.url);
+        return (
+          <li>
+            <a href={href} aria-current={href === current ? 'page' : undefined}>
+              {entry.nav_title || entry.title}
+            </a>
+            <Astro.self entries={entry.children} current={current} />
+          </li>
+        );
+      })}
+    </ul>
+  )
+}

@@ -56,7 +56,10 @@ final class DescribePageMeta
             'required' => ['robots', 'canonical', 'schema'],
             'additionalProperties' => false,
         ];
-        $document['components']['schemas'][$pageSchema]['properties']['meta'] = ['$ref' => '#/components/schemas/' . $metaSchema];
+        $page = &$document['components']['schemas'][$pageSchema];
+        $page['properties']['meta'] = ['$ref' => '#/components/schemas/' . $metaSchema];
+        $page['required'] = array_values(array_unique([...$page['required'] ?? [], 'meta']));
+        unset($page);
         $event->setDocument($document);
     }
 }

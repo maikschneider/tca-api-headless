@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -e
+
+## Description: Print a frontend session cookie for a fixture user, for the demo and manual API requests
+## Usage: fe-session <username>
+## Example: ddev fe-session member
+
+if [ -z "$1" ]; then
+    echo "Usage: ddev fe-session <username>" >&2
+    exit 1
+fi
+
+php -d display_errors=stderr /dev/stdin "$1" <<'PHPEOF'
+<?php
+
+use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Session\UserSessionManager;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+$classLoader = require '/var/www/html/vendor/autoload.php';
+SystemEnvironmentBuilder::run(0, SystemEnvironmentBuilder::REQUESTTYPE_CLI);
+Bootstrap::init($classLoader);
+
+$uid = GeneralUtility::makeInstance(ConnectionPool::class)
+    ->getConnectionForTable('fe_users')
+    ->select(['uid'], 'fe_users', ['username' => $argv[1], 'deleted' => 0, 'disable' => 0])
+    ->fetchOne();
+if ($uid === false) {
+    fwrite(STDERR, sprintf('No frontend user "%s".' . PHP_EOL, $argv[1]));
+    exit(1);
+}
+
+$sessionManager = UserSessionManager::create('FE');
+$session = $sessionManager->elevateToFixatedUserSession($sessionManager->createAnonymousSession(), (int)$uid);
+echo $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'] . '=' . $session->getJwt() . PHP_EOL;
+PHPEOF
