@@ -1,0 +1,18 @@
+{
+	"name": "maikschneider/tca-api-headless-content-show",
+	"description": "Functional test fixture: gives headless_content a show endpoint to inspect serialized content elements",
+	"license": "GPL-2.0-or-later",
+	"type": "typo3-cms-extension",
+	"require": {
+		"maikschneider/tca-api-headless": "*"
+	},
+	"extra": {
+		"typo3/cms": {
+			"Package": {
+				"providesPackages": {}
+			},
+			"extension-key": "content_show",
+			"version": "1.0.0"
+		}
+	}
+}

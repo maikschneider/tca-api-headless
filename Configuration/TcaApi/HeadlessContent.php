@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use MaikSchneider\TcaApi\Serializer\FileProcessing\FileProcessor;
 use MaikSchneider\TcaApi\Serializer\FileProcessing\ImageProcessor;
+use MaikSchneider\TcaApiHeadless\Processing\BodytextProcessor;
 
 // Content is only read as part of a composed page, so it has no endpoint of its own.
 return [
@@ -21,7 +22,10 @@ return [
     'columns' => [
         'CType' => ['groups' => ['list', 'show']],
         'header' => ['groups' => ['list', 'show']],
-        'bodytext' => ['groups' => ['list', 'show']],
+        'bodytext' => ['groups' => ['list', 'show'], 'processor' => BodytextProcessor::class],
+        'bullets_type' => ['groups' => ['list', 'show']],
+        'table_caption' => ['groups' => ['list', 'show']],
+        'table_header_position' => ['groups' => ['list', 'show']],
         'image' => ['groups' => ['list', 'show'], 'processor' => ImageProcessor::class],
         'assets' => ['groups' => ['list', 'show'], 'processor' => FileProcessor::class],
         'media' => ['groups' => ['list', 'show'], 'processor' => FileProcessor::class],
