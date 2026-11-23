@@ -1,0 +1,11 @@
+---
+import type { HeadlessContentHeaderRead } from '../../api/schema';
+
+export type Props = { content: HeadlessContentHeaderRead };
+
+const { content } = Astro.props;
+---
+
+<section class="block">
+  <h2>{content.header}</h2>
+</section>

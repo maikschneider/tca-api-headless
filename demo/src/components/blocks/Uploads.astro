@@ -1,0 +1,15 @@
+---
+import type { HeadlessContentUploadsRead } from '../../api/schema';
+import { fileUrl } from '../../lib/api';
+
+export type Props = { content: HeadlessContentUploadsRead };
+
+const { content } = Astro.props;
+---
+
+<section class="block">
+  {content.header && <h2>{content.header}</h2>}
+  <ul>
+    {(content.media ?? []).map((file) => <li><a href={file.publicUrl ? fileUrl(file.publicUrl) : undefined}>{file.name}</a></li>)}
+  </ul>
+</section>

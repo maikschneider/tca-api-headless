@@ -1,0 +1,35 @@
+---
+import { blocks } from '../components/blocks';
+import Layout from '../layouts/Layout.astro';
+import { loadPage, route, sessionCookie } from '../lib/api';
+
+// Rendered per request, never prerendered: what the API returns depends on the
+// visitor's TYPO3 session, so a response with a session is private.
+export const prerender = false;
+
+const session = Astro.cookies.get(sessionCookie)?.value;
+const { language, path } = route(Astro.url.pathname);
+const loaded = await loadPage(language, path, session);
+
+Astro.response.headers.set('Vary', 'Cookie');
+Astro.response.headers.set('Cache-Control', session === undefined ? 'public, max-age=60' : 'private, no-store');
+if (loaded === null) {
+  return new Response('Not found', { status: 404, headers: Astro.response.headers });
+}
+const { page, navigation } = loaded;
+---
+
+<Layout language={language} page={page} navigation={navigation}>
+  {
+    Object.entries(page.regions).map(([region, contents]) => (
+      <div class="region" data-region={region}>
+        <h2>{region}</h2>
+        {contents.map((content) => {
+          // TypeScript can't tie the CType of `content` to the component it picks from the map.
+          const Block = blocks[content.CType] as (props: { content: typeof content }) => unknown;
+          return <Block content={content} />;
+        })}
+      </div>
+    ))
+  }
+</Layout>

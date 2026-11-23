@@ -1,0 +1,64 @@
+---
+import type { HeadlessNavigationRead, HeadlessPagesRead } from '../api/schema';
+import { demoHref, languages, type Language } from '../lib/api';
+import Navigation from '../components/Navigation.astro';
+
+export type Props = { language: Language; page: HeadlessPagesRead; navigation: HeadlessNavigationRead };
+
+const { language, page, navigation } = Astro.props;
+const { meta } = page;
+const home = demoHref(navigation.url);
+---
+
+<!doctype html>
+<html lang={languages[language].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{meta.schema.name}</title>
+    <meta name="robots" content={meta.robots} />
+    {meta.schema.description && <meta name="description" content={meta.schema.description} />}
+    {meta.canonical && <link rel="canonical" href={meta.canonical} />}
+    <script type="application/ld+json" set:html={JSON.stringify(meta.schema)} />
+  </head>
+  <body>
+    <header>
+      <a class="home" href={home}>{navigation.nav_title || navigation.title}</a>
+      <nav aria-label="Language">
+        {Object.entries(languages).map(([code, { prefix, label }]) => (
+          <a href={prefix + '/'} aria-current={code === language ? 'true' : undefined}>{label}</a>
+        ))}
+      </nav>
+    </header>
+    <div class="layout">
+      <nav aria-label="Main">
+        <Navigation entries={navigation.children} current={Astro.url.pathname} />
+      </nav>
+      <main>
+        <h1>{page.title}</h1>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  body { font-family: system-ui, sans-serif; margin: 0; color: #1d2433; line-height: 1.5; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #1d2433; }
+  header a { color: #fff; text-decoration: none; margin-left: 1rem; }
+  header .home { font-weight: 700; margin-left: 0; }
+  header [aria-current] { text-decoration: underline; }
+  .layout { display: grid; grid-template-columns: 16rem 1fr; gap: 2rem; padding: 2rem; max-width: 72rem; }
+  .layout nav ul { list-style: none; padding-left: 1rem; margin: 0; }
+  .layout nav > ul { padding-left: 0; }
+  .layout nav a { color: #1d2433; }
+  .layout nav [aria-current] { font-weight: 700; }
+  .region { margin-bottom: 2rem; }
+  .region > h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; }
+  .block { border-left: 3px solid #e5e7eb; padding-left: 1rem; margin-bottom: 1.5rem; }
+  .block h2 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+  .fallback { border-left-color: #f59e0b; }
+  .block img { width: 16rem; height: auto; }
+  table { border-collapse: collapse; }
+  th, td { border: 1px solid #e5e7eb; padding: 0.25rem 0.75rem; text-align: left; }
+</style>

@@ -1,0 +1,13 @@
+---
+import type { HeadlessContentImageRead } from '../../api/schema';
+import Figure from '../Figure.astro';
+
+export type Props = { content: HeadlessContentImageRead };
+
+const { content } = Astro.props;
+---
+
+<section class="block">
+  {content.header && <h2>{content.header}</h2>}
+  {(content.image ?? []).map((file) => <Figure file={file} />)}
+</section>
