@@ -18,6 +18,7 @@
 ,222,6,256,2,"header","Column without identifier","",0,0,"",0,0
 ,223,6,256,1,"header","Not in the layout","",0,0,"",0,0
 ,225,5,256,0,"header","Section content","",0,0,"",0,0
+,226,23,256,0,"header","Numbered region","",0,0,"",0,0
 ,230,7,256,0,"header","Members page content","",0,0,"",0,0
 ,231,9,256,0,"header","Members area content","",0,0,"",0,0
 ,240,30,256,0,"html","Not listed on this site","",0,0,"",0,0

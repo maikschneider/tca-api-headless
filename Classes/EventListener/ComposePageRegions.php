@@ -48,7 +48,7 @@ final readonly class ComposePageRegions
             $regions = array_filter($regions);
         }
 
-        $data['regions'] = $regions === [] ? new \stdClass() : $regions;
+        $data['regions'] = (object)$regions;
         $event->setData($data);
     }
 }

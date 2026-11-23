@@ -45,7 +45,8 @@ final readonly class RegionMapper
                     continue;
                 }
                 $colPos = (int)$column['colPos'];
-                $name = trim((string)($column['identifier'] ?? '')) ?: ($siteRegions[$colPos] ?? '');
+                $name = trim((string)($column['identifier'] ?? ''));
+                $name = $name !== '' ? $name : ($siteRegions[$colPos] ?? '');
                 if ($name !== '') {
                     $regions[$colPos] = $name;
                 }

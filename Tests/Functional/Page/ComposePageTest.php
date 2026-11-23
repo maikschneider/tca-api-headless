@@ -80,6 +80,15 @@ final class ComposePageTest extends AbstractApiTestCase
     }
 
     #[Test]
+    public function numericRegionNamesStayAnObject(): void
+    {
+        $response = $this->request('http://localhost/_api/headless_pages/23');
+
+        self::assertSame(200, $response->getStatusCode(), (string)$response->getBody());
+        self::assertStringContainsString('"regions":{"0":[{"uid":226,', (string)$response->getBody());
+    }
+
+    #[Test]
     public function translatedContentFollowsTheRequestLanguage(): void
     {
         self::assertSame(
