@@ -168,6 +168,19 @@ final class HtmlToPortableTextTest extends UnitTestCase
     }
 
     #[Test]
+    public function contentAfterANestedListKeepsItsPlace(): void
+    {
+        $result = $this->subject->convert('<ul><li><p>Before</p><ul><li>Nested</li></ul><p>After</p></li><li>Next</li></ul>');
+
+        self::assertSame([
+            [1, 'Before'],
+            [2, 'Nested'],
+            [1, 'After'],
+            [1, 'Next'],
+        ], array_map(static fn (array $block): array => [$block['level'], $block['children'][0]['text']], $result));
+    }
+
+    #[Test]
     public function aLineBreakBecomesANewline(): void
     {
         $result = $this->subject->convert("<p>line1<br>\n  line2</p>");

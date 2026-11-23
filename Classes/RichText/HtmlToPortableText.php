@@ -117,7 +117,8 @@ final class HtmlToPortableText
 
     /**
      * Each li becomes one block; paragraphs inside an item are separated by a
-     * line break, nested lists follow with a higher level.
+     * line break. A nested list follows with a higher level, in document order:
+     * content after it continues as another item of the outer level.
      *
      * @return list<array<string, mixed>>
      */
@@ -130,23 +131,36 @@ final class HtmlToPortableText
             }
 
             $inline = [];
-            $nested = [];
             foreach ($item->childNodes as $node) {
                 $tag = $node instanceof \DOMElement ? strtolower($node->tagName) : null;
-                if ($tag === 'ul' || $tag === 'ol') {
-                    $nested = [...$nested, ...$this->listItems($node, $tag === 'ol' ? 'number' : 'bullet', $level + 1, $paragraphStyle)];
-                } else {
+                if ($tag !== 'ul' && $tag !== 'ol') {
                     $inline[] = $node;
+                    continue;
                 }
-            }
 
-            foreach ($this->textBlock($inline, $paragraphStyle) as $block) {
-                $blocks[] = [...$block, 'listItem' => $listItem, 'level' => $level];
+                $blocks = [
+                    ...$blocks,
+                    ...$this->listItem($inline, $listItem, $level, $paragraphStyle),
+                    ...$this->listItems($node, $tag === 'ol' ? 'number' : 'bullet', $level + 1, $paragraphStyle),
+                ];
+                $inline = [];
             }
-            $blocks = [...$blocks, ...$nested];
+            $blocks = [...$blocks, ...$this->listItem($inline, $listItem, $level, $paragraphStyle)];
         }
 
         return $blocks;
+    }
+
+    /**
+     * @param list<\DOMNode> $nodes
+     * @return list<array<string, mixed>>
+     */
+    private function listItem(array $nodes, string $listItem, int $level, string $paragraphStyle): array
+    {
+        return array_map(
+            static fn (array $block): array => [...$block, 'listItem' => $listItem, 'level' => $level],
+            $this->textBlock($nodes, $paragraphStyle),
+        );
     }
 
     private static function isBlock(string $tag): bool
