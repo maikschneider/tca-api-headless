@@ -10,6 +10,7 @@ use MaikSchneider\TcaApi\OperationHandler\GetItemHandler;
 use MaikSchneider\TcaApi\OperationHandler\OperationHandlerInterface;
 use MaikSchneider\TcaApi\Serializer\HydraResponseBuilder;
 use MaikSchneider\TcaApi\Serializer\ResourceSerializer;
+use MaikSchneider\TcaApiHeadless\Composition\FrontendGroups;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
@@ -27,9 +28,10 @@ use TYPO3\CMS\Core\Utility\RootlineUtility;
 
 /**
  * Serves the page resources of the add-on: a page is only delivered by the site
- * whose page tree it belongs to, and only to the frontend user groups of its
- * fe_group or of an ancestor's that extends to subpages. Otherwise it answers
- * like a missing record.
+ * whose page tree it belongs to, and only like the frontend would: to the
+ * frontend user groups of the page and of the ancestors that extend to
+ * subpages, and not below a hidden or scheduled ancestor that extends to
+ * subpages. Otherwise it answers like a missing record.
  *
  * The page collection is no listing but the lookup of one page by its path,
  * resolved by the site router like a frontend request in the request language.
@@ -47,6 +49,7 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
         private ResourceSerializer $serializer,
         private SiteFinder $siteFinder,
         private Context $context,
+        private FrontendGroups $frontendGroups,
     ) {
     }
 
@@ -135,7 +138,8 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
 
     private function isDeliverable(int $pageUid, ServerRequestInterface $request): bool
     {
-        return $this->belongsToRequestSite($pageUid, $request) && $this->isGrantedToFrontendUser($pageUid);
+        return $this->belongsToRequestSite($pageUid, $request)
+            && $this->isVisibleThroughAncestors($pageUid);
     }
 
     private function belongsToRequestSite(int $pageUid, ServerRequestInterface $request): bool
@@ -153,19 +157,25 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
     }
 
     /**
-     * The group check of the frontend: a page without fe_group is public, otherwise
-     * one of the user's groups (incl. -1 "hide at login", -2 "any login") must match.
+     * The frontend's inheritance: the page's own groups, and the visibility and
+     * groups of every ancestor that extends to subpages. The page's own
+     * visibility is checked by the read of the definition.
      */
-    private function isGrantedToFrontendUser(int $pageUid): bool
+    private function isVisibleThroughAncestors(int $pageUid): bool
     {
-        $groupIds = array_map(strval(...), (array)$this->context->getPropertyFromAspect('frontend.user', 'groupIds', [0, -1]));
+        $now = (int)$this->context->getPropertyFromAspect('date', 'timestamp');
 
         foreach (GeneralUtility::makeInstance(RootlineUtility::class, $pageUid)->get() as $page) {
-            if ((int)$page['uid'] !== $pageUid && !($page['extendToSubpages'] ?? false)) {
+            $isPage = (int)$page['uid'] === $pageUid;
+            if (!$isPage && !($page['extendToSubpages'] ?? false)) {
                 continue;
             }
-            $pageGroups = GeneralUtility::trimExplode(',', (string)($page['fe_group'] ?? ''), true);
-            if ($pageGroups !== [] && array_intersect($pageGroups, $groupIds) === []) {
+            if (!$this->frontendGroups->grant($page['fe_group'] ?? '')) {
+                return false;
+            }
+            $starttime = (int)($page['starttime'] ?? 0);
+            $endtime = (int)($page['endtime'] ?? 0);
+            if (!$isPage && (($page['hidden'] ?? false) || $starttime > $now || ($endtime !== 0 && $endtime <= $now))) {
                 return false;
             }
         }

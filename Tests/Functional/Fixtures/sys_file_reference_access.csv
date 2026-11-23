@@ -1,0 +1,4 @@
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname","sorting_foreign","alternative","sys_language_uid","l10n_parent"
+,400,400,2,403,"tt_content","image",1,"Members image",0,0
+,410,400,2,413,"tt_content","image",1,"Mitgliederbild",1,400

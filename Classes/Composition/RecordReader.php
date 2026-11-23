@@ -23,6 +23,7 @@ final readonly class RecordReader
         private DataRepository $dataRepository,
         private EmbedPreloader $embedPreloader,
         private ResourceSerializer $serializer,
+        private FrontendGroups $frontendGroups,
     ) {
     }
 
@@ -39,6 +40,8 @@ final readonly class RecordReader
         ];
 
         $rows = $this->dataRepository->findCollection($config->table, $constraints, 0, 0, ['sorting' => 'asc'], $config, $language);
+        // The query checks the groups of the default language; a translation may restrict itself further.
+        $rows = array_values(array_filter($rows, fn (array $row): bool => $this->frontendGroups->grant($row['fe_group'] ?? '')));
         if ($rows === []) {
             return [];
         }
