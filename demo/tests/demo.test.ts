@@ -50,6 +50,8 @@ describe('public pages', () => {
     expect(home.html).toContain('<table>');
     expect(home.html).not.toContain('Members area');
     expect(home.html).toContain(`<a href="${typo3Origin}/fileadmin/brochure.pdf">the brochure</a>`);
+    expect(home.html).toContain('<h2><a href="/about" target="_blank" title="About us">Just a header</a></h2>');
+    expect(home.html).toContain('<a href="https://example.org/article" target="_blank" title="Opens in a new window">the article</a>');
 
     const about = await render('/about');
     expect(about.status).toBe(200);
@@ -63,7 +65,8 @@ describe('public pages', () => {
     expect(home.html).toContain('<html lang="de">');
     expect(home.html).toContain('<h1>Start</h1>');
     expect(home.html).toContain('<a href="/de/ueber-uns">Über uns</a>');
-    expect(home.html).toContain('<a href="/de/ueber-uns">Über uns</a>.');
+    expect(home.html).toContain('<a href="/de/ueber-uns" title="Über uns">Über uns</a>.');
+    expect(home.html).toContain('<h2><a href="/de/ueber-uns">Nur eine Überschrift</a></h2>');
 
     const about = await render('/de/ueber-uns');
     expect(about.status).toBe(200);

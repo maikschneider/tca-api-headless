@@ -127,6 +127,7 @@ export interface components {
              */
             CType: "text";
             header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
             bodytext?: components["schemas"]["PortableText"];
         };
         HeadlessContentTextmediaRead: {
@@ -140,6 +141,7 @@ export interface components {
              */
             CType: "textmedia";
             header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
             bodytext?: components["schemas"]["PortableText"];
             assets?: components["schemas"]["FileObject"][];
         };
@@ -154,6 +156,7 @@ export interface components {
              */
             CType: "image";
             header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
             image?: components["schemas"]["FileObject"][];
         };
         HeadlessContentHeaderRead: {
@@ -167,6 +170,7 @@ export interface components {
              */
             CType: "header";
             header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
         };
         HeadlessContentBulletsRead: {
             /** @example HeadlessContent */
@@ -179,6 +183,7 @@ export interface components {
              */
             CType: "bullets";
             header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
             bullets_type?: number;
             bodytext?: components["schemas"]["HeadlessBulletList"];
         };
@@ -193,6 +198,7 @@ export interface components {
              */
             CType: "table";
             header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
             bodytext?: components["schemas"]["HeadlessTable"];
             table_caption?: string | null;
             table_header_position?: number;
@@ -208,6 +214,7 @@ export interface components {
              */
             CType: "uploads";
             header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
             media?: components["schemas"]["FileObject"][];
         };
         HeadlessContentRead: components["schemas"]["HeadlessContentTextRead"] | components["schemas"]["HeadlessContentTextmediaRead"] | components["schemas"]["HeadlessContentImageRead"] | components["schemas"]["HeadlessContentHeaderRead"] | components["schemas"]["HeadlessContentBulletsRead"] | components["schemas"]["HeadlessContentTableRead"] | components["schemas"]["HeadlessContentUploadsRead"];
@@ -298,7 +305,7 @@ export interface components {
             description?: string | null;
             no_index?: number;
             no_follow?: number;
-            canonical_link?: string | null;
+            canonical_link?: components["schemas"]["HeadlessLink"] | null;
             og_title?: string;
             og_description?: string | null;
             og_image?: components["schemas"]["FileObject"][];
@@ -368,6 +375,10 @@ export interface components {
              * @description Absolute http(s), mailto or tel URL.
              */
             href: string;
+            /** @description Link target such as "_blank"; null when not set. */
+            target: string | null;
+            /** @description Link title; null when not set. */
+            title: string | null;
         };
         /** @description One entry per line; terms and definitions for a definition list (bullets_type 2). */
         HeadlessBulletList: string[] | {
@@ -380,6 +391,17 @@ export interface components {
             body: string[][];
             /** @description Footer row; empty without one. */
             foot: string[];
+        };
+        HeadlessLink: {
+            /**
+             * Format: uri
+             * @description Absolute http(s), mailto or tel URL.
+             */
+            href: string;
+            /** @description Link target such as "_blank"; null when not set. */
+            target: string | null;
+            /** @description Link title; null when not set. */
+            title: string | null;
         };
         HeadlessPagesMeta: {
             /** @enum {string} */
@@ -443,6 +465,7 @@ export type PortableTextSpan = components['schemas']['PortableTextSpan'];
 export type PortableTextLink = components['schemas']['PortableTextLink'];
 export type HeadlessBulletList = components['schemas']['HeadlessBulletList'];
 export type HeadlessTable = components['schemas']['HeadlessTable'];
+export type HeadlessLink = components['schemas']['HeadlessLink'];
 export type HeadlessPagesMeta = components['schemas']['HeadlessPagesMeta'];
 export type HeadlessPagesLookup = components['schemas']['HeadlessPagesLookup'];
 export type HeadlessContentFallbackRead = components['schemas']['HeadlessContentFallbackRead'];

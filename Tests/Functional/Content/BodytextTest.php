@@ -75,7 +75,10 @@ final class BodytextTest extends AbstractApiTestCase
     {
         $content = $this->content('http://localhost/_api/headless_content/2');
 
-        self::assertSame([['_key' => 'k0', '_type' => 'link', 'href' => 'https://example.org/article']], $content['bodytext'][0]['markDefs']);
+        self::assertSame(
+            [['_key' => 'k0', '_type' => 'link', 'href' => 'https://example.org/article', 'target' => '_blank', 'title' => 'Opens in a new window']],
+            $content['bodytext'][0]['markDefs'],
+        );
         self::assertSame(['Read ', 'the article', '.'], array_column($content['bodytext'][0]['children'], 'text'));
     }
 
@@ -85,7 +88,24 @@ final class BodytextTest extends AbstractApiTestCase
         $content = $this->content('http://localhost/de/_api/headless_content/1');
 
         self::assertSame('Rich text DE', $content['header']);
-        self::assertSame(['http://localhost/de/ueber-uns'], array_column($content['bodytext'][0]['markDefs'], 'href'));
+        self::assertSame(
+            [['_key' => 'k0', '_type' => 'link', 'href' => 'http://localhost/de/ueber-uns', 'target' => null, 'title' => 'Über uns']],
+            $content['bodytext'][0]['markDefs'],
+        );
+    }
+
+    #[Test]
+    public function theHeaderLinkCarriesItsTargetAndTitle(): void
+    {
+        self::assertSame(
+            ['href' => 'http://localhost/about', 'target' => '_blank', 'title' => 'About us'],
+            $this->content('http://localhost/_api/headless_content/7')['header_link'],
+        );
+        self::assertSame(
+            ['href' => 'http://localhost/de/ueber-uns', 'target' => null, 'title' => null],
+            $this->content('http://localhost/de/_api/headless_content/7')['header_link'],
+        );
+        self::assertNull($this->content('http://localhost/_api/headless_content/1')['header_link']);
     }
 
     #[Test]

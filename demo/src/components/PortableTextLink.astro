@@ -1,11 +1,11 @@
 ---
 import type { Mark } from 'astro-portabletext/types';
-import { demoHref } from '../lib/api';
+import type { HeadlessLink } from '../api/schema';
+import Link from './Link.astro';
 
-export type Props = { node: Mark<{ href: string }> };
+export type Props = { node: Mark<HeadlessLink> };
 
-// Links to pages of the TYPO3 site stay inside the demo.
 const { node } = Astro.props;
 ---
 
-<a href={demoHref(node.markDef.href)}><slot /></a>
+<Link link={node.markDef}><slot /></Link>

@@ -1,5 +1,6 @@
 ---
 import type { HeadlessContentUploadsRead } from '../../api/schema';
+import Heading from '../Heading.astro';
 import { fileUrl } from '../../lib/api';
 
 export type Props = { content: HeadlessContentUploadsRead };
@@ -8,7 +9,7 @@ const { content } = Astro.props;
 ---
 
 <section class="block">
-  {content.header && <h2>{content.header}</h2>}
+  <Heading header={content.header} link={content.header_link} />
   <ul>
     {(content.media ?? []).map((file) => <li><a href={file.publicUrl ? fileUrl(file.publicUrl) : undefined}>{file.name}</a></li>)}
   </ul>

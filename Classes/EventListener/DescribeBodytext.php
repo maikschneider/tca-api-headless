@@ -114,7 +114,7 @@ final class DescribeBodytext
             'PortableTextLink' => self::object([
                 '_type' => ['type' => 'string', 'const' => 'link'],
                 '_key' => $string,
-                'href' => ['type' => 'string', 'format' => 'uri', 'description' => 'Absolute http(s), mailto or tel URL.'],
+                ...DescribeLinks::PROPERTIES,
             ]),
         ];
     }

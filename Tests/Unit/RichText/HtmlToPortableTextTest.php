@@ -122,12 +122,26 @@ final class HtmlToPortableTextTest extends UnitTestCase
     {
         $result = $this->subject->convert('<p>see <a href="https://example.org/team">the <strong>team</strong></a></p>');
 
-        self::assertSame([['_key' => 'k0', '_type' => 'link', 'href' => 'https://example.org/team']], $result[0]['markDefs']);
+        self::assertSame([['_key' => 'k0', '_type' => 'link', 'href' => 'https://example.org/team', 'target' => null, 'title' => null]], $result[0]['markDefs']);
         self::assertSame([
             [[], 'see '],
             [['k0'], 'the '],
             [['k0', 'strong'], 'team'],
         ], $this->spans($result[0]));
+    }
+
+    #[Test]
+    public function aLinkKeepsItsTargetAndTitle(): void
+    {
+        $result = $this->subject->convert(
+            '<p><a href="https://example.org/a" target="_blank" title="Team &amp; more">a</a> <a href="https://example.org/b" target=" " title="">b</a> <a href="https://example.org/c" title="0">c</a></p>',
+        );
+
+        self::assertSame([
+            ['_key' => 'k0', '_type' => 'link', 'href' => 'https://example.org/a', 'target' => '_blank', 'title' => 'Team & more'],
+            ['_key' => 'k1', '_type' => 'link', 'href' => 'https://example.org/b', 'target' => null, 'title' => null],
+            ['_key' => 'k2', '_type' => 'link', 'href' => 'https://example.org/c', 'target' => null, 'title' => '0'],
+        ], $result[0]['markDefs']);
     }
 
     #[Test]
@@ -138,7 +152,7 @@ final class HtmlToPortableTextTest extends UnitTestCase
             static fn (string $href): ?string => $href === 't3://page?uid=2' ? 'https://example.org/about' : null,
         );
 
-        self::assertSame([['_key' => 'k0', '_type' => 'link', 'href' => 'https://example.org/about']], $result[0]['markDefs']);
+        self::assertSame([['_key' => 'k0', '_type' => 'link', 'href' => 'https://example.org/about', 'target' => null, 'title' => null]], $result[0]['markDefs']);
         self::assertSame([
             [['k0'], 'About'],
             [[], ' and gone'],

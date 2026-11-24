@@ -6,28 +6,20 @@ namespace MaikSchneider\TcaApiHeadless\Processing;
 
 use MaikSchneider\TcaApi\Configuration\ColumnDefinition;
 use MaikSchneider\TcaApi\Serializer\Processing\ColumnProcessorInterface;
-use MaikSchneider\TcaApi\Serializer\Processing\LinkLanguageResolver;
-use MaikSchneider\TcaApi\Serializer\Processing\TypoLinkProcessor;
 use MaikSchneider\TcaApiHeadless\RichText\HtmlToPortableText;
-use TYPO3\CMS\Core\Http\NormalizedParams;
-use TYPO3\CMS\Core\LinkHandling\LinkService;
-use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\CsvUtility;
 
 /**
  * Structures tt_content.bodytext by the record's CType, the way fluid_styled_content
  * reads it: bullets as a list of items, a table as rows, everything else as rich
- * text converted to Portable Text. Links in rich text become absolute URLs; links
- * that don't resolve to one keep their text without annotation.
+ * text converted to Portable Text. Links in rich text resolve like link columns
+ * (see LinkProcessor); links that don't resolve keep their text without annotation.
  */
 final readonly class BodytextProcessor implements ColumnProcessorInterface
 {
-    private const LINK_SCHEMES = ['http', 'https', 'mailto', 'tel'];
-
     public function __construct(
         private HtmlToPortableText $htmlToPortableText,
-        private TypoLinkProcessor $typoLinkProcessor,
-        private LinkService $linkService,
+        private LinkProcessor $linkProcessor,
     ) {
     }
 
@@ -44,7 +36,7 @@ final readonly class BodytextProcessor implements ColumnProcessorInterface
             'table' => $this->table($bodytext, $row),
             default => $this->htmlToPortableText->convert(
                 $bodytext,
-                fn (string $href): ?string => $this->absoluteUrl($href, $config, $context),
+                fn (string $href): ?string => $this->linkProcessor->url($href, $config, $context),
             ),
         };
     }
@@ -106,53 +98,5 @@ final readonly class BodytextProcessor implements ColumnProcessorInterface
         }
 
         return $rows;
-    }
-
-    /**
-     * Resolves a link like a typolink field (pages in the request language) and
-     * makes file and root-relative links absolute against the request host.
-     *
-     * @param array<string, mixed> $context
-     */
-    private function absoluteUrl(string $href, ColumnDefinition $config, array $context): ?string
-    {
-        $url = $this->typoLinkProcessor->process($href, $config, $context);
-        if (\is_string($url) && str_starts_with($url, 't3://')) {
-            $url = $this->fileUrl($url);
-        }
-        if (!\is_string($url) || $url === '') {
-            return null;
-        }
-
-        if (str_starts_with($url, '/') && !str_starts_with($url, '//')) {
-            $normalizedParams = LinkLanguageResolver::contextRequest($context)?->getAttribute('normalizedParams');
-            if (!$normalizedParams instanceof NormalizedParams) {
-                return null;
-            }
-            $url = $normalizedParams->getRequestHost() . $url;
-        }
-
-        $scheme = strtolower((string)parse_url($url, PHP_URL_SCHEME));
-
-        return \in_array($scheme, self::LINK_SCHEMES, true) ? $url : null;
-    }
-
-    private function fileUrl(string $link): ?string
-    {
-        try {
-            $file = $this->linkService->resolve($link)['file'] ?? null;
-        } catch (\Exception) {
-            return null;
-        }
-        if (!$file instanceof File) {
-            return null;
-        }
-
-        $publicUrl = $file->getPublicUrl();
-        if ($publicUrl === null || parse_url($publicUrl, PHP_URL_SCHEME) !== null) {
-            return $publicUrl;
-        }
-
-        return '/' . ltrim($publicUrl, '/');
     }
 }

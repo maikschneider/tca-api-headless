@@ -101,6 +101,18 @@ describe('composed page', () => {
     expect(Object.keys(en.regions)).toContain('main');
   });
 
+  test('links carry target and title in both languages', async () => {
+    const content = async (language: '' | '/de', header: string): Promise<Json> =>
+      (await get(`${language}/_api/headless_pages/1`)).regions.main.find((entry: Json) => entry.header === header);
+
+    expect((await content('', 'Just a header')).header_link).toEqual({ href: `${base}/about`, target: '_blank', title: 'About us' });
+    expect((await content('/de', 'Nur eine Überschrift')).header_link).toEqual({ href: `${base}/de/ueber-uns`, target: null, title: null });
+    expect((await content('', 'Text and media')).bodytext[0].markDefs).toEqual([
+      { _key: 'k0', _type: 'link', href: 'https://example.org/article', target: '_blank', title: 'Opens in a new window' },
+    ]);
+    expect((await content('/de', 'Rich text DE')).bodytext[0].markDefs[0]).toMatchObject({ target: null, title: 'Über uns' });
+  });
+
   test('regions follow the backend layout', async () => {
     const page = await get('/_api/headless_pages/6');
 
@@ -138,7 +150,9 @@ describe('meta', () => {
   });
 
   test('an explicit canonical wins and page links follow the language', async () => {
-    expect((await get('/_api/headless_pages/41')).meta.canonical).toBe('https://example.com/canonical');
+    const explicit = await get('/_api/headless_pages/41');
+    expect(explicit.meta.canonical).toBe('https://example.com/canonical');
+    expect(explicit.canonical_link).toEqual({ href: 'https://example.com/canonical', target: null, title: 'Canonical title' });
     expect((await get('/_api/headless_pages/43')).meta.canonical).toBe(`${base}/about`);
     expect((await get('/de/_api/headless_pages/43')).meta.canonical).toBe(`${base}/de/ueber-uns`);
   });
@@ -209,6 +223,7 @@ describe('contract', () => {
     const lookup = await get('/_api/headless_pages?path=/');
     const broken: [string, Json][] = [
       ['/_api/headless_pages/1', { ...page, meta: { ...page.meta, robots: 'all' } }],
+      ['/_api/headless_pages/1', { ...page, canonical_link: 'https://example.com/canonical' }],
       ['/_api/headless_navigation/70', { ...navigation, url: 'not a URL' }],
       ['/_api/headless_pages', { ...lookup, 'hydra:member': [{ uid: '1' }] }],
     ];

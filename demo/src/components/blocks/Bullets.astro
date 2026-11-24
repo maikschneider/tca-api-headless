@@ -1,5 +1,6 @@
 ---
 import type { HeadlessContentBulletsRead } from '../../api/schema';
+import Heading from '../Heading.astro';
 
 export type Props = { content: HeadlessContentBulletsRead };
 type Term = { term: string; definition: string };
@@ -10,7 +11,7 @@ const terms = items.filter((item): item is Term => typeof item !== 'string');
 ---
 
 <section class="block">
-  {content.header && <h2>{content.header}</h2>}
+  <Heading header={content.header} link={content.header_link} />
   {
     terms.length > 0 ? (
       <dl>{terms.map((item) => [<dt>{item.term}</dt>, <dd>{item.definition}</dd>])}</dl>

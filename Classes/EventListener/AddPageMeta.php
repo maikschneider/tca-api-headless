@@ -35,7 +35,7 @@ final class AddPageMeta
             RouterInterface::ABSOLUTE_URL,
         );
         // As in EXT:seo, a page that must not be indexed gets no canonical URL.
-        $canonical = $noIndex ? null : $this->httpUrl($data['canonical_link'] ?? null) ?? $url;
+        $canonical = $noIndex ? null : $this->httpUrl($data['canonical_link']['href'] ?? null) ?? $url;
 
         $schema = [
             '@context' => 'https://schema.org',

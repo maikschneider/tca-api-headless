@@ -53,6 +53,10 @@ Shapes
         -   ``PortableText`` (``text``, ``textmedia``), ``HeadlessBulletList``
             (``bullets``) or ``HeadlessTable`` (``table``), see
             :ref:`resources-bodytext`.
+    *   -   ``HeadlessLink``
+        -   ``canonical_link`` and ``header_link``: ``href``, ``target`` and
+            ``title``, or ``null``. Link annotations (``PortableTextLink``)
+            carry the same properties, see :ref:`resources-links`.
     *   -   ``HeadlessPagesCollection``
         -   The path lookup (``GET /_api/headless_pages?path=``): ``path`` is a
             required query parameter, ``hydra:member`` holds at most one
