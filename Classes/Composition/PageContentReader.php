@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace MaikSchneider\TcaApiHeadless\Composition;
 
 use MaikSchneider\TcaApi\Configuration\ApiDefinition;
+use MaikSchneider\TcaApi\DataAccess\DataRepository;
 use MaikSchneider\TcaApi\Registry\ApiRegistry;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\Entity\SiteSettings;
 
 /**
@@ -28,6 +30,7 @@ final readonly class PageContentReader
     public function __construct(
         private ApiRegistry $apiRegistry,
         private RecordReader $recordReader,
+        private DataRepository $dataRepository,
     ) {
     }
 
@@ -56,12 +59,13 @@ final readonly class PageContentReader
         }
 
         $entries = [];
-        foreach ($this->recordReader->readByPid($catalog, [$pageUid], $request) as [$row, $content]) {
+        $languageId = $this->freeModeLanguageId($pageUid, $request);
+        foreach ($this->recordReader->readByPid($catalog, [$pageUid], $request, $languageId) as [$row, $content]) {
             $entries[] = [$row, array_diff_key($content, self::LINKED_DATA_KEYS)];
         }
         $fallbackTypes = self::fallbackTypes($catalog, $site->getSettings());
         if ($fallbackTypes !== []) {
-            foreach ($this->recordReader->readByPid($this->fallbackDefinition($catalog, $fallbackTypes), [$pageUid], $request) as [$row, $content]) {
+            foreach ($this->recordReader->readByPid($this->fallbackDefinition($catalog, $fallbackTypes), [$pageUid], $request, $languageId) as [$row, $content]) {
                 $entries[] = [$row, array_intersect_key($content, self::FALLBACK_KEYS)];
             }
         }
@@ -72,6 +76,23 @@ final readonly class PageContentReader
             static fn (array $entry): array => ['colPos' => (int)$entry[0]['colPos'], 'content' => $entry[1]],
             $entries,
         );
+    }
+
+    /**
+     * In free mode (fallbackType "free") content is not translated record by
+     * record: a page shows the content of its own language. A page without a
+     * translation is served in the default language, and so is its content.
+     * Null in the other modes, which overlay default-language content.
+     */
+    private function freeModeLanguageId(int $pageUid, ServerRequestInterface $request): ?int
+    {
+        $language = $request->getAttribute('tca_api.language');
+        if (!$language instanceof SiteLanguage || $language->getLanguageId() === 0 || $language->getFallbackType() !== 'free') {
+            return null;
+        }
+        $page = $this->dataRepository->findByIdsWithOverlay('pages', [$pageUid], $language)[$pageUid] ?? [];
+
+        return isset($page['_LOCALIZED_UID']) ? $language->getLanguageId() : 0;
     }
 
     /**

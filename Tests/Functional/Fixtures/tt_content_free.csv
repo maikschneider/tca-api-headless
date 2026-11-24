@@ -1,0 +1,14 @@
+"tt_content"
+,"uid","pid","sorting","colPos","CType","header","bodytext","hidden","fe_group","sys_language_uid","l18n_parent","assets"
+,610,600,256,0,"header","First","",0,"",0,0,0
+,611,600,512,0,"text","Second","<p>Second</p>",0,"",0,0,0
+,612,600,768,0,"header","All languages","",0,"",-1,0,0
+,613,600,1024,0,"textmedia","Media","",0,"",0,0,1
+,620,600,128,0,"header","Premier","",0,"",2,0,0
+,621,600,1100,0,"text","Deuxième","<p>Deuxième</p>",0,"",2,611,0
+,622,600,300,0,"header","Caché","",1,"",2,0,0
+,623,600,256,1,"header","À gauche","",0,"",2,0,0
+,624,600,1200,0,"textmedia","Média","",0,"",2,0,1
+,625,600,64,0,"html","Brut","<b>brut</b>",0,"",2,0,0
+,626,600,32,0,"header","Deutsch","",0,"",1,0,0
+,627,600,1300,0,"header","Membres","",0,"1",2,0,0

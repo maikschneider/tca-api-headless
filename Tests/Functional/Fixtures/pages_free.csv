@@ -1,0 +1,7 @@
+"pages"
+,"uid","pid","title","slug","doktype","sorting","sys_language_uid","l10n_parent"
+,600,1,"Free","/free",1,4352,0,0
+,601,1,"Libre","/libre",1,4352,2,600
+,602,600,"Free child","/free/child",1,256,0,0
+,603,600,"Enfant","/libre/enfant",1,256,2,602
+,604,600,"Untranslated child","/free/untranslated",1,512,0,0

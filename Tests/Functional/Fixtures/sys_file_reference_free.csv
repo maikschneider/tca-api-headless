@@ -1,0 +1,4 @@
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname","sorting_foreign"
+,600,600,2,613,"tt_content","assets",1
+,601,600,1,624,"tt_content","assets",1

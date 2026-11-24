@@ -138,6 +138,29 @@ columns of their type; types allowed by
 :confval:`tca-api-headless-fallbackctypes` carry ``uid``, ``CType`` and
 ``header`` only, all other types are left out.
 
+Translations
+~~~~~~~~~~~~
+
+How content follows the request language depends on the site language's
+``fallbackType``:
+
+``strict`` and ``fallback``
+    Content elements of the default language (and of all languages) with the
+    translation of the request language. ``strict`` leaves out untranslated
+    elements, ``fallback`` keeps them in the default language. ``uid`` is the
+    one of the default language.
+
+``free``
+    The content elements of the request language (and of all languages) as
+    they are, in their own backend order, whether translated from the default
+    language or not. ``uid`` is the one of the element itself. A page without
+    a translation in the request language has the content of the default
+    language, like its title.
+
+Navigation titles and URLs follow the page translations in every mode.
+Untranslated pages are listed only if the language isn't ``strict`` and falls
+back to the default language (``fallbacks``).
+
 Login-protected pages
 ---------------------
 
