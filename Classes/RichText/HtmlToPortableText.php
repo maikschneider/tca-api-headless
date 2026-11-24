@@ -12,8 +12,9 @@ namespace MaikSchneider\TcaApiHeadless\RichText;
  * Container elements such as div are unwrapped, inline
  * content outside a block becomes a normal block. Decorators: strong/b, em/i,
  * u (underline), s/strike/del (strike-through), code. Links become link
- * annotations; br becomes a line break. Script and style elements are dropped,
- * any other tag is unwrapped to its text, so the result never contains markup.
+ * annotations with href, target and title (null when not set); br becomes a
+ * line break. Script and style elements are dropped, any other tag is
+ * unwrapped to its text, so the result never contains markup.
  * Keys are deterministic per call.
  *
  * @see https://www.portabletext.org/specification/
@@ -164,6 +165,13 @@ final class HtmlToPortableText
         );
     }
 
+    private static function attribute(\DOMElement $element, string $name): ?string
+    {
+        $value = trim($element->getAttribute($name));
+
+        return $value !== '' ? $value : null;
+    }
+
     private static function isBlock(string $tag): bool
     {
         return isset(self::BLOCK_STYLES[$tag]) || \in_array($tag, self::CONTAINERS, true);
@@ -204,7 +212,7 @@ final class HtmlToPortableText
 
     /**
      * @param list<string> $marks
-     * @param list<array{_key: string, _type: string, href: string}> $markDefs
+     * @param list<array{_key: string, _type: string, href: string, target: ?string, title: ?string}> $markDefs
      * @param bool $preformatted inside pre: whitespace is kept as is
      * @return list<array{marks: list<string>, text: string, pre: bool, break?: bool}>
      */
@@ -237,7 +245,13 @@ final class HtmlToPortableText
             $href = $this->resolveHref !== null ? ($this->resolveHref)($href) : $href;
             if ($href !== null && $href !== '') {
                 $key = $this->nextKey();
-                $markDefs[] = ['_key' => $key, '_type' => 'link', 'href' => $href];
+                $markDefs[] = [
+                    '_key' => $key,
+                    '_type' => 'link',
+                    'href' => $href,
+                    'target' => self::attribute($node, 'target'),
+                    'title' => self::attribute($node, 'title'),
+                ];
                 $marks[] = $key;
             }
         }

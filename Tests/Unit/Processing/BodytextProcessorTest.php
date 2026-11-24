@@ -8,11 +8,14 @@ use MaikSchneider\TcaApi\Configuration\ColumnDefinition;
 use MaikSchneider\TcaApi\Serializer\Processing\LinkLanguageResolver;
 use MaikSchneider\TcaApi\Serializer\Processing\TypoLinkProcessor;
 use MaikSchneider\TcaApiHeadless\Processing\BodytextProcessor;
+use MaikSchneider\TcaApiHeadless\Processing\LinkProcessor;
 use MaikSchneider\TcaApiHeadless\RichText\HtmlToPortableText;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\EventDispatcher\NoopEventDispatcher;
 use TYPO3\CMS\Core\LinkHandling\LinkService;
+use TYPO3\CMS\Core\LinkHandling\TypoLinkCodecService;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -38,8 +41,11 @@ final class BodytextProcessorTest extends UnitTestCase
         $linkService = $this->createMock(LinkService::class);
         $this->subject = new BodytextProcessor(
             new HtmlToPortableText(),
-            new TypoLinkProcessor($linkService, $this->createMock(SiteFinder::class), new LinkLanguageResolver($this->createMock(ConnectionPool::class))),
-            $linkService,
+            new LinkProcessor(
+                new TypoLinkCodecService(new NoopEventDispatcher()),
+                new TypoLinkProcessor($linkService, $this->createMock(SiteFinder::class), new LinkLanguageResolver($this->createMock(ConnectionPool::class))),
+                $linkService,
+            ),
         );
     }
 

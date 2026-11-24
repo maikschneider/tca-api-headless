@@ -105,7 +105,8 @@ SEO fields and meta
 
 The page sends the EXT:seo fields ``seo_title``, ``description``, ``no_index``,
 ``no_follow``, ``canonical_link``, ``og_title``, ``og_description`` and
-``og_image`` in the language of the request. ``og_image`` is processed like
+``og_image`` in the language of the request. ``canonical_link`` is a
+:ref:`link <resources-links>`. ``og_image`` is processed like
 EXT:seo's ``og:image`` (crop variant ``social``, at most 2000 pixels wide) and
 has an absolute ``publicUrl``.
 
@@ -115,8 +116,8 @@ has an absolute ``publicUrl``.
     ``index`` or ``noindex``, then ``follow`` or ``nofollow``.
 
 ``canonical``
-    The absolute URL of ``canonical_link`` (a page link points to the page in
-    the request language), otherwise the absolute URL of the page itself in
+    The ``href`` of ``canonical_link`` (a :ref:`link <resources-links>`),
+    otherwise the absolute URL of the page itself in
     the request language. Like EXT:seo, a page with ``no_index`` has none
     (``null``). A canonical link that is no web URL, or a page that isn't
     available in the language, counts as unset.
@@ -231,9 +232,10 @@ Content
 media, images, header, bullet list, table and file links (``text``,
 ``textmedia``, ``image``, ``header``, ``bullets``, ``table``, ``uploads``). Each
 type has its own schema in the OpenAPI document, discriminated by ``CType``.
-The resource has no endpoint of its own; requests to it answer with
-``405 Method Not Allowed``. Content elements are delivered inside a page's
-``regions``, without ``@id`` and ``@type``.
+Every type sends ``header`` and its ``header_link`` (a
+:ref:`link <resources-links>`). The resource has no endpoint of its own;
+requests to it answer with ``405 Method Not Allowed``. Content elements are
+delivered inside a page's ``regions``, without ``@id`` and ``@type``.
 
 ..  _resources-bodytext:
 
@@ -263,15 +265,12 @@ OpenAPI document describes per type:
     element has a table footer; both are empty otherwise. ``table_caption``
     and ``table_header_position`` (2 = first column) are sent as well.
 
-Link annotations carry absolute URLs: page links point to the page in the
-request language (``/de/…`` for a German request), file links to the file's
-public URL, and root-relative links get the request host. Only ``http``,
-``https``, ``mailto`` and ``tel`` links are kept; any other link (a page that
-isn't available in the language, an anchor, a record link) keeps its text
-without annotation.
+Link annotations are :ref:`links <resources-links>` with ``_key`` and
+``_type``; ``target`` and ``title`` come from the ``a`` element. A link that
+doesn't resolve keeps its text without annotation.
 
 ..  code-block:: json
-    :caption: bodytext of a text element with ``<p>See <a href="t3://page?uid=2">About</a></p>``
+    :caption: bodytext of a text element with ``<p>See <a href="t3://page?uid=2" target="_blank">About</a></p>``
 
     [
         {
@@ -279,7 +278,7 @@ without annotation.
             "_key": "k1",
             "style": "normal",
             "markDefs": [
-                {"_key": "k0", "_type": "link", "href": "https://example.org/about"}
+                {"_key": "k0", "_type": "link", "href": "https://example.org/about", "target": "_blank", "title": null}
             ],
             "children": [
                 {"_type": "span", "_key": "k2", "marks": [], "text": "See "},
@@ -295,4 +294,30 @@ without annotation.
         "head": ["Name", "Age"],
         "body": [["Anna", "30"], ["Ben", "40"]],
         "foot": []
+    }
+
+..  _resources-links:
+
+Links
+-----
+
+The link columns ``canonical_link`` (pages) and ``header_link`` (content) are
+sent as an object with ``href``, ``target`` and ``title`` (schema
+``HeadlessLink``), read from the typolink the editor set. ``target`` and
+``title`` are ``null`` when the link doesn't set them; a column without a link
+is ``null``.
+
+``href`` is absolute: page links point to the page in the request language
+(``/de/…`` for a German request), file links to the file's public URL, and
+root-relative links get the request host. Only ``http``, ``https``, ``mailto``
+and ``tel`` links are kept; any other link (a page that isn't available in the
+language, an anchor, a record link) is ``null``.
+
+..  code-block:: json
+    :caption: header_link of ``t3://page?uid=2 _blank - "About us"`` in a German request
+
+    {
+        "href": "https://example.org/de/ueber-uns",
+        "target": "_blank",
+        "title": "About us"
     }

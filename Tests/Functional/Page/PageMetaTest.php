@@ -110,6 +110,25 @@ final class PageMetaTest extends AbstractApiTestCase
     }
 
     #[Test]
+    public function theCanonicalLinkCarriesItsTargetAndTitle(): void
+    {
+        self::assertNull($this->page('http://localhost/_api/headless_pages/40')['canonical_link']);
+        self::assertSame(
+            ['href' => 'https://example.com/canonical', 'target' => null, 'title' => 'Canonical title'],
+            $this->page('http://localhost/_api/headless_pages/41')['canonical_link'],
+        );
+        self::assertSame(
+            ['href' => 'http://localhost/about', 'target' => '_top', 'title' => null],
+            $this->page('http://localhost/_api/headless_pages/43')['canonical_link'],
+        );
+        self::assertSame(
+            ['href' => 'http://localhost/de/ueber-uns', 'target' => '_top', 'title' => null],
+            $this->page('http://localhost/de/_api/headless_pages/43')['canonical_link'],
+        );
+        self::assertNull($this->page('http://localhost/_api/headless_pages/49')['canonical_link']);
+    }
+
+    #[Test]
     public function theOpenGraphImageHasAnAbsoluteUrl(): void
     {
         $images = $this->page('http://localhost/_api/headless_pages/41')['og_image'];

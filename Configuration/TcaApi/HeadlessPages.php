@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use MaikSchneider\TcaApi\Serializer\FileProcessing\ImageProcessor;
+use MaikSchneider\TcaApiHeadless\Processing\LinkProcessor;
 
 return [
     'general' => [
@@ -21,7 +22,7 @@ return [
         'description' => ['groups' => ['show']],
         'no_index' => ['groups' => ['show']],
         'no_follow' => ['groups' => ['show']],
-        'canonical_link' => ['groups' => ['show']],
+        'canonical_link' => ['groups' => ['show'], 'processor' => LinkProcessor::class],
         'og_title' => ['groups' => ['show']],
         'og_description' => ['groups' => ['show']],
         // Like EXT:seo's og:image: the "social" crop, at most 2000 px wide.

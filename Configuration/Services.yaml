@@ -14,3 +14,6 @@ services:
   # tca-api creates column processors with GeneralUtility::makeInstance().
   MaikSchneider\TcaApiHeadless\Processing\BodytextProcessor:
     public: true
+
+  MaikSchneider\TcaApiHeadless\Processing\LinkProcessor:
+    public: true

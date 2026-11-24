@@ -1,5 +1,6 @@
 ---
 import type { HeadlessContentTableRead } from '../../api/schema';
+import Heading from '../Heading.astro';
 
 export type Props = { content: HeadlessContentTableRead };
 
@@ -8,7 +9,7 @@ const table = content.bodytext ?? { head: [], body: [], foot: [] };
 ---
 
 <section class="block">
-  {content.header && <h2>{content.header}</h2>}
+  <Heading header={content.header} link={content.header_link} />
   <table>
     {content.table_caption && <caption>{content.table_caption}</caption>}
     {table.head.length > 0 && <thead><tr>{table.head.map((cell) => <th>{cell}</th>)}</tr></thead>}

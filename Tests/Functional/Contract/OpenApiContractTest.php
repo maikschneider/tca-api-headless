@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\Test;
  */
 final class OpenApiContractTest extends AbstractApiTestCase
 {
-    private const ADDED_SCHEMAS = '/^(HeadlessContent|HeadlessNavigation|HeadlessPages|HeadlessTable$|HeadlessBulletList$|PortableText)/';
+    private const ADDED_SCHEMAS = '/^(HeadlessContent|HeadlessNavigation|HeadlessPages|HeadlessTable$|HeadlessBulletList$|HeadlessLink$|PortableText)/';
 
     protected function setUp(): void
     {
@@ -53,6 +53,22 @@ final class OpenApiContractTest extends AbstractApiTestCase
     }
 
     #[Test]
+    public function linksAreTypedWithTargetAndTitle(): void
+    {
+        $schemas = $this->openApiDocument('main')['components']['schemas'];
+        $link = ['oneOf' => [['$ref' => '#/components/schemas/HeadlessLink'], ['type' => 'null']]];
+
+        self::assertSame($link, $schemas['HeadlessPagesRead']['properties']['canonical_link']);
+        self::assertSame($link, $schemas['HeadlessContentHeaderRead']['properties']['header_link']);
+        self::assertSame($link, $schemas['HeadlessContentTextRead']['properties']['header_link']);
+        self::assertSame(['href', 'target', 'title'], $schemas['HeadlessLink']['required']);
+        self::assertSame(['string', 'null'], $schemas['HeadlessLink']['properties']['target']['type']);
+        self::assertSame(['string', 'null'], $schemas['HeadlessLink']['properties']['title']['type']);
+        self::assertSame(['_type', '_key', 'href', 'target', 'title'], $schemas['PortableTextLink']['required']);
+        self::assertSame($schemas['HeadlessLink']['properties'], array_diff_key($schemas['PortableTextLink']['properties'], ['_type' => true, '_key' => true]));
+    }
+
+    #[Test]
     public function theDocumentOverHttpEqualsTheCliDocument(): void
     {
         foreach (['main' => 'http://localhost', 'pages-only' => 'http://pages-only.localhost', 'navigation-only' => 'http://navigation-only.localhost'] as $site => $base) {
@@ -70,7 +86,7 @@ final class OpenApiContractTest extends AbstractApiTestCase
         self::assertSame(['/_api/headless_pages', '/_api/headless_pages/{uid}'], array_keys($document['paths']));
         self::assertSame('path', $document['paths']['/_api/headless_pages']['get']['parameters'][0]['name']);
         self::assertSame(
-            ['HeadlessPagesCollection', 'HeadlessPagesLookup', 'HeadlessPagesMeta', 'HeadlessPagesRead'],
+            ['HeadlessLink', 'HeadlessPagesCollection', 'HeadlessPagesLookup', 'HeadlessPagesMeta', 'HeadlessPagesRead'],
             $this->addedSchemas($schemas),
         );
         self::assertArrayNotHasKey('regions', $schemas['HeadlessPagesRead']['properties']);

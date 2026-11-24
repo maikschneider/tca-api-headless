@@ -1,25 +1,26 @@
 "tt_content"
-,"uid","pid","sorting","colPos","CType","header","bodytext","bullets_type","table_caption","table_delimiter","table_enclosure","table_header_position","table_tfoot","cols","sys_language_uid","l18n_parent"
+,"uid","pid","sorting","colPos","CType","header","bodytext","bullets_type","table_caption","table_delimiter","table_enclosure","table_header_position","table_tfoot","cols","sys_language_uid","l18n_parent","header_link"
 ,1,1,256,0,"text","Rich text","<h2>Intro</h2>
 <p>Hello <strong>world</strong>, see <a href=""t3://page?uid=2"">About</a>, <a href=""t3://page?uid=999"">a missing page</a>, <a href=""/contact"">contact</a>, <a href=""t3://file?uid=1"">the brochure</a>, <a href=""mailto:info@example.org"">mail</a> and <a href=""javascript:alert(1)"">no script</a>.</p>
 <ul>
 <li>one</li>
 <li>two</li>
-</ul>",0,"",124,0,0,0,0,0,0
-,2,1,512,0,"textmedia","Text and media","<p>Read <a href=""https://example.org/article"">the article</a>.</p>",0,"",124,0,0,0,0,0,0
+</ul>",0,"",124,0,0,0,0,0,0,""
+,2,1,512,0,"textmedia","Text and media","<p>Read <a href=""https://example.org/article"" target=""_blank"" title=""Opens in a new window"">the article</a>.</p>",0,"",124,0,0,0,0,0,0,""
 ,3,1,768,0,"bullets","Bullets","one
 two
 
-three",0,"",124,0,0,0,0,0,0
+three",0,"",124,0,0,0,0,0,0,""
 ,4,1,1024,0,"bullets","Definitions","Term A|Definition A
-Term B|Definition B",2,"",124,0,0,0,0,0,0
+Term B|Definition B",2,"",124,0,0,0,0,0,0,""
 ,5,1,1280,0,"table","People","Name|Age
 Anna|30
 Ben|40
 
-Sum|70",0,"Ages",124,0,1,1,0,0,0
+Sum|70",0,"Ages",124,0,1,1,0,0,0,""
 ,6,1,1536,0,"table","Semicolons","""a;b"";c
-1;2",0,"",59,34,0,0,0,0,0
-,7,1,1792,0,"header","Just a header","",0,"",124,0,0,0,0,0,0
-,8,1,2048,0,"text","Empty","",0,"",124,0,0,0,0,0,0
-,101,1,256,0,"text","Rich text DE","<p>Siehe <a href=""t3://page?uid=2"">Über uns</a>.</p>",0,"",124,0,0,0,0,1,1
+1;2",0,"",59,34,0,0,0,0,0,""
+,7,1,1792,0,"header","Just a header","",0,"",124,0,0,0,0,0,0,"t3://page?uid=2 _blank - ""About us"""
+,8,1,2048,0,"text","Empty","",0,"",124,0,0,0,0,0,0,""
+,101,1,256,0,"text","Rich text DE","<p>Siehe <a href=""t3://page?uid=2"" title=""Über uns"">Über uns</a>.</p>",0,"",124,0,0,0,0,1,1,""
+,107,1,1792,0,"header","Nur eine Überschrift","",0,"",124,0,0,0,0,1,7,"t3://page?uid=2"
