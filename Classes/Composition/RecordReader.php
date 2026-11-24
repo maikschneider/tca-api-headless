@@ -11,11 +11,14 @@ use MaikSchneider\TcaApi\Filter\ExactFilter;
 use MaikSchneider\TcaApi\Filter\FilterContext;
 use MaikSchneider\TcaApi\Serializer\ResourceSerializer;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
+use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 
 /**
  * Reads the records stored on some pages through TCA API's read pipeline in a
- * single query: language overlay, enable fields, the frontend user groups of
- * the request, embeds and column processors of the definition.
+ * single query: language overlay (or the records of one language as they are),
+ * enable fields, the frontend user groups of the request, embeds and column
+ * processors of the definition.
  */
 final readonly class RecordReader
 {
@@ -24,22 +27,32 @@ final readonly class RecordReader
         private EmbedPreloader $embedPreloader,
         private ResourceSerializer $serializer,
         private FrontendGroups $frontendGroups,
+        private TcaSchemaFactory $schemaFactory,
     ) {
     }
 
     /**
      * @param list<int> $pids
+     * @param int|null $languageId Read the records of this language (and of all languages) as they
+     *                             are, instead of the default-language records with their overlay
      * @return list<array{array<string, mixed>, array<string, mixed>}> raw row and serialized record, by sorting
      */
-    public function readByPid(ApiDefinition $config, array $pids, ServerRequestInterface $request): array
+    public function readByPid(ApiDefinition $config, array $pids, ServerRequestInterface $request, ?int $languageId = null): array
     {
         $language = $request->getAttribute('tca_api.language');
         $constraints = [
             [ExactFilter::class, new FilterContext($pids, $config->table, 't.pid', ['type' => 'int'], $request, $config)],
             [FrontendGroupFilter::class, new FilterContext(null, $config->table, 't.fe_group', [], $request, $config)],
         ];
+        $overlayLanguage = $language;
+        $schema = $this->schemaFactory->get($config->table);
+        if ($languageId !== null && $schema->isLanguageAware()) {
+            $languageField = $schema->getCapability(TcaSchemaCapability::Language)->getLanguageField()->getName();
+            $constraints[] = [ExactFilter::class, new FilterContext([$languageId, -1], $config->table, 't.' . $languageField, ['type' => 'int'], $request, $config)];
+            $overlayLanguage = null;
+        }
 
-        $rows = $this->dataRepository->findCollection($config->table, $constraints, 0, 0, ['sorting' => 'asc'], $config, $language);
+        $rows = $this->dataRepository->findCollection($config->table, $constraints, 0, 0, ['sorting' => 'asc'], $config, $overlayLanguage);
         // The query checks the groups of the default language; a translation may restrict itself further.
         $rows = array_values(array_filter($rows, fn (array $row): bool => $this->frontendGroups->grant($row['fe_group'] ?? '')));
         if ($rows === []) {

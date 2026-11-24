@@ -47,7 +47,7 @@ async function get(path: string, status = 200, headers: Record<string, string> =
 
   const body = JSON.parse(text);
   const url = new URL(base + path);
-  const validate = validatorFor(url.pathname.replace(/^\/de(?=\/)/, ''), status);
+  const validate = validatorFor(url.pathname.replace(/^\/(de|fr|es)(?=\/)/, ''), status);
   expect(validate(body), `${path}: ${ajv.errorsText(validate.errors)}`).toBe(true);
 
   return body;
@@ -173,6 +173,28 @@ describe('navigation', () => {
     const response = await fetch(`${base}/_api/headless_navigation?path=/`);
 
     expect(response.status).toBe(405);
+  });
+});
+
+describe('free-mode translations', () => {
+  const headers = (contents: Json[]): string[] => contents.map((content) => content.header);
+
+  test('regions hold the content of the request language', async () => {
+    const fr = await get('/fr/_api/headless_pages/600');
+
+    expect(fr.title).toBe('Libre');
+    expect(headers(fr.regions.main)).toEqual(['Brut', 'Premier', 'All languages', 'Deuxième', 'Média']);
+    expect(headers(fr.regions.left)).toEqual(['À gauche']);
+    expect(headers((await get('/es/_api/headless_pages/600')).regions.main)).toEqual(['First', 'Second', 'All languages', 'Media']);
+  });
+
+  test('navigation has translated titles and URLs', async () => {
+    const fr = await get('/fr/_api/headless_navigation/600');
+    const es = await get('/es/_api/headless_navigation/600');
+
+    expect(fr.url).toBe(`${base}/fr/libre`);
+    expect(fr.children.map((child: Json) => [child.title, child.url])).toEqual([['Enfant', `${base}/fr/libre/enfant`]]);
+    expect(es.children.map((child: Json) => child.url)).toEqual([`${base}/es/free/child`, `${base}/es/free/untranslated`]);
   });
 });
 
