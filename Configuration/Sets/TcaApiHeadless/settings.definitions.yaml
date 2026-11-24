@@ -23,6 +23,11 @@ settings:
     type: int
     default: 2
 
+  tca_api_headless.navigation.maxDepth:
+    category: TcaApiHeadless
+    type: int
+    default: 5
+
   tca_api_headless.fallbackCTypes:
     category: TcaApiHeadless
     type: stringlist

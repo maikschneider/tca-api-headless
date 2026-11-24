@@ -7,6 +7,7 @@ namespace MaikSchneider\TcaApiHeadless\EventListener;
 use MaikSchneider\TcaApi\Configuration\ApiDefinition;
 use MaikSchneider\TcaApi\Event\AfterOperationEvent;
 use MaikSchneider\TcaApiHeadless\Composition\RecordReader;
+use MaikSchneider\TcaApiHeadless\Navigation\NavigationDepth;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Context\LanguageAspect;
@@ -19,8 +20,8 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 
 /**
  * Adds the absolute URL and the subpages to a headless_navigation show
- * response, down to tca_api_headless.navigation.depth levels below the
- * requested page: {url, children: [{…, url, children: […]}]}.
+ * response, down to the NavigationDepth levels below the requested page:
+ * {url, children: [{…, url, children: […]}]}.
  *
  * The tree is read breadth-first with one read per level. Like a frontend
  * menu, it leaves out pages hidden in menus, pages unavailable in the request
@@ -59,7 +60,7 @@ final readonly class BuildNavigationTree
      */
     private function subpagesOf(int $pageUid, ApiDefinition $config, ServerRequestInterface $request, Site $site, SiteLanguage $language): array
     {
-        $depth = (int)$site->getSettings()->get('tca_api_headless.navigation.depth', 2);
+        $depth = NavigationDepth::levels($request, $site);
         $languageAspect = LanguageAspectFactory::createFromSiteLanguage($language);
         $otherSiteRoots = $this->otherSiteRoots($site);
 

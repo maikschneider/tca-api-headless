@@ -32,8 +32,16 @@
 				<target>Navigationstiefe</target>
 			</trans-unit>
 			<trans-unit id="settings.description.tca_api_headless.navigation.depth" resname="settings.description.tca_api_headless.navigation.depth">
-				<source>Number of page levels below the requested page in a navigation response.</source>
-				<target>Anzahl der Seitenebenen unterhalb der angefragten Seite in einer Navigationsantwort.</target>
+				<source>Number of page levels below the requested page in a navigation response without a depth parameter.</source>
+				<target>Anzahl der Seitenebenen unterhalb der angefragten Seite in einer Navigationsantwort ohne depth-Parameter.</target>
+			</trans-unit>
+			<trans-unit id="settings.tca_api_headless.navigation.maxDepth" resname="settings.tca_api_headless.navigation.maxDepth">
+				<source>Maximum navigation depth</source>
+				<target>Maximale Navigationstiefe</target>
+			</trans-unit>
+			<trans-unit id="settings.description.tca_api_headless.navigation.maxDepth" resname="settings.description.tca_api_headless.navigation.maxDepth">
+				<source>Highest number of page levels a client can request with the depth parameter; a higher value is capped.</source>
+				<target>Höchste Anzahl an Seitenebenen, die ein Client mit dem depth-Parameter anfragen kann; ein höherer Wert wird begrenzt.</target>
 			</trans-unit>
 			<trans-unit id="settings.tca_api_headless.fallbackCTypes" resname="settings.tca_api_headless.fallbackCTypes">
 				<source>Fallback content types</source>

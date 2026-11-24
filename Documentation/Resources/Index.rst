@@ -187,6 +187,12 @@ Navigation
     (empty on the last level). The same rules as for pages apply to the
     requested page.
 
+``GET /_api/headless_navigation/{uid}?depth=3``
+    The same with the given number of levels, e.g. a deeper tree for a
+    sitemap. A depth above :confval:`tca-api-headless-navigation-maxdepth` is
+    capped to it; a depth that is not a positive integer answers with
+    ``400 Bad Request``.
+
 ..  code-block:: json
     :caption: GET /de/_api/headless_navigation/70
 

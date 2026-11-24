@@ -11,6 +11,8 @@ use MaikSchneider\TcaApi\OperationHandler\OperationHandlerInterface;
 use MaikSchneider\TcaApi\Serializer\HydraResponseBuilder;
 use MaikSchneider\TcaApi\Serializer\ResourceSerializer;
 use MaikSchneider\TcaApiHeadless\Composition\FrontendGroups;
+use MaikSchneider\TcaApiHeadless\EventListener\BuildNavigationTree;
+use MaikSchneider\TcaApiHeadless\Navigation\NavigationDepth;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
@@ -66,6 +68,10 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
     {
         if ($request->getAttribute('tca_api.operation') === 'list') {
             return $this->lookUp($request, $config);
+        }
+
+        if ($config->resourceName === BuildNavigationTree::RESOURCE && !NavigationDepth::isValid($request)) {
+            return $this->hydraResponseBuilder->buildError(400, 'The query parameter "depth" must be a positive integer.', 'Bad Request');
         }
 
         if (!$this->isDeliverable((int)$request->getAttribute('tca_api.uid'), $request)) {
