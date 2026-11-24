@@ -476,6 +476,8 @@ export interface operations {
             query?: {
                 /** @description Sparse fieldset: only return the specified columns and virtual properties (plus @type, @id, uid) */
                 fields?: string[];
+                /** @description Number of page levels below the page. Defaults to the site setting tca_api_headless.navigation.depth; values above tca_api_headless.navigation.maxDepth are capped. */
+                depth?: number;
             };
             header?: never;
             path: {
@@ -492,6 +494,15 @@ export interface operations {
                 };
                 content: {
                     "application/ld+json": components["schemas"]["HeadlessNavigationRead"];
+                };
+            };
+            /** @description The depth is not a positive integer */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
                 };
             };
             /** @description Forbidden */

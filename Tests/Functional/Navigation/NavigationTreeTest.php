@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MaikSchneider\TcaApiHeadless\Tests\Functional\Navigation;
 
 use MaikSchneider\TcaApiHeadless\Tests\Functional\AbstractApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
@@ -44,6 +45,60 @@ final class NavigationTreeTest extends AbstractApiTestCase
         $navigation = $this->navigation('http://second.localhost/_api/headless_navigation/30');
 
         self::assertSame(['Second child' => []], $this->titles($navigation));
+    }
+
+    #[Test]
+    public function theDepthParameterSetsTheNumberOfLevels(): void
+    {
+        $url = 'http://localhost/_api/headless_navigation/70?depth=';
+
+        self::assertSame([], $this->titles($this->navigation($url . '1'))['Products']);
+        self::assertSame(['Product A' => ['Product A details' => []]], $this->titles($this->navigation($url . '3'))['Products']);
+        self::assertSame(['Product A' => []], $this->titles($this->navigation($url . '2'))['Products']);
+    }
+
+    #[Test]
+    public function aDepthAboveTheSiteMaximumIsCapped(): void
+    {
+        $navigation = $this->navigation('http://localhost/_api/headless_navigation/70?depth=40');
+
+        self::assertSame(['Product A' => ['Product A details' => []]], $this->titles($navigation)['Products']);
+        self::assertSame($navigation, $this->navigation('http://localhost/_api/headless_navigation/70?depth=99999999999999999999'));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function invalidDepths(): iterable
+    {
+        yield 'zero' => ['depth=0'];
+        yield 'negative' => ['depth=-1'];
+        yield 'empty' => ['depth='];
+        yield 'fraction' => ['depth=1.5'];
+        yield 'text' => ['depth=all'];
+        yield 'list' => ['depth[]=1'];
+    }
+
+    #[Test]
+    #[DataProvider('invalidDepths')]
+    public function anInvalidDepthIsABadRequest(string $query): void
+    {
+        $response = $this->request('http://localhost/_api/headless_navigation/70?' . $query);
+
+        self::assertSame(400, $response->getStatusCode());
+        self::assertSame('hydra:Error', $this->json($response)['@type']);
+    }
+
+    #[Test]
+    public function theDepthParameterIsDocumented(): void
+    {
+        $operation = $this->openApiDocument('main')['paths']['/_api/headless_navigation/{uid}']['get'];
+        $depth = array_values(array_filter($operation['parameters'], static fn (array $parameter): bool => $parameter['name'] === 'depth'));
+
+        self::assertCount(1, $depth);
+        self::assertSame('query', $depth[0]['in']);
+        self::assertSame(['type' => 'integer', 'minimum' => 1], $depth[0]['schema']);
+        self::assertSame(['$ref' => '#/components/schemas/HydraError'], $operation['responses']['400']['content']['application/ld+json']['schema']);
     }
 
     #[Test]

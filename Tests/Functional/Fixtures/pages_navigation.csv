@@ -4,6 +4,7 @@
 ,71,70,"Products","Our products","/navigation/products",1,0,256,0,0,0,0,0,0,"",0,0,0
 ,74,71,"Product A","","/navigation/products/a",1,0,256,0,0,0,0,0,0,"",0,0,0
 ,77,74,"Product A details","","/navigation/products/a/details",1,0,256,0,0,0,0,0,0,"",0,0,0
+,88,77,"Product A part","","/navigation/products/a/details/part",1,0,256,0,0,0,0,0,0,"",0,0,0
 ,75,71,"Not in menu","","/navigation/products/not-in-menu",1,0,512,0,0,1,0,0,0,"",0,0,0
 ,78,75,"Below not in menu","","/navigation/products/not-in-menu/below",1,0,256,0,0,0,0,0,0,"",0,0,0
 ,72,70,"Shortcut","","/navigation/shortcut",4,0,512,0,0,0,0,0,0,"",0,0,71

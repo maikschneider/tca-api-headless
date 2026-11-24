@@ -19,5 +19,7 @@ return [
     ],
     'cache' => [
         'enabled' => false,
+        // The cache key does not vary by depth: a tree for a requested depth is never cached.
+        'parametersToIgnore' => ['depth'],
     ],
 ];

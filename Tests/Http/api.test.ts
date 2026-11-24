@@ -188,6 +188,21 @@ describe('navigation', () => {
 
     expect(response.status).toBe(405);
   });
+
+  test('the depth parameter sets the levels up to the site maximum', async () => {
+    const products = async (depth: string): Promise<Json> => summary((await get(`/_api/headless_navigation/70?depth=${depth}`)).children[0]);
+    const details = { title: 'Product A details', url: `${base}/navigation/products/a/details`, children: [] };
+
+    expect((await products('1')).children).toEqual([]);
+    expect((await products('3')).children[0].children).toEqual([details]);
+    expect(await products('9')).toEqual(await products('3'));
+  });
+
+  test('an invalid depth is a bad request', async () => {
+    for (const depth of ['0', '-1', 'all']) {
+      expect((await get(`/_api/headless_navigation/70?depth=${depth}`, 400))['@type']).toBe('hydra:Error');
+    }
+  });
 });
 
 describe('free-mode translations', () => {

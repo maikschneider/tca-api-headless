@@ -41,7 +41,7 @@ final class ResourceDefinitionsTest extends UnitTestCase
     #[DataProvider('definitionFiles')]
     public function theResourceIsNotCached(string $file): void
     {
-        self::assertSame(['enabled' => false], $this->definition($file)['cache'] ?? null);
+        self::assertFalse($this->definition($file)['cache']['enabled'] ?? null);
     }
 
     #[Test]

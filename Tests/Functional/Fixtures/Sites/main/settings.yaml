@@ -2,3 +2,5 @@ tca_api_headless:
   fallbackCTypes:
     - html
     - shortcut
+  navigation:
+    maxDepth: 3

@@ -19,6 +19,7 @@ The site set defines these site settings. Change them in the backend module
         - '3:border'
       navigation:
         depth: 2
+        maxDepth: 5
       fallbackCTypes: []
 
 ..  confval-menu::
@@ -53,8 +54,16 @@ The site set defines these site settings. Change them in the backend module
     :type: int
     :default: 2
 
-    Number of page levels below the requested page in a navigation response.
-    ``1`` lists only its subpages, ``0`` none.
+    Number of page levels below the requested page in a navigation response
+    without a ``depth`` parameter. ``1`` lists only its subpages, ``0`` none.
+
+..  confval:: tca_api_headless.navigation.maxDepth
+    :name: tca-api-headless-navigation-maxdepth
+    :type: int
+    :default: 5
+
+    Highest number of page levels a client can request with the ``depth``
+    parameter of a navigation request. A higher ``depth`` is capped to it.
 
 ..  confval:: tca_api_headless.fallbackCTypes
     :name: tca-api-headless-fallbackctypes
