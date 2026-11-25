@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MaikSchneider\TcaApiHeadless\Composition;
 
+use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
 use TYPO3\CMS\Backend\View\BackendLayoutView;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -28,10 +29,22 @@ final readonly class RegionMapper
      */
     public function regionsOf(int $pageUid, Site $site): array
     {
-        $siteRegions = $this->siteRegions($site);
+        return $this->regionsOfLayout(
+            $this->backendLayoutView->getBackendLayoutForPage($pageUid),
+            $this->siteRegions($site),
+        );
+    }
 
-        $layout = $this->backendLayoutView->getBackendLayoutForPage($pageUid);
-        if ($layout->getIdentifier() === self::DEFAULT_LAYOUT) {
+    /**
+     * Takes a nullable layout because TYPO3 13 returns null when not even the
+     * default layout resolves; TYPO3 14 throws instead.
+     *
+     * @param array<int, string> $siteRegions
+     * @return array<int, string>
+     */
+    private function regionsOfLayout(?BackendLayout $layout, array $siteRegions): array
+    {
+        if ($layout === null || $layout->getIdentifier() === self::DEFAULT_LAYOUT) {
             return $siteRegions;
         }
 
