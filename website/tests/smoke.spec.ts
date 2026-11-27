@@ -19,15 +19,26 @@ for (const route of manifest.routes) {
     expect(response?.status()).toBe(200);
     await expect(page.locator('html')).toHaveAttribute('lang', route.language);
     await expect(page.locator('main h1')).toBeVisible();
-    const panels = page.locator('main details');
+    const panels = page.locator('details.proof');
     expect(await panels.count()).toBeGreaterThan(0);
     await panels.first().locator('summary').click();
     await expect(panels.first()).toHaveAttribute('open', '');
-    await expect(panels.first()).toContainText('JSON response');
-    await expect(panels.first()).toContainText('Generated TypeScript type');
+    await expect(panels.first().locator('[data-pane="json"]')).toBeVisible();
+    await expect(panels.first().locator('[data-pane="type"]')).toBeVisible();
     if (route.uid === 2001) {
       expect(await page.locator('main ol li').count()).toBeGreaterThan(0);
       expect(await page.locator('main th[scope="row"]').count()).toBeGreaterThan(0);
+    }
+    if (route.site === 'website' && route.uid === 2000) {
+      const groups = page.locator('.actions-group');
+      expect(await groups.count()).toBe(2);
+      for (const group of await groups.all()) {
+        await group.locator('summary').click();
+        const elements = JSON.parse(await group.locator('[data-pane="json"] pre').textContent() ?? '') as { header: string }[];
+        const actions = await group.locator('.action').allInnerTexts();
+        expect(elements.length).toBe(actions.length);
+        elements.forEach((element, index) => expect(actions[index]).toContain(element.header));
+      }
     }
     const targets = await page.locator('a[href], img[src], source[srcset], link[rel="stylesheet"]').evaluateAll((elements) => elements.flatMap((element) => {
       const value = element.getAttribute('href') ?? element.getAttribute('src') ?? '';
@@ -55,7 +66,7 @@ for (const route of manifest.routes) {
     }
     const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());
     expect(schema.url).toBe(`${siteOrigin}${route.output}`);
-    const alternates = await page.locator('nav[aria-label="Language"] a').evaluateAll((elements) => elements.map((element) => ({ href: element.getAttribute('href'), language: element.getAttribute('lang') })));
+    const alternates = await page.locator('.masthead-inner > .languages a').evaluateAll((elements) => elements.map((element) => ({ href: element.getAttribute('href'), language: element.getAttribute('lang') })));
     for (const alternate of alternates) {
       expect(manifest.routes.find((other) => other.output === alternate.href)).toMatchObject({ site: route.site, uid: route.uid, language: alternate.language });
     }

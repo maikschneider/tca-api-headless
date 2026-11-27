@@ -1,0 +1,25 @@
+---
+import type { Entry } from '../lib/content';
+import type { Language } from '../lib/config';
+import { groupReveal, pointerLabel } from '../lib/excerpt';
+import Link from './Link.astro';
+import Proof from './Proof.astro';
+
+export type Props = { items: Entry['blocks'][number]['items']; language: Language; class?: string };
+
+// Header elements with a link, set as the region's actions; the first one leads.
+// One proof shows all of them, in the order of the response.
+const { items, language, class: className } = Astro.props;
+const links = items.flatMap(({ content }) => content.CType === 'header' && content.header_link ? [{ header: content.header, link: content.header_link }] : []);
+---
+
+{links.length > 0 && (
+  <div class:list={['actions-group', className]}>
+    <ul class="actions">
+      {links.map(({ header, link }, index) => (
+        <li><Link link={link} language={language} class={index === 0 ? 'action action-primary' : 'action'}>{header}</Link></li>
+      ))}
+    </ul>
+    <Proof recording={groupReveal(items.map((item) => item.reveal))} language={language} where={items.map((item) => pointerLabel(item.reveal.pointer)).join(', ')} />
+  </div>
+)}

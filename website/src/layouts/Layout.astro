@@ -5,25 +5,29 @@ import { deployment, output } from '../lib/config';
 import { imageSource } from '../lib/images';
 import { imageFormat } from '../lib/formats';
 import { jsonLd } from '../lib/api';
+import { t } from '../lib/i18n';
 import Navigation from '../components/Navigation.astro';
-import Reveal from '../components/Reveal.astro';
-import '../styles/base.css';
+import Proof from '../components/Proof.astro';
+import Mark from '../components/Mark.astro';
+import Head from './Head.astro';
+import Languages from '../components/Languages.astro';
 
 export type Props = { entry: Entry };
 const { entry } = Astro.props;
 const { page, navigation, language } = entry;
 const { meta } = page;
+const s = t(language);
 const image = page.og_image?.[0]?.publicUrl;
 const social = image && imageFormat(image) ? await getImage({ src: imageSource(image), width: 1200, format: 'jpg' }) : undefined;
 const socialUrl = social?.src ?? image;
+const home = new URL(navigation.url).pathname;
+const file = (name: string) => output(`contracts/${name}`).replace(/\/$/, '');
 ---
 
 <!doctype html>
-<html lang={language}>
+<html lang={language} data-copy={s.copy} data-copied={s.copied} data-copy-failed={s.copyFailed}>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{meta.schema.name}</title>
+    <Head title={meta.schema.name} language={language} />
     <meta name="robots" content={meta.robots} />
     {meta.schema.description && <meta name="description" content={meta.schema.description} />}
     {meta.canonical && <link rel="canonical" href={meta.canonical} />}
@@ -32,27 +36,67 @@ const socialUrl = social?.src ?? image;
     {entry.alternates.map((alternate) => <link rel="alternate" hreflang={alternate.language} href={new URL(alternate.output, deployment).href} />)}
     <script type="application/ld+json" set:html={jsonLd(meta.schema)} />
   </head>
-  <body>
-    <a class="skip" href="#main">Skip to content</a>
-    <header>
-      <a class="home" href={new URL(navigation.url).pathname}>{navigation.title}</a>
-      <nav aria-label="Language">
-        {entry.alternates.map((alternate) => <a href={alternate.output} lang={alternate.language} hreflang={alternate.language} aria-current={alternate.language === language ? 'true' : undefined}>{alternate.language === 'en' ? 'English' : 'Deutsch'}</a>)}
-      </nav>
+  <body class:list={[`site-${entry.site}`]}>
+    <a class="skip" href="#main">{s.skip}</a>
+    <header class="masthead">
+      <div class="masthead-inner">
+        <a class="wordmark" href={home} aria-current={home === entry.output ? 'page' : undefined}><Mark />{navigation.title}</a>
+        <nav class="nav-bar" aria-label={s.mainNav}><Navigation entries={navigation.children} current={entry.output} flat /></nav>
+        <details class="nav-menu">
+          <summary>{s.menu}</summary>
+          <div class="nav-panel">
+            <nav aria-label={s.mainNav}><Navigation entries={navigation.children} current={entry.output} /></nav>
+            <Languages entry={entry} />
+          </div>
+        </details>
+        <Languages entry={entry} />
+      </div>
     </header>
-    <div class="layout">
-      <aside>
-        <nav aria-label="Main"><Navigation entries={navigation.children} current={entry.output} /></nav>
-        <Reveal recording={entry.menuReveal} label="Navigation response" />
-        <p><a href={output(`contracts/${entry.site}.json`).replace(/\/$/, '')}>OpenAPI document</a> · <a href={output(`contracts/${entry.site}.d.ts`).replace(/\/$/, '')}>TypeScript declarations</a></p>
-      </aside>
-      <main id="main">
-        {entry.site === 'kettenblatt' && <p>Fictional specimen site · Erfundene Muster-Site</p>}
-        <h1>{page.title}</h1>
-        <slot />
-        <Reveal recording={entry.reveal} label="Composed page response" />
-      </main>
-    </div>
-    <footer><a href={output('meta/imprint')}>Imprint placeholder</a> · Static HTML from TYPO3</footer>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="colophon">
+      <div class="colophon-inner">
+        <div class="colophon-about">
+          <a class="wordmark" href={home}><Mark />{navigation.title}</a>
+          <p>{s.colophon}</p>
+        </div>
+        <nav class="colophon-pages" aria-label={s.sitemap}>
+          <p class="colophon-label">{s.sitemap}</p>
+          <Navigation entries={navigation.children} current={entry.output} />
+        </nav>
+        <div class="colophon-contract">
+          <p class="colophon-label">{s.contracts}</p>
+          <ul>
+            <li><a href={file(`${entry.site}.json`)} type="application/json">{s.openapi}</a></li>
+            <li><a href={file(`${entry.site}.d.ts`)}>{s.declarations}</a></li>
+            {entry.meta.map((item) => <li><a href={item.output}>{item.title}</a></li>)}
+          </ul>
+        </div>
+        <div class="colophon-proof">
+          <Proof recording={entry.reveal} language={language} label={s.proofOfPage} />
+          <Proof recording={entry.menuReveal} language={language} label={s.proofOfMenu} />
+        </div>
+      </div>
+    </footer>
+    <script is:inline>
+      // Only where the clipboard API exists; on a refused write the button says so.
+      if (navigator.clipboard) document.querySelectorAll('pre[data-copy]').forEach(function (pre) {
+        var label = document.documentElement.dataset;
+        var button = document.createElement('button');
+        var show = function (text) {
+          button.textContent = text;
+          setTimeout(function () { button.textContent = label.copy; }, 2400);
+        };
+        button.type = 'button';
+        button.className = 'copy';
+        button.setAttribute('aria-live', 'polite');
+        button.textContent = label.copy;
+        button.addEventListener('click', function () {
+          navigator.clipboard.writeText(pre.textContent).then(function () { show(label.copied); }, function () { show(label.copyFailed); });
+        });
+        pre.parentElement.append(button);
+      });
+    </script>
   </body>
 </html>

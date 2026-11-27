@@ -5,5 +5,5 @@ export default defineConfig({
   site: process.env.WEBSITE_SITE ?? 'https://maikschneider.github.io',
   base: process.env.WEBSITE_BASE ?? '/tca-api-headless/',
   trailingSlash: 'always',
-  build: { format: 'directory' },
+  build: { format: 'directory', inlineStylesheets: 'always' },
 });

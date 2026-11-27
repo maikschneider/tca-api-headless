@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Docs
 
-- Static product website in `website/`, built from a dedicated TYPO3 content fixture (not part of the extension package).
+- Static product website in `website/` with its own design system, built from a dedicated TYPO3 content fixture (not part of the extension package).
 
 ### Added
 

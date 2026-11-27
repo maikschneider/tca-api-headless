@@ -1,0 +1,11 @@
+---
+// The registration mark: ties a rendered element to its line in a proof.
+export type Props = { class?: string };
+const { class: className } = Astro.props;
+---
+
+<svg class:list={['mark', className]} viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+  <circle cx="12" cy="12" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+  <path d="M12 1.5v21M1.5 12h21" stroke="currentColor" stroke-width="1.5" />
+  <circle cx="12" cy="12" r="2.25" fill="currentColor" />
+</svg>

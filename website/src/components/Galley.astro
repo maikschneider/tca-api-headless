@@ -1,0 +1,34 @@
+---
+import { Code } from 'astro:components';
+import type { ShikiTransformer } from 'shiki';
+import type { Reveal } from '../lib/content';
+import type { Language } from '../lib/config';
+import { lineOf } from '../lib/excerpt';
+import { t } from '../lib/i18n';
+import { proofThemes } from '../lib/shiki';
+import Mark from './Mark.astro';
+
+export type Props = { recording: Reveal; language: Language; field: string };
+
+// An always-open excerpt of a proof, with the line of `field` marked: the same
+// registration mark sits next to the element rendered from it.
+const { recording, language, field } = Astro.props;
+const s = t(language);
+const marked = lineOf(recording.excerpt, field);
+const mark: ShikiTransformer = {
+  line(node, line) {
+    if (line === marked) this.addClassToHast(node, 'marked');
+  },
+};
+---
+
+<figure class="galley galley-sheet">
+  <figcaption>
+    <Mark />
+    <span class="proof-label">{s.proof}</span>
+    <code class="proof-request">{recording.request}</code>
+    <code class="proof-pointer">#{recording.pointer}</code>
+  </figcaption>
+  <Code code={recording.excerpt} lang="jsonc" themes={proofThemes} defaultColor={false} wrap transformers={[mark]} />
+  <p class="proof-note">{s.excerpt}</p>
+</figure>

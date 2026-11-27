@@ -1,0 +1,17 @@
+---
+import { blocks, type Content } from './blocks';
+import type { Reveal } from '../lib/content';
+import type { Language } from '../lib/config';
+import Proof from './Proof.astro';
+
+export type Props = { content: Content; reveal: Reveal; language: Language; region: string; class?: string };
+
+// One content element and the proof it was rendered from.
+const { content, reveal, language, region, class: className } = Astro.props;
+const Block = blocks[content.CType] as (props: { content: Content; language: Language; region: string }) => unknown;
+---
+
+<div class:list={['element', `element-${content.CType}`, className]}>
+  <Block content={content} language={language} region={region} />
+  <Proof recording={reveal} language={language} />
+</div>

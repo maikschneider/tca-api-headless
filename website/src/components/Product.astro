@@ -1,0 +1,74 @@
+---
+import type { Entry } from '../lib/content';
+import Actions from './Actions.astro';
+import Element from './Element.astro';
+import Figure from './Figure.astro';
+import Galley from './Galley.astro';
+import Heading from './Heading.astro';
+import Mark from './Mark.astro';
+import Proof from './Proof.astro';
+import RichText from './RichText.astro';
+
+export type Props = { entry: Entry };
+
+// The product layout's regions in their fixed order: hero, story, features, cta.
+const { entry } = Astro.props;
+const { language } = entry;
+const region = (name: string) => entry.blocks.find((block) => block.region === name)?.items ?? [];
+const isText = (item: Entry['blocks'][number]['items'][number]) => item.content.CType === 'text' || item.content.CType === 'textmedia';
+const isAction = (item: Entry['blocks'][number]['items'][number]) => item.content.CType === 'header' && Boolean(item.content.header_link);
+const actions = (items: Entry['blocks'][number]['items']) => items.filter(isAction);
+const rest = (items: Entry['blocks'][number]['items']) => items.filter((item) => !isAction(item));
+const assets = (content: Entry['blocks'][number]['items'][number]['content']) => content.CType === 'textmedia' ? (content.assets ?? []) : [];
+
+const hero = region('hero');
+const lead = hero.find(isText);
+const leadContent = lead?.content.CType === 'text' || lead?.content.CType === 'textmedia' ? lead.content : undefined;
+const cta = region('cta');
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <h1 id="hero-title">{lead && <Mark class="hero-mark" />}{leadContent?.header || entry.page.title}</h1>
+    {leadContent && <RichText value={leadContent.bodytext} class="lead" />}
+    {leadContent && assets(leadContent).map((file) => <Figure file={file} />)}
+    <Actions items={actions(hero)} language={language} />
+  </div>
+  {lead && (
+    <div class="hero-proof">
+      <Galley recording={lead.reveal} language={language} field="header" />
+      <Proof recording={lead.reveal} language={language} />
+    </div>
+  )}
+</section>
+{rest(hero).filter((item) => item !== lead).map((item) => <Element {...item} language={language} region="hero" />)}
+
+<section class="story">
+  {region('story').map(({ content, reveal }) => (
+    content.CType === 'text' || content.CType === 'textmedia' ? (
+      <article class="beat">
+        <Heading header={content.header} link={content.header_link} language={language} class="beat-title" />
+        <div class="beat-body">
+          <RichText value={content.bodytext} />
+          {assets(content).map((file) => <Figure file={file} />)}
+          <Proof recording={reveal} language={language} />
+        </div>
+      </article>
+    ) : <Element content={content} reveal={reveal} language={language} region="story" />
+  ))}
+</section>
+
+<section class="features">
+  {region('features').map((item) => <Element {...item} language={language} region="features" />)}
+</section>
+
+{cta.length > 0 && (
+  <section class="closing">
+    <div class="closing-inner">
+      <div class="closing-text">
+        {rest(cta).map((item) => <Element {...item} language={language} region="cta" />)}
+      </div>
+      <Actions items={actions(cta)} language={language} class="actions-stacked" />
+    </div>
+  </section>
+)}

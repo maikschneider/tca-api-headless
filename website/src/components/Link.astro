@@ -1,11 +1,16 @@
 ---
 import type { HeadlessLink } from '../api/schema';
-import { demoHref } from '../lib/api';
+import type { Language } from '../lib/config';
+import { t } from '../lib/i18n';
+import Arrow from './Arrow.astro';
 
-export type Props = { link: HeadlessLink };
+export type Props = { link: HeadlessLink; language?: Language; class?: string };
 
-// Links to pages of the TYPO3 site stay inside the demo.
-const { link } = Astro.props;
+// Page links arrive already rewritten to emitted routes; only links that leave
+// the site keep an absolute URL and get the outbound arrow.
+const { link, language, class: className } = Astro.props;
+const external = /^https?:\/\//.test(link.href);
+const newTab = link.target === '_blank';
 ---
 
-<a href={demoHref(link.href)} target={link.target ?? undefined} title={link.title ?? undefined}><slot /></a>
+<a class:list={[className, { external }]} href={link.href} target={link.target ?? undefined} title={link.title ?? undefined} rel={newTab ? 'noopener' : undefined}><slot />{newTab && language && <span class="visually-hidden"> ({t(language).newTab})</span>}{external && <Arrow />}</a>

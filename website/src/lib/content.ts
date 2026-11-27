@@ -3,8 +3,9 @@ import { inventory, sites, languages, sourceBase, route, deployment, origin, typ
 import { record, recordings, atPointer, type Recording } from './recorder';
 import { pageKey, localizeFiles, rewriteHref, type LinkManifest } from './links';
 import { schemaType, typeName } from './types';
+import { elementExcerpt, pageExcerpt } from './excerpt';
 
-export interface Reveal { request: string; status: number; pointer: string; json: string; type: string }
+export interface Reveal { request: string; status: number; pointer: string; json: string; lang: 'json' | 'jsonc'; excerpt: string; type: string }
 export interface Entry {
   site: Site;
   language: Language;
@@ -16,20 +17,31 @@ export interface Entry {
   menuReveal: Reveal;
   blocks: { region: string; items: { content: Content; reveal: Reveal }[] }[];
   alternates: { language: Language; output: string }[];
+  meta: { title: string; output: string }[];
 }
 export interface BuildData { entries: Entry[]; missing: Reveal; pages: LinkManifest; files: LinkManifest }
 
 const members = (recording: Recording) => (recording.body as { 'hydra:member': { uid: number }[] })['hydra:member'];
 const flatten = (node: Navigation): Navigation[] => [node, ...node.children.flatMap(flatten)];
 
-async function reveal(recording: Recording, name: string, pointer = ''): Promise<Reveal> {
+const normalize = (json: string) => json.replaceAll(origin, 'https://typo3.example');
+
+async function reveal(recording: Recording, name: string, pointer = '', shorten?: (value: unknown) => string): Promise<Reveal> {
+  const value = pointer ? atPointer(recording.body, pointer) : recording.body;
   return {
     request: `GET ${new URL(recording.url).pathname}${new URL(recording.url).search}`,
     status: recording.status,
     pointer,
-    json: JSON.stringify(pointer ? atPointer(recording.body, pointer) : recording.body, null, 2).replaceAll(origin, 'https://typo3.example'),
+    json: normalize(JSON.stringify(value, null, 2)),
+    lang: 'json',
+    excerpt: shorten ? normalize(shorten(value)) : '',
     type: name ? await schemaType(recording.site, name) : '',
   };
+}
+
+// The page proof shows the page without its elements: each element has its own proof.
+async function pageReveal(recording: Recording): Promise<Reveal> {
+  return { ...await reveal(recording, 'HeadlessPagesRead'), json: normalize(pageExcerpt(recording.body as Page)), lang: 'jsonc' };
 }
 
 export async function prepare(): Promise<void> {
@@ -70,11 +82,11 @@ export async function prepare(): Promise<void> {
           const items = [];
           for (const [index, content] of contents.entries()) {
             const pointer = `/regions/${region.replaceAll('~', '~0').replaceAll('/', '~1')}/${index}`;
-            items.push({ content, reveal: await reveal(recording, typeName(content.CType), pointer) });
+            items.push({ content, reveal: await reveal(recording, typeName(content.CType), pointer, elementExcerpt) });
           }
           blocks.push({ region, items });
         }
-        entries.push({ site, language, path, output, page, navigation, reveal: await reveal(recording, 'HeadlessPagesRead'), menuReveal: await reveal(navigationRecord, 'HeadlessNavigationRead'), blocks, alternates: [] });
+        entries.push({ site, language, path, output, page, navigation, reveal: await pageReveal(recording), menuReveal: await reveal(navigationRecord, 'HeadlessNavigationRead'), blocks, alternates: [], meta: [] });
       }
       const expectedIds = new Set(Object.values(expected));
       for (const uid of discovered) if (!expectedIds.has(uid)) throw new Error(`Menu contains unlisted page ${site}/${language}:${uid}`);
@@ -95,6 +107,7 @@ export async function prepare(): Promise<void> {
   const allTypes = new Set<string>(entries.flatMap((entry) => Object.values(entry.page.regions).flat().map((content) => content.CType)));
   for (const ctype of ['text', 'textmedia', 'image', 'header', 'bullets', 'table', 'uploads', 'html']) if (!allTypes.has(ctype)) throw new Error(`No fixture for ${ctype}`);
   for (const entry of entries) {
+    entry.meta = entries.filter((other) => other.site === entry.site && other.language === entry.language && other.path.startsWith('/meta/')).map(({ page, output }) => ({ title: page.title ?? '', output }));
     entry.alternates = entries.filter((other) => other.site === entry.site && other.page.uid === entry.page.uid).map(({ language, output }) => ({ language, output }));
     await localizeFiles(entry.page, files);
   }

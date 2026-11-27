@@ -93,6 +93,19 @@ jobs:
           tar -xzf ../var/website/website-dist.tar.gz -C ../var/website/project
           WEBSITE_DIST=../var/website/root WEBSITE_BASE=/ bun run smoke
           WEBSITE_DIST=../var/website/project WEBSITE_BASE=/tca-api-headless/ bun run smoke
+      - name: Budgets and Lighthouse (mobile) on the extracted project build
+        working-directory: website
+        env:
+          WEBSITE_DIST: ../var/website/project
+          WEBSITE_BASE: /tca-api-headless/
+        run: |
+          bun run budget
+          export CHROME_PATH="$(find ~/.cache/ms-playwright -type f -name chrome-headless-shell | head -n 1)"
+          bun run lighthouse
+          jq -r '.[] | select(.isRepresentativeRun) | "\(.url) \(.summary | to_entries | map("\(.key)=\(.value)") | join(" "))"' ../var/website/lighthouse/manifest.json
+      - name: Design detector (advisory)
+        working-directory: website
+        run: bunx impeccable@4.11.1 detect --github ../var/website/project || [ $? -eq 2 ]
       - name: Check the Composer dist exclusion
         run: |
           git archive HEAD > var/website/package.tar

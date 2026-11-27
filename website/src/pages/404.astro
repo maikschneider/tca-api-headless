@@ -1,13 +1,28 @@
 ---
 import { loadBuild } from '../lib/content';
-import Reveal from '../components/Reveal.astro';
+import Proof from '../components/Proof.astro';
+import Head from '../layouts/Head.astro';
 import { output } from '../lib/config';
-import '../styles/base.css';
 const { missing } = await loadBuild();
 ---
 
 <!doctype html>
 <html lang="en">
-  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Page not found</title><meta name="robots" content="noindex" /></head>
-  <body><main id="main"><h1>Page not found</h1><p>The path lookup returned no page.</p><a href={output('')}>Home</a><Reveal recording={missing} /></main></body>
+  <head>
+    <Head title="Page not found" language="en" />
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <main id="main" class="not-found">
+      <article class="article">
+        <header class="article-head">
+          <h1>Page not found</h1>
+        </header>
+        <div class="prose">
+          <p>The path lookup returned no page, so the build emitted none. <a href={output('')}>Back to the home page</a>.</p>
+        </div>
+        <Proof recording={missing} language="en" />
+      </article>
+    </main>
+  </body>
 </html>

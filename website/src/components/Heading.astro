@@ -1,10 +1,12 @@
 ---
 import type { HeadlessLink } from '../api/schema';
+import type { Language } from '../lib/config';
 import Link from './Link.astro';
 
-export type Props = { header?: string; link?: HeadlessLink | null };
+export type Props = { header?: string; link?: HeadlessLink | null; level?: 1 | 2 | 3; language?: Language; class?: string };
 
-const { header, link } = Astro.props;
+const { header, link, level = 2, language, class: className } = Astro.props;
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3';
 ---
 
-{header && <h2>{link ? <Link link={link}>{header}</Link> : header}</h2>}
+{header && <Tag class={className}>{link ? <Link link={link} language={language}>{header}</Link> : header}<slot /></Tag>}

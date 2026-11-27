@@ -1,0 +1,25 @@
+---
+import type { Entry } from '../lib/content';
+import { t } from '../lib/i18n';
+import Element from './Element.astro';
+
+export type Props = { entry: Entry };
+
+// Every layout other than the product page: the title, then the regions in
+// the order the API sends them. An aside region sits beside the main one.
+const { entry } = Astro.props;
+const { language, page } = entry;
+const hasAside = entry.blocks.some((block) => block.region === 'aside');
+---
+
+<article class:list={['article', { 'has-aside': hasAside }]}>
+  <header class="article-head">
+    <h1>{page.title}</h1>
+    {entry.site === 'kettenblatt' && <p class="specimen-note">{t(language).specimen}</p>}
+  </header>
+  {entry.blocks.map(({ region, items }) => (
+    <div class:list={['region', `region-${region}`]}>
+      {items.map((item) => <Element {...item} language={language} region={region} />)}
+    </div>
+  ))}
+</article>

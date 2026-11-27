@@ -1,0 +1,20 @@
+---
+import type { Entry } from '../lib/content';
+import { t } from '../lib/i18n';
+
+export type Props = { entry: Entry };
+
+// Only actual translations of the page: a missing one is not linked.
+const { entry } = Astro.props;
+const s = t(entry.language);
+---
+
+{entry.alternates.length > 1 && (
+  <nav class="languages" aria-label={s.language}>
+    <ul>
+      {entry.alternates.map((alternate) => (
+        <li><a href={alternate.output} lang={alternate.language} hreflang={alternate.language} aria-current={alternate.language === entry.language ? 'true' : undefined}>{s.languageName[alternate.language]}</a></li>
+      ))}
+    </ul>
+  </nav>
+)}
