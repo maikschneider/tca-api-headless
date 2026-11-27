@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import type { FileObject } from '../api/schema';
 import { imageSource } from '../lib/images';
+import { imageFormat } from '../lib/formats';
 
 export type Props = { file: FileObject };
 
@@ -12,7 +13,11 @@ const { file } = Astro.props;
   file.publicUrl && (
     <figure>
       {file.mimeType?.startsWith('image/') ? (
-        <Picture src={imageSource(file.publicUrl)} formats={['avif', 'webp']} widths={[480, 768, 1024, 1536]} sizes="(max-width: 48rem) 100vw, 48rem" alt={file.metadata?.alternative ?? ''} loading="lazy" />
+        imageFormat(file.publicUrl) ? (
+          <Picture src={imageSource(file.publicUrl)} formats={['avif', 'webp']} widths={[480, 768, 1024, 1536]} sizes="(max-width: 48rem) 100vw, 48rem" alt={file.metadata?.alternative ?? ''} loading="lazy" />
+        ) : (
+          <img src={file.publicUrl} alt={file.metadata?.alternative ?? ''} width={file.width || undefined} height={file.height || undefined} loading="lazy" />
+        )
       ) : (
         <a href={file.publicUrl}>{file.name}</a>
       )}

@@ -22,7 +22,7 @@ permissions:
 jobs:
   website:
     name: Static website (TYPO3 14.3)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4

@@ -80,7 +80,7 @@ Smoke opens **every** route in both languages with JS disabled, follows internal
 
 The Actions workflow restores a fresh instance, verifies two restore/export round trips (tracked **and new** files), builds and tests both bases, and uploads `website-dist.tar.gz`. Extract it into a static host's document root configured for the chosen base and `404.html`; no Node/PHP backend is needed. **No deployment or hosting configuration is included.** Legal copy is still placeholder text.
 
-`website/` is excluded from Composer dist and TER packages, not from source checkouts. The existing demo can be checked independently with `cd demo && bun install && bun run check && bun run build`.
+`website/` is excluded from Composer dist and from TER packages built with `TYPO3_EXCLUDE_FROM_PACKAGING` pointing to this repository's `packaging_exclude.php`, not from source checkouts. Tailor does not discover that custom file automatically. The existing demo can be checked independently with `cd demo && bun install && bun run check && bun run build`.
 
 ### Known-good dependency snapshot
 
