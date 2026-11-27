@@ -100,7 +100,7 @@
   .lead strong { color: var(--ink); }
   .lead .command { margin-block-start: var(--space-m); }
   .lead .command pre { font-size: clamp(0.85rem, 0.75rem + 0.4vw, 1.05rem); color: var(--ink); }
-  .hero .actions { margin-block-start: var(--space-l); }
+  .hero .actions-group { margin-block-start: var(--space-l); }
   @media (min-width: 64rem) {
     .hero { align-items: start; }
     .hero-copy { grid-column: 1 / span 7; }
@@ -115,7 +115,7 @@
   .action-primary { background: var(--ink); color: var(--paper); }
   .action-primary:hover { background: var(--ink-soft); border-color: var(--ink-soft); }
   .action .arrow, .external .arrow { display: inline-block; width: 0.85em; height: 0.85em; vertical-align: -0.05em; margin-inline-start: 0.15em; }
-  .actions-stacked { flex-direction: column; align-items: stretch; gap: 0; }
+  .actions-stacked .actions { flex-direction: column; align-items: stretch; gap: 0; }
   .actions-stacked li { border-block-end: var(--hairline) solid var(--rule); }
   .actions-stacked li:first-child { border: 0; margin-block-end: var(--space-s); }
   .actions-stacked .action:not(.action-primary) { justify-content: space-between; width: 100%; padding-inline: 0; border: 0; border-radius: 0; font-size: var(--step-1); }
@@ -156,12 +156,12 @@
   /* Closing: the darkroom plate with the quick start and the ways out. */
   .closing { padding: var(--space-2xl) var(--gutter); background: var(--plate); }
   .closing-inner { width: min(100%, var(--page)); color-scheme: dark; color: var(--ink); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--space-xl); }
-  .closing-text, .closing-inner > .actions { grid-column: 1 / -1; min-width: 0; }
+  .closing-text, .closing-inner > .actions-group { grid-column: 1 / -1; min-width: 0; }
   .closing h2 { font-size: var(--step-3); letter-spacing: -0.03em; max-width: 16ch; margin-block-end: var(--space-l); }
   .closing .proof { border-color: var(--rule-strong); }
   @media (min-width: 64rem) {
     .closing-text { grid-column: 1 / span 7; }
-    .closing-inner > .actions { grid-column: 9 / -1; align-self: start; padding-block-start: 0.5rem; }
+    .closing-inner > .actions-group { grid-column: 9 / -1; align-self: start; padding-block-start: 0.5rem; }
   }
 
   /* Prose from Portable Text. */

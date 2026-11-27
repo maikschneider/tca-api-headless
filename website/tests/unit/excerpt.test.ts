@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-import { elementExcerpt, pageExcerpt, lineOf, pointerLabel } from '../../src/lib/excerpt';
+import { elementExcerpt, pageExcerpt, lineOf, pointerLabel, groupReveal } from '../../src/lib/excerpt';
 
 describe('proof excerpts', () => {
   const element = { uid: 1, CType: 'text', header: 'Hello', bodytext: [{ _type: 'block' }, { _type: 'block' }], assets: [], tags: ['a'] };
@@ -29,4 +29,13 @@ describe('proof excerpts', () => {
     expect(pointerLabel('/regions/story/1')).toBe('regions.story[1]');
     expect(pointerLabel('/regions/a~1b~0c/0')).toBe('regions["a/b~c"][0]');
   });
+});
+
+test('grouped proofs keep every element and refuse mixed requests', () => {
+  const reveal = { request: 'GET /p/1', status: 200, pointer: '/regions/cta/1', json: '{\n  "uid": 1\n}', lang: 'json' as const, excerpt: '', type: 'type A = {}' };
+  const group = groupReveal([reveal, { ...reveal, pointer: '/regions/cta/2', json: '{\n  "uid": 2\n}' }]);
+  expect(JSON.parse(group.json)).toEqual([{ uid: 1 }, { uid: 2 }]);
+  expect(group.pointer).toBe('');
+  expect(() => groupReveal([reveal, { ...reveal, request: 'GET /p/2' }])).toThrow();
+  expect(() => groupReveal([])).toThrow();
 });

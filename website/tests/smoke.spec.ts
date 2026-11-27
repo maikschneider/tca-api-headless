@@ -29,6 +29,17 @@ for (const route of manifest.routes) {
       expect(await page.locator('main ol li').count()).toBeGreaterThan(0);
       expect(await page.locator('main th[scope="row"]').count()).toBeGreaterThan(0);
     }
+    if (route.site === 'website' && route.uid === 2000) {
+      const groups = page.locator('.actions-group');
+      expect(await groups.count()).toBe(2);
+      for (const group of await groups.all()) {
+        await group.locator('summary').click();
+        const elements = JSON.parse(await group.locator('[data-pane="json"] pre').textContent() ?? '') as { header: string }[];
+        const actions = await group.locator('.action').allInnerTexts();
+        expect(elements.length).toBe(actions.length);
+        elements.forEach((element, index) => expect(actions[index]).toContain(element.header));
+      }
+    }
     const targets = await page.locator('a[href], img[src], source[srcset], link[rel="stylesheet"]').evaluateAll((elements) => elements.flatMap((element) => {
       const value = element.getAttribute('href') ?? element.getAttribute('src') ?? '';
       const srcset = element.getAttribute('srcset')?.split(',').map((item) => item.trim().split(/\s+/)[0]) ?? [];

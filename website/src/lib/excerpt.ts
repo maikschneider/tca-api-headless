@@ -1,3 +1,5 @@
+import type { Reveal } from './content';
+
 // Display helpers for recorded JSON. They shorten what is shown, never the
 // recording itself, and mark the omission as a comment (shown as JSONC).
 
@@ -38,4 +40,11 @@ export function pointerLabel(pointer: string): string {
   return pointer.split('/').slice(1).map((part) => part.replaceAll('~1', '/').replaceAll('~0', '~')).map((key, index) =>
     /^\d+$/.test(key) ? `[${key}]` : /^[A-Za-z_$][\w$]*$/.test(key) ? `${index ? '.' : ''}${key}` : `[${JSON.stringify(key)}]`,
   ).join('');
+}
+
+/** Several element proofs of one response as one: their JSON as an array, in order. */
+export function groupReveal(reveals: Reveal[]): Reveal {
+  const [first] = reveals;
+  if (!first || reveals.some((reveal) => reveal.request !== first.request || reveal.type !== first.type)) throw new Error('Only proofs of one request and type can be grouped');
+  return { ...first, pointer: '', excerpt: '', json: `[\n${reveals.map((reveal) => reveal.json.replace(/^/gm, '  ')).join(',\n')}\n]` };
 }

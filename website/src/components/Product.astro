@@ -1,5 +1,4 @@
 ---
-import type { HeadlessContentHeaderRead } from '../api/schema';
 import type { Entry } from '../lib/content';
 import Actions from './Actions.astro';
 import Element from './Element.astro';
@@ -17,8 +16,9 @@ const { entry } = Astro.props;
 const { language } = entry;
 const region = (name: string) => entry.blocks.find((block) => block.region === name)?.items ?? [];
 const isText = (item: Entry['blocks'][number]['items'][number]) => item.content.CType === 'text' || item.content.CType === 'textmedia';
-const actions = (items: Entry['blocks'][number]['items']) => items.map((item) => item.content).filter((content): content is HeadlessContentHeaderRead => content.CType === 'header' && Boolean(content.header_link));
-const rest = (items: Entry['blocks'][number]['items']) => items.filter((item) => item.content.CType !== 'header' || !item.content.header_link);
+const isAction = (item: Entry['blocks'][number]['items'][number]) => item.content.CType === 'header' && Boolean(item.content.header_link);
+const actions = (items: Entry['blocks'][number]['items']) => items.filter(isAction);
+const rest = (items: Entry['blocks'][number]['items']) => items.filter((item) => !isAction(item));
 const assets = (content: Entry['blocks'][number]['items'][number]['content']) => content.CType === 'textmedia' ? (content.assets ?? []) : [];
 
 const hero = region('hero');

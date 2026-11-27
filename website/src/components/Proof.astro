@@ -7,12 +7,13 @@ import { t } from '../lib/i18n';
 import { proofThemes } from '../lib/shiki';
 import Mark from './Mark.astro';
 
-export type Props = { recording: Reveal; language: Language; label?: string; class?: string };
+export type Props = { recording: Reveal; language: Language; label?: string; where?: string; class?: string };
 
 // The proof of one rendered element: request, recorded JSON and generated type.
 // A native disclosure, so it opens without JavaScript. The summary names what
 // differs between proofs of one page: the element's place in the response.
 const { recording, language, label, class: className } = Astro.props;
+const where = Astro.props.where ?? (recording.pointer ? pointerLabel(recording.pointer) : '');
 const s = t(language);
 ---
 
@@ -20,10 +21,10 @@ const s = t(language);
   <summary>
     <Mark />
     <span class="proof-label">{label ?? s.proof}</span>
-    <code class="proof-request">{recording.pointer ? pointerLabel(recording.pointer) : recording.request}</code>
+    <code class="proof-request">{where || recording.request}</code>
   </summary>
   <div class="galley">
-    <p class="proof-line"><span class="pane-label">{s.request}</span> <code>{recording.request}</code>{recording.pointer && <> <code class="proof-pointer">#{recording.pointer}</code></>} <span class="proof-status">{s.status} <code>{recording.status}</code></span></p>
+    <p class="proof-line"><span class="pane-label">{s.request}</span> <code>{recording.request}</code>{recording.pointer ? <> <code class="proof-pointer">#{recording.pointer}</code></> : where && <> <code class="proof-pointer">{where}</code></>} <span class="proof-status">{s.status} <code>{recording.status}</code></span></p>
     <p class="proof-note">{s.recorded}</p>
     <div class="panes">
       <div class="pane" data-pane="json">
