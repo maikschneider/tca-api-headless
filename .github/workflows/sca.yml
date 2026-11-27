@@ -12,8 +12,13 @@ permissions:
 
 jobs:
   sca:
-    name: SCA
+    name: SCA (TYPO3 ${{ matrix.typo3-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3-version: ["13.4", "14.3"]
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,7 +33,10 @@ jobs:
         run: |
           ddev start
           ddev composer config --global github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
-          ddev composer install --no-progress
+          ddev composer update --no-progress --with=typo3/cms-core:"^${{ matrix.typo3-version }}"
+
+      - name: Log versions
+        run: ddev composer show typo3/cms-core
 
       - name: Run static code analysis
         run: ddev composer ci:sca
