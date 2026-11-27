@@ -24,7 +24,8 @@ export async function localFile(href: string, files: LinkManifest): Promise<stri
   if (url.origin !== origin || !['/fileadmin/', '/typo3temp/'].some((path) => url.pathname.startsWith(path))) {
     throw new Error(`Unexpected content file URL: ${href}`);
   }
-  const name = localizedName(basename(url.pathname));
+  const name = localizedName(decodeURIComponent(basename(url.pathname)));
+  if (name.includes('/') || name.includes('\\')) throw new Error(`Invalid file basename: ${href}`);
   const path = `files/${createHash('sha256').update(key).digest('hex').slice(0, 16)}/${name}`;
   const cached = `.cache/${path}`;
   let data: Uint8Array;
@@ -43,7 +44,7 @@ export async function localFile(href: string, files: LinkManifest): Promise<stri
     await mkdir(`src/assets/${path.slice(0, path.lastIndexOf('/'))}`, { recursive: true });
     await writeFile(`src/assets/${path}`, data);
   }
-  files[key] = `${prefix}/${path}`;
+  files[key] = `${prefix}/${path.split('/').map(encodeURIComponent).join('/')}`;
   return files[key];
 }
 

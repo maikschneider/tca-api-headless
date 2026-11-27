@@ -15,6 +15,8 @@ const terms = items.filter((item): item is Term => typeof item !== 'string');
   {
     terms.length > 0 ? (
       <dl>{terms.map((item) => [<dt>{item.term}</dt>, <dd>{item.definition}</dd>])}</dl>
+    ) : content.bullets_type === 1 ? (
+      <ol>{items.map((item) => <li>{item}</li>)}</ol>
     ) : (
       <ul>{items.map((item) => <li>{item}</li>)}</ul>
     )

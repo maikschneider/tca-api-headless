@@ -116,7 +116,7 @@ export async function prepare(): Promise<void> {
   }
   const missing = await record('website', 'en', '_api/headless_pages?path=%2Fdoes-not-exist');
   if (members(missing).length) throw new Error('Expected empty missing-page lookup');
-  const data: BuildData = { entries, pages, files, missing: await reveal(missing, 'HeadlessPagesLookup') };
+  const data: BuildData = { entries, pages, files, missing: await reveal(missing, 'HeadlessPagesCollection') };
   await mkdir('.cache', { recursive: true });
   await writeFile('.cache/build.json', JSON.stringify(data));
   await writeFile('public/routes.json', JSON.stringify({ base: process.env.WEBSITE_BASE ?? '/tca-api-headless/', routes: entries.map(({ site, language, path, output, page }) => ({ site, language, path, output, uid: page.uid })) }, null, 2));

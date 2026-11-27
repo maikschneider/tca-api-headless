@@ -13,7 +13,7 @@ const table = content.bodytext ?? { head: [], body: [], foot: [] };
   <table>
     {content.table_caption && <caption>{content.table_caption}</caption>}
     {table.head.length > 0 && <thead><tr>{table.head.map((cell) => <th>{cell}</th>)}</tr></thead>}
-    <tbody>{table.body.map((row) => <tr>{row.map((cell) => <td>{cell}</td>)}</tr>)}</tbody>
+    <tbody>{table.body.map((row) => <tr>{row.map((cell, index) => index === 0 && content.table_header_position === 2 ? <th scope="row">{cell}</th> : <td>{cell}</td>)}</tr>)}</tbody>
     {table.foot.length > 0 && <tfoot><tr>{table.foot.map((cell) => <td>{cell}</td>)}</tr></tfoot>}
   </table>
 </section>

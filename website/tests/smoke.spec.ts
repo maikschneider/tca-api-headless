@@ -6,6 +6,7 @@ const root = resolve(process.env.WEBSITE_DIST ?? 'dist');
 const manifest = JSON.parse(await readFile(root + '/routes.json', 'utf8')) as { base: string; routes: { output: string; site: string; language: string; uid: number }[] };
 const base = '/' + manifest.base.split('/').filter(Boolean).join('/');
 const prefix = base === '/' ? '' : base;
+const siteOrigin = new URL(process.env.WEBSITE_SITE ?? 'https://maikschneider.github.io').origin;
 
 for (const route of manifest.routes) {
   test(`${route.site}/${route.language}: ${route.output}`, async ({ page, request }) => {
@@ -24,6 +25,10 @@ for (const route of manifest.routes) {
     await expect(panels.first()).toHaveAttribute('open', '');
     await expect(panels.first()).toContainText('JSON response');
     await expect(panels.first()).toContainText('Generated TypeScript type');
+    if (route.uid === 2001) {
+      expect(await page.locator('main ol li').count()).toBeGreaterThan(0);
+      expect(await page.locator('main th[scope="row"]').count()).toBeGreaterThan(0);
+    }
     const targets = await page.locator('a[href], img[src], source[srcset], link[rel="stylesheet"]').evaluateAll((elements) => elements.flatMap((element) => {
       const value = element.getAttribute('href') ?? element.getAttribute('src') ?? '';
       const srcset = element.getAttribute('srcset')?.split(',').map((item) => item.trim().split(/\s+/)[0]) ?? [];
@@ -44,12 +49,12 @@ for (const route of manifest.routes) {
     const absolute = await page.locator('link[rel="canonical"], link[rel="alternate"], meta[property="og:image"]').evaluateAll((elements) => elements.map((element) => element.getAttribute('href') ?? element.getAttribute('content') ?? ''));
     for (const href of absolute) {
       const url = new URL(href);
-      if (url.origin !== 'https://maikschneider.github.io') continue;
+      if (url.origin !== siteOrigin) continue;
       expect(url.pathname.startsWith(prefix + '/'), href).toBeTruthy();
       expect((await request.get(url.pathname)).status(), href).toBe(200);
     }
     const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());
-    expect(schema.url).toBe(`https://maikschneider.github.io${route.output}`);
+    expect(schema.url).toBe(`${siteOrigin}${route.output}`);
     const alternates = await page.locator('nav[aria-label="Language"] a').evaluateAll((elements) => elements.map((element) => ({ href: element.getAttribute('href'), language: element.getAttribute('lang') })));
     for (const alternate of alternates) {
       expect(manifest.routes.find((other) => other.output === alternate.href)).toMatchObject({ site: route.site, uid: route.uid, language: alternate.language });
@@ -65,6 +70,7 @@ test('standalone artifact, 404, downloads and no hidden-file loss', async ({ pag
   await page.locator('summary').click();
   await expect(page.locator('details')).toContainText('hydra:totalItems');
   await expect(page.locator('details')).toContainText('does-not-exist');
+  await expect(page.locator('details')).toContainText('type HeadlessPagesCollection =');
   for (const site of ['website', 'kettenblatt']) {
     const document = await request.get(`${prefix}/contracts/${site}.json`);
     expect(document.status()).toBe(200);

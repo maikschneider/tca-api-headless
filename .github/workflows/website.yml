@@ -71,7 +71,10 @@ jobs:
           bun run types:compare
           bun run check
           bun test tests/unit
-          bunx playwright install --with-deps chromium
+      - name: Install Chromium for static smoke
+        timeout-minutes: 3
+        working-directory: website
+        run: bunx playwright install --with-deps --only-shell chromium
       - name: Build both deployment bases from TYPO3
         working-directory: website
         run: |
