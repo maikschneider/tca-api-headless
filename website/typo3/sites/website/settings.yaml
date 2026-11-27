@@ -1,0 +1,5 @@
+tca_api_headless:
+  navigation:
+    depth: 2
+    maxDepth: 4
+  fallbackCTypes: []

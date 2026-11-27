@@ -1,0 +1,91 @@
+# Static website
+
+Astro builds this product site from two TYPO3 page trees, not from copied page text. W1 is the content/export skeleton; the visual design and full showcases follow separately. `demo/` remains the minimal, request-time reference frontend.
+
+## Restore, edit, export
+
+Use a **dedicated checkout/worktree and DDEV project**, never the extension's regular test instance. `website-restore` drops **every database table** and replaces **all of public/fileadmin**. Both commands refuse any project name other than `tca-api-headless-website`.
+
+From the repository root, with DDEV, Node 26 and Bun on PATH:
+
+```bash
+# In a fresh worktree, create this untracked file before ddev start:
+printf 'name: tca-api-headless-website\nphp_version: "8.4"\n' > .ddev/config.local.yaml
+ddev start
+ddev composer update --no-progress --with=typo3/cms-core:^14.3
+ddev website-restore
+ddev restart
+```
+
+Open `/typo3` on the DDEV URL (the local setup account is `admin` / `Passw0rd!`). The Website and Kettenblatt roots have stable IDs 2000 and 3000. Edit content in the backend and upload assets to fileadmin, then:
+
+```bash
+ddev website-export
+git diff -- website/typo3
+git status --short --untracked-files=all -- website/typo3
+```
+
+Commit the SQL **and** new files. Site configuration lives in `typo3/sites/`; restore copies it into ignored `config/sites/` directories with the current DDEV URL. Other tracked test sites are not rewritten. The SQL is explicit-column, ordered, one INSERT per row; it includes the fileadmin storage, metadata, references, owner counters and editable DB backend layouts, but no accounts or derived files. Only live, non-deleted rows are exported. Avoid workspaces in this authoring instance. `website-export` is a content snapshot, not a complete TYPO3 database backup.
+
+After adding/removing/translating a page, update the expected per-site/per-language route inventory in `src/lib/config.ts`. Navigation discovers menu pages; explicit path lookups cover the hidden Meta branch. The build checks the inventory, unexpected menu pages, hidden/untranslated omissions, duplicate output paths, a depth boundary and every CType. Free-mode pages without an actual translation are deliberately **not** emitted as alternates, even where a direct API show falls back.
+
+## Generate, check, build
+
+```bash
+mkdir -p var/website
+ddev exec vendor/bin/typo3 tca-api:openapi website --output var/website/website.json
+ddev exec vendor/bin/typo3 tca-api:openapi kettenblatt --output var/website/kettenblatt.json
+cd website
+bun install --frozen-lockfile
+bun run types:compare
+bun run check
+bun test tests/unit
+export TYPO3_BASE_URL="$(ddev exec printenv DDEV_PRIMARY_URL)"
+# For an HTTPS DDEV URL, trust its mkcert CA:
+export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+bun run build
+```
+
+After an intentional API contract change run `bun run types`, review both generated declarations, then compare again. Direct `openapi-typescript` generates separate product/specimen types because only the latter includes the `html` fallback contract. Downloadable documents and declarations come from that same run.
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `TYPO3_BASE_URL` | `http://tca-api-headless-website.ddev.site` | Origin of the dedicated content instance |
+| `WEBSITE_SITE` | `https://maikschneider.github.io` | Future public origin, used for absolute SEO URLs; not a deployment |
+| `WEBSITE_BASE` | `/tca-api-headless/` | Static deployment base; `/` also supported |
+| `WEBSITE_API` | live | `replay` uses the ignored recordings/files from the last live build |
+| `WEBSITE_DIST` | `dist` | Directory served/tested by the static-only smoke server |
+| `CHROMIUM_PATH` | Playwright's Chromium | Optional installed browser executable for local smoke |
+
+`build` records requests keyed by site, language, method and full URL in `.cache/api/`. Only display copies replace the source host; block reveals retain an exact JSON pointer into the recorded response. Open the native `<details>` without JS to see request, JSON and the generated type. The build localizes content/download/processed-image URLs, rewrites page links through the emitted route manifest and fails on an unknown internal target. Images are then imported locally and optimized by `astro:assets` (AVIF/WebP, responsive sizes). FileProcessor does not supply image dimensions for textmedia assets, so local imports supply intrinsic dimensions. The flat placeholder plate is a locally generated gradient, not a photo or a trademark.
+
+## Prove a standalone artifact
+
+```bash
+# Still in website/, build the root deployment and pack it including .nojekyll:
+WEBSITE_BASE=/ bun run build
+tar -czf ../var/website/root.tar.gz -C dist .
+WEBSITE_BASE=/tca-api-headless/ bun run build
+tar -czf ../var/website/website-dist.tar.gz -C dist .
+ddev stop
+mkdir -p ../var/website/root ../var/website/project
+tar -xzf ../var/website/root.tar.gz -C ../var/website/root
+tar -xzf ../var/website/website-dist.tar.gz -C ../var/website/project
+bunx playwright install chromium
+WEBSITE_DIST=../var/website/root WEBSITE_BASE=/ bun run smoke
+WEBSITE_DIST=../var/website/project WEBSITE_BASE=/tca-api-headless/ bun run smoke
+```
+
+Smoke opens **every** route in both languages with JS disabled, follows internal links/downloads, checks every image/srcset and SEO image URL, language-switch UID identity, JSON panels, contracts, custom 404 and `.nojekyll`. It must pass with TYPO3 stopped. To inspect the extracted project build, `WEBSITE_DIST=../var/website/project bun run serve` serves it at `http://127.0.0.1:4400/tca-api-headless/`.
+
+The Actions workflow restores a fresh instance, verifies two restore/export round trips (tracked **and new** files), builds and tests both bases, and uploads `website-dist.tar.gz`. Extract it into a static host's document root configured for the chosen base and `404.html`; no Node/PHP backend is needed. **No deployment or hosting configuration is included.** Legal copy is still placeholder text.
+
+`website/` is excluded from Composer dist and TER packages, not from source checkouts. The existing demo can be checked independently with `cd demo && bun install && bun run check && bun run build`.
+
+### Known-good dependency snapshot
+
+The initial fixture/build was exercised with TYPO3 `14.3.12` and tca-api revision `bb4a71bf98182a57af2caa73095ae69d5c550c5d` on PHP 8.4. CI logs resolved versions rather than pretending the development branch is pinned. If upstream drifts, this temporary constraint was verified with Composer's resolver:
+
+```bash
+ddev composer update --no-progress --with=typo3/cms-core:14.3.12 --with=maikschneider/tca-api:dev-release/2.4.0#bb4a71bf98182a57af2caa73095ae69d5c550c5d
+```

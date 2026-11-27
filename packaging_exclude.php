@@ -16,6 +16,7 @@ return [
         'build',
         'config\/',
         'demo',
+        'website',
         'Documentation-GENERATED-temp',
         'Plans',
         'public',

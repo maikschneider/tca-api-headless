@@ -1,0 +1,13 @@
+---
+import { loadBuild } from '../lib/content';
+import Reveal from '../components/Reveal.astro';
+import { output } from '../lib/config';
+import '../styles/base.css';
+const { missing } = await loadBuild();
+---
+
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Page not found</title><meta name="robots" content="noindex" /></head>
+  <body><main id="main"><h1>Page not found</h1><p>The path lookup returned no page.</p><a href={output('')}>Home</a><Reveal recording={missing} /></main></body>
+</html>

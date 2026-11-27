@@ -20,3 +20,5 @@ config/system
 .codegraph
 Plans/*.md
 node_modules/
+config/sites/website/
+config/sites/kettenblatt/

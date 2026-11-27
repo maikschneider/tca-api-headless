@@ -1,0 +1,13 @@
+---
+import type { HeadlessContentFallbackRead } from '../../api/schema';
+
+export type Props = { content: HeadlessContentFallbackRead };
+
+// A content type the site lists as fallback: only its type and header are sent.
+const { content } = Astro.props;
+---
+
+<section class="block fallback" data-ctype={content.CType}>
+  {content.header && <h2>{content.header}</h2>}
+  <p><small>{content.CType}</small></p>
+</section>

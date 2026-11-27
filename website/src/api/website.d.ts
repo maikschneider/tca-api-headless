@@ -1,0 +1,600 @@
+export interface paths {
+    "/_api/headless_navigation/{uid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                uid: number;
+            };
+            cookie?: never;
+        };
+        /** Get single HeadlessNavigation */
+        get: operations["showHeadless_navigation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_api/headless_pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Look up a page by its path
+         * @description Resolves the path like the frontend in the request language. An unknown path answers an empty collection.
+         */
+        get: operations["listHeadless_pages"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/_api/headless_pages/{uid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                uid: number;
+            };
+            cookie?: never;
+        };
+        /** Get single HeadlessPages */
+        get: operations["showHeadless_pages"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+}
+export type webhooks = Record<string, never>;
+export interface components {
+    schemas: {
+        RelationStub: {
+            "@id": string;
+            "@type": string;
+            uid: number;
+        };
+        FileObject: {
+            uid?: number;
+            name?: string;
+            extension?: string;
+            publicUrl?: string | null;
+            mimeType?: string;
+            fileSize?: number;
+            metadata?: {
+                title?: string | null;
+                alternative?: string | null;
+                description?: string | null;
+                copyright?: string | null;
+            };
+            width?: number;
+            height?: number;
+            cropVariants?: {
+                [key: string]: {
+                    publicUrl?: string;
+                    width?: number;
+                    height?: number;
+                };
+            };
+        };
+        HydraError: {
+            /** @example http://www.w3.org/ns/hydra/context.jsonld */
+            "@context"?: string;
+            /** @example hydra:Error */
+            "@type": string;
+            "hydra:title": string;
+            "hydra:description": string;
+        };
+        ValidationError: {
+            /** @example http://www.w3.org/ns/hydra/context.jsonld */
+            "@context"?: string;
+            /** @example hydra:Error */
+            "@type"?: string;
+            /** @example Validation Failed */
+            "hydra:title"?: string;
+            "hydra:description"?: string;
+            violations?: {
+                propertyPath?: string;
+                message?: string;
+                code?: string;
+            }[];
+        };
+        HeadlessContentTextRead: {
+            /** @example HeadlessContent */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            CType: "text";
+            header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
+            bodytext?: components["schemas"]["PortableText"];
+        };
+        HeadlessContentTextmediaRead: {
+            /** @example HeadlessContent */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            CType: "textmedia";
+            header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
+            bodytext?: components["schemas"]["PortableText"];
+            assets?: components["schemas"]["FileObject"][];
+        };
+        HeadlessContentImageRead: {
+            /** @example HeadlessContent */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            CType: "image";
+            header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
+            image?: components["schemas"]["FileObject"][];
+        };
+        HeadlessContentHeaderRead: {
+            /** @example HeadlessContent */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            CType: "header";
+            header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
+        };
+        HeadlessContentBulletsRead: {
+            /** @example HeadlessContent */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            CType: "bullets";
+            header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
+            bullets_type?: number;
+            bodytext?: components["schemas"]["HeadlessBulletList"];
+        };
+        HeadlessContentTableRead: {
+            /** @example HeadlessContent */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            CType: "table";
+            header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
+            bodytext?: components["schemas"]["HeadlessTable"];
+            table_caption?: string | null;
+            table_header_position?: number;
+        };
+        HeadlessContentUploadsRead: {
+            /** @example HeadlessContent */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            CType: "uploads";
+            header?: string;
+            header_link?: components["schemas"]["HeadlessLink"] | null;
+            media?: components["schemas"]["FileObject"][];
+        };
+        HeadlessContentRead: components["schemas"]["HeadlessContentTextRead"] | components["schemas"]["HeadlessContentTextmediaRead"] | components["schemas"]["HeadlessContentImageRead"] | components["schemas"]["HeadlessContentHeaderRead"] | components["schemas"]["HeadlessContentBulletsRead"] | components["schemas"]["HeadlessContentTableRead"] | components["schemas"]["HeadlessContentUploadsRead"];
+        HeadlessContentCollection: {
+            "@context"?: string;
+            /** @example hydra:Collection */
+            "@type"?: string;
+            "@id"?: string;
+            "hydra:totalItems"?: number;
+            "hydra:member"?: components["schemas"]["HeadlessContentRead"][];
+            "hydra:view"?: {
+                "@type"?: string;
+                "hydra:first"?: string;
+                "hydra:last"?: string;
+                "hydra:previous"?: string | null;
+                "hydra:next"?: string | null;
+            };
+            "hydra:search"?: {
+                /** @example hydra:IriTemplate */
+                "@type"?: string;
+                "hydra:template"?: string;
+                /** @example BasicRepresentation */
+                "hydra:variableRepresentation"?: string;
+                "hydra:mapping"?: {
+                    /** @example IriTemplateMapping */
+                    "@type"?: string;
+                    variable?: string;
+                    property?: string;
+                    required?: boolean;
+                }[];
+            };
+        };
+        HeadlessNavigationRead: {
+            /** @example HeadlessNavigation */
+            "@type"?: string;
+            "@id"?: string;
+            uid: number;
+            title?: string;
+            nav_title?: string;
+            slug?: string | null;
+            /** @enum {integer} */
+            doktype?: 1 | 3 | 4;
+            /**
+             * Format: uri
+             * @description Absolute URL of the page in the request language.
+             */
+            url: string;
+            /** @description Subpages shown in menus, in their order in the page tree. */
+            children: components["schemas"]["HeadlessNavigationRead"][];
+        };
+        HeadlessNavigationCollection: {
+            "@context"?: string;
+            /** @example hydra:Collection */
+            "@type"?: string;
+            "@id"?: string;
+            "hydra:totalItems"?: number;
+            "hydra:member"?: components["schemas"]["HeadlessNavigationRead"][];
+            "hydra:view"?: {
+                "@type"?: string;
+                "hydra:first"?: string;
+                "hydra:last"?: string;
+                "hydra:previous"?: string | null;
+                "hydra:next"?: string | null;
+            };
+            "hydra:search"?: {
+                /** @example hydra:IriTemplate */
+                "@type"?: string;
+                "hydra:template"?: string;
+                /** @example BasicRepresentation */
+                "hydra:variableRepresentation"?: string;
+                "hydra:mapping"?: {
+                    /** @example IriTemplateMapping */
+                    "@type"?: string;
+                    variable?: string;
+                    property?: string;
+                    required?: boolean;
+                }[];
+            };
+        };
+        HeadlessPagesRead: {
+            /** @example HeadlessPages */
+            "@type"?: string;
+            "@id"?: string;
+            uid?: number;
+            title?: string;
+            slug?: string | null;
+            seo_title?: string;
+            description?: string | null;
+            no_index?: number;
+            no_follow?: number;
+            canonical_link?: components["schemas"]["HeadlessLink"] | null;
+            og_title?: string;
+            og_description?: string | null;
+            og_image?: components["schemas"]["FileObject"][];
+            meta: components["schemas"]["HeadlessPagesMeta"];
+            /** @description Content elements by region, in their order on the page. */
+            regions: {
+                [key: string]: components["schemas"]["HeadlessContentRead"][];
+            };
+        };
+        HeadlessPagesCollection: {
+            "@context"?: string;
+            /** @example hydra:Collection */
+            "@type"?: string;
+            "@id"?: string;
+            "hydra:totalItems"?: number;
+            "hydra:member"?: components["schemas"]["HeadlessPagesLookup"][];
+            "hydra:view"?: {
+                "@type"?: string;
+                "hydra:first"?: string;
+                "hydra:last"?: string;
+                "hydra:previous"?: string | null;
+                "hydra:next"?: string | null;
+            };
+            "hydra:search"?: {
+                /** @example hydra:IriTemplate */
+                "@type"?: string;
+                "hydra:template"?: string;
+                /** @example BasicRepresentation */
+                "hydra:variableRepresentation"?: string;
+                "hydra:mapping"?: {
+                    /** @example IriTemplateMapping */
+                    "@type"?: string;
+                    variable?: string;
+                    property?: string;
+                    required?: boolean;
+                }[];
+            };
+        };
+        /** @description Rich text as Portable Text, see https://www.portabletext.org/specification/ */
+        PortableText: components["schemas"]["PortableTextBlock"][];
+        PortableTextBlock: {
+            /** @constant */
+            _type: "block";
+            _key: string;
+            /** @enum {string} */
+            style: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+            markDefs: components["schemas"]["PortableTextLink"][];
+            children: components["schemas"]["PortableTextSpan"][];
+            /** @enum {string} */
+            listItem?: "bullet" | "number";
+            level?: number;
+        };
+        PortableTextSpan: {
+            /** @constant */
+            _type: "span";
+            _key: string;
+            /** @description Decorators (strong, em, underline, strike-through, code) and markDef keys. */
+            marks: string[];
+            text: string;
+        };
+        PortableTextLink: {
+            /** @constant */
+            _type: "link";
+            _key: string;
+            /**
+             * Format: uri
+             * @description Absolute http(s), mailto or tel URL.
+             */
+            href: string;
+            /** @description Link target such as "_blank"; null when not set. */
+            target: string | null;
+            /** @description Link title; null when not set. */
+            title: string | null;
+        };
+        /** @description One entry per line; terms and definitions for a definition list (bullets_type 2). */
+        HeadlessBulletList: string[] | {
+            term: string;
+            definition: string;
+        }[];
+        HeadlessTable: {
+            /** @description Header row; empty without one. */
+            head: string[];
+            body: string[][];
+            /** @description Footer row; empty without one. */
+            foot: string[];
+        };
+        HeadlessLink: {
+            /**
+             * Format: uri
+             * @description Absolute http(s), mailto or tel URL.
+             */
+            href: string;
+            /** @description Link target such as "_blank"; null when not set. */
+            target: string | null;
+            /** @description Link title; null when not set. */
+            title: string | null;
+        };
+        HeadlessPagesMeta: {
+            /** @enum {string} */
+            robots: "index,follow" | "index,nofollow" | "noindex,follow" | "noindex,nofollow";
+            /** @description Absolute canonical URL; null when the page must not be indexed. */
+            canonical: string | null;
+            /** @description schema.org WebPage as JSON-LD. */
+            schema: {
+                /** @constant */
+                "@context": "https://schema.org";
+                /** @constant */
+                "@type": "WebPage";
+                /** Format: uri */
+                url: string;
+                name: string;
+                inLanguage: string;
+                description?: string;
+            };
+        };
+        /** @description The page found at the path; fetch the page itself by its uid. */
+        HeadlessPagesLookup: {
+            "@type": string;
+            "@id": string;
+            /** @description uid of the page in the default language. */
+            uid: number;
+        };
+    };
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
+}
+export type $defs = Record<string, never>;
+export interface operations {
+    showHeadless_navigation: {
+        parameters: {
+            query?: {
+                /** @description Sparse fieldset: only return the specified columns and virtual properties (plus @type, @id, uid) */
+                fields?: string[];
+                /** @description Number of page levels below the page. Defaults to the site setting tca_api_headless.navigation.depth; values above tca_api_headless.navigation.maxDepth are capped. */
+                depth?: number;
+            };
+            header?: never;
+            path: {
+                uid: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HeadlessNavigationRead"];
+                };
+            };
+            /** @description The depth is not a positive integer */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+        };
+    };
+    listHeadless_pages: {
+        parameters: {
+            query: {
+                /** @description Page path below the base of the request language, e.g. "/about". */
+                path: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HeadlessPagesCollection"];
+                };
+            };
+            /** @description The path is missing */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+        };
+    };
+    showHeadless_pages: {
+        parameters: {
+            query?: {
+                /** @description Sparse fieldset: only return the specified columns and virtual properties (plus @type, @id, uid) */
+                fields?: string[];
+            };
+            header?: never;
+            path: {
+                uid: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HeadlessPagesRead"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/ld+json": components["schemas"]["HydraError"];
+                };
+            };
+        };
+    };
+}

@@ -1,0 +1,28 @@
+base: 'http://localhost/website/'
+dependencies:
+  - maikschneider/tca-api-headless
+languages:
+  -
+    title: English
+    enabled: true
+    locale: en_US
+    hreflang: en
+    base: /
+    websiteTitle: ''
+    navigationTitle: English
+    flag: en-us-gb
+    languageId: 0
+  -
+    title: German
+    enabled: true
+    locale: de_DE
+    hreflang: de
+    base: /de/
+    websiteTitle: ''
+    navigationTitle: Deutsch
+    fallbackType: strict
+    fallbacks: ''
+    flag: de
+    languageId: 1
+rootPageId: 2000
+websiteTitle: tca-api-headless

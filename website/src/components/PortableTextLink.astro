@@ -1,0 +1,11 @@
+---
+import type { Mark } from 'astro-portabletext/types';
+import type { HeadlessLink } from '../api/schema';
+import Link from './Link.astro';
+
+export type Props = { node: Mark<HeadlessLink> };
+
+const { node } = Astro.props;
+---
+
+<Link link={node.markDef}><slot /></Link>

@@ -1,0 +1,56 @@
+---
+import { getImage } from 'astro:assets';
+import type { Entry } from '../lib/content';
+import { deployment, output } from '../lib/config';
+import { imageSource } from '../lib/images';
+import { jsonLd } from '../lib/api';
+import Navigation from '../components/Navigation.astro';
+import Reveal from '../components/Reveal.astro';
+import '../styles/base.css';
+
+export type Props = { entry: Entry };
+const { entry } = Astro.props;
+const { page, navigation, language } = entry;
+const { meta } = page;
+const image = page.og_image?.[0]?.publicUrl;
+const social = image ? await getImage({ src: imageSource(image), width: 1200, format: 'jpg' }) : undefined;
+---
+
+<!doctype html>
+<html lang={language}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{meta.schema.name}</title>
+    <meta name="robots" content={meta.robots} />
+    {meta.schema.description && <meta name="description" content={meta.schema.description} />}
+    {meta.canonical && <link rel="canonical" href={meta.canonical} />}
+    {social && <meta property="og:image" content={new URL(social.src, deployment).href} />}
+    <meta property="og:title" content={page.og_title || meta.schema.name} />
+    {entry.alternates.map((alternate) => <link rel="alternate" hreflang={alternate.language} href={new URL(alternate.output, deployment).href} />)}
+    <script type="application/ld+json" set:html={jsonLd(meta.schema)} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header>
+      <a class="home" href={new URL(navigation.url).pathname}>{navigation.title}</a>
+      <nav aria-label="Language">
+        {entry.alternates.map((alternate) => <a href={alternate.output} lang={alternate.language} hreflang={alternate.language} aria-current={alternate.language === language ? 'true' : undefined}>{alternate.language === 'en' ? 'English' : 'Deutsch'}</a>)}
+      </nav>
+    </header>
+    <div class="layout">
+      <aside>
+        <nav aria-label="Main"><Navigation entries={navigation.children} current={entry.output} /></nav>
+        <Reveal recording={entry.menuReveal} label="Navigation response" />
+        <p><a href={output(`contracts/${entry.site}.json`).replace(/\/$/, '')}>OpenAPI document</a> · <a href={output(`contracts/${entry.site}.d.ts`).replace(/\/$/, '')}>TypeScript declarations</a></p>
+      </aside>
+      <main id="main">
+        {entry.site === 'kettenblatt' && <p>Fictional specimen site · Erfundene Muster-Site</p>}
+        <h1>{page.title}</h1>
+        <slot />
+        <Reveal recording={entry.reveal} label="Composed page response" />
+      </main>
+    </div>
+    <footer><a href={output('meta/imprint')}>Imprint placeholder</a> · Static HTML from TYPO3</footer>
+  </body>
+</html>

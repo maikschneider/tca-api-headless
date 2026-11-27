@@ -5,6 +5,7 @@ CHANGELOG.md                                      merge=union
 /.github                                          export-ignore
 /config                                           export-ignore
 /demo                                             export-ignore
+/website                                          export-ignore
 /Tests                                            export-ignore
 /.editorconfig                                    export-ignore
 /.gitattributes                                   export-ignore
