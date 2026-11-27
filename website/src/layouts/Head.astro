@@ -1,0 +1,18 @@
+---
+import type { Language } from '../lib/config';
+import { prefix } from '../lib/config';
+import textFont from '../fonts/schibsted-grotesk-latin.woff2?url';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+export type Props = { title: string; language: Language };
+const { title } = Astro.props;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<link rel="preload" href={textFont} as="font" type="font/woff2" crossorigin />
+<link rel="icon" href={`${prefix}/favicon.svg`} type="image/svg+xml" />
+<meta name="theme-color" content="#f4f7fa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0e171f" media="(prefers-color-scheme: dark)" />

@@ -1,14 +1,15 @@
 ---
 import type { HeadlessContentImageRead } from '../../api/schema';
+import type { Language } from '../../lib/config';
 import Heading from '../Heading.astro';
 import Figure from '../Figure.astro';
 
-export type Props = { content: HeadlessContentImageRead };
+export type Props = { content: HeadlessContentImageRead; language: Language; region: string };
 
-const { content } = Astro.props;
+const { content, language } = Astro.props;
 ---
 
-<section class="block">
-  <Heading header={content.header} link={content.header_link} />
+<section class="block block-image">
+  <Heading header={content.header} link={content.header_link} language={language} />
   {(content.image ?? []).map((file) => <Figure file={file} />)}
 </section>

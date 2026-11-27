@@ -1,0 +1,18 @@
+---
+import type { HeadlessContentHeaderRead } from '../api/schema';
+import type { Language } from '../lib/config';
+import Link from './Link.astro';
+
+export type Props = { items: HeadlessContentHeaderRead[]; language: Language; class?: string };
+
+// Header elements with a link, set as the region's actions; the first one leads.
+const { items, language, class: className } = Astro.props;
+---
+
+{items.length > 0 && (
+  <ul class:list={['actions', className]}>
+    {items.map((content, index) => content.header_link && (
+      <li><Link link={content.header_link} language={language} class={index === 0 ? 'action action-primary' : 'action'}>{content.header}</Link></li>
+    ))}
+  </ul>
+)}

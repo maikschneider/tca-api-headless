@@ -1,0 +1,16 @@
+---
+import type { BlockProps } from 'astro-portabletext/types';
+
+export type Props = BlockProps;
+
+// The API has no code-block type: `<pre>` arrives as a block whose spans all
+// carry the `code` mark. Render that as a code block; anything else as text.
+// `node.children` is the marks tree here: `@span` nodes around `@text` leaves.
+type TreeNode = { _type: string; markType?: string; text?: string; children?: TreeNode[] };
+const { node } = Astro.props;
+const children = node.children as unknown as TreeNode[];
+const textOf = (item: TreeNode): string => item.text ?? (item.children ?? []).map(textOf).join('');
+const code = children.length > 0 && children.every((child) => child._type === '@span' && child.markType === 'code');
+---
+
+{code ? <div class="command"><pre data-copy><code>{children.map(textOf).join('')}</code></pre></div> : <p><slot /></p>}

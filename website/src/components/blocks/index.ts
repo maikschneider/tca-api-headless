@@ -6,9 +6,10 @@ import Image from './Image.astro';
 import Table from './Table.astro';
 import Text from './Text.astro';
 import Uploads from './Uploads.astro';
+import type { Language } from '../../lib/config';
 
 export type Content = HeadlessContentRead | HeadlessContentFallbackRead;
-type Props<T extends Content['CType']> = { content: Extract<Content, { CType: T }> };
+type Props<T extends Content['CType']> = { content: Extract<Content, { CType: T }>; language: Language; region: string };
 
 // One component per content type. A type the API adds without a component here
 // fails `astro check`, so the demo can't silently drop it.

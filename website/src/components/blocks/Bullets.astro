@@ -1,20 +1,23 @@
 ---
 import type { HeadlessContentBulletsRead } from '../../api/schema';
+import type { Language } from '../../lib/config';
 import Heading from '../Heading.astro';
 
-export type Props = { content: HeadlessContentBulletsRead };
+export type Props = { content: HeadlessContentBulletsRead; language: Language; region: string };
 type Term = { term: string; definition: string };
 
-const { content } = Astro.props;
+// A definition list in the product's features region reads as a flow of
+// stages; elsewhere it stays a glossary.
+const { content, language, region } = Astro.props;
 const items: (string | Term)[] = content.bodytext ?? [];
 const terms = items.filter((item): item is Term => typeof item !== 'string');
 ---
 
-<section class="block">
-  <Heading header={content.header} link={content.header_link} />
+<section class="block block-bullets">
+  <Heading header={content.header} link={content.header_link} language={language} />
   {
     terms.length > 0 ? (
-      <dl>{terms.map((item) => [<dt>{item.term}</dt>, <dd>{item.definition}</dd>])}</dl>
+      <dl class:list={[{ flow: region === 'features' }]}>{terms.map((item) => <div><dt>{item.term}</dt><dd>{item.definition}</dd></div>)}</dl>
     ) : content.bullets_type === 1 ? (
       <ol>{items.map((item) => <li>{item}</li>)}</ol>
     ) : (

@@ -1,6 +1,6 @@
 ---
-import { blocks } from '../components/blocks';
-import Reveal from '../components/Reveal.astro';
+import Article from '../components/Article.astro';
+import Product from '../components/Product.astro';
 import Layout from '../layouts/Layout.astro';
 import { loadBuild, type Entry } from '../lib/content';
 import { prefix } from '../lib/config';
@@ -11,16 +11,10 @@ export async function getStaticPaths() {
 }
 export type Props = { entry: Entry };
 const { entry } = Astro.props;
+// The product layout is recognised by its hero region, not by the page.
+const product = entry.blocks.some((block) => block.region === 'hero');
 ---
 
 <Layout entry={entry}>
-  {entry.blocks.map(({ region, items }) => (
-    <div class="region" data-region={region}>
-      <h2 class="region-label">{region}</h2>
-      {items.map(({ content, reveal }) => {
-        const Block = blocks[content.CType] as (props: { content: typeof content }) => unknown;
-        return <div class="element"><Block content={content} /><Reveal recording={reveal} /></div>;
-      })}
-    </div>
-  ))}
+  {product ? <Product entry={entry} /> : <Article entry={entry} />}
 </Layout>

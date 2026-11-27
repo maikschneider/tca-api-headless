@@ -7,3 +7,4 @@ public/files/
 public/contracts/
 public/routes.json
 src/assets/
+.lighthouseci/
