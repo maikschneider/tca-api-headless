@@ -1,5 +1,7 @@
 ---
 import Article from '../components/Article.astro';
+import Catalog from '../components/Catalog.astro';
+import Feature from '../components/Feature.astro';
 import Product from '../components/Product.astro';
 import Layout from '../layouts/Layout.astro';
 import { loadBuild, type Entry } from '../lib/content';
@@ -7,14 +9,15 @@ import { prefix } from '../lib/config';
 
 export async function getStaticPaths() {
   const { entries } = await loadBuild();
-  return entries.map((entry) => ({ params: { path: entry.output.slice(prefix.length).replace(/^\/|\/$/g, '') || undefined }, props: { entry } }));
+  const targets = Object.fromEntries(entries.map((entry) => [entry.output, entry]));
+  return entries.map((entry) => ({ params: { path: entry.output.slice(prefix.length).replace(/^\/|\/$/g, '') || undefined }, props: { entry, targets } }));
 }
-export type Props = { entry: Entry };
-const { entry } = Astro.props;
-// The product layout is recognised by its hero region, not by the page.
-const product = entry.blocks.some((block) => block.region === 'hero');
+export type Props = { entry: Entry; targets: Record<string, Entry> };
+const { entry, targets } = Astro.props;
+// Layouts are recognised by their regions, not by the page.
+const has = (region: string) => entry.blocks.some((block) => block.region === region);
 ---
 
 <Layout entry={entry}>
-  {product ? <Product entry={entry} /> : <Article entry={entry} />}
+  {has('hero') ? <Product entry={entry} /> : has('entries') ? <Catalog entry={entry} /> : has('intro') ? <Feature entry={entry} targets={targets} /> : <Article entry={entry} />}
 </Layout>

@@ -16,6 +16,11 @@ colors:
   process-blue-dark: "oklch(0.8 0.1 245)"
   plate: "oklch(0.24 0.035 248)"
   plate-dark: "oklch(0.15 0.02 248)"
+  workshop-ground: "oklch(0.225 0.016 65)"
+  workshop-sheet: "oklch(0.285 0.02 65)"
+  workshop-paper: "oklch(0.94 0.022 85)"
+  workshop-soft: "oklch(0.82 0.03 80)"
+  workshop-brass: "oklch(0.83 0.11 65)"
 typography:
   display:
     fontFamily: "Schibsted Grotesk, Schibsted Fallback, system-ui, sans-serif"
@@ -137,7 +142,15 @@ The hero's always-open proof: request, the element's JSON with nested arrays col
 Preformatted text from TYPO3 (a Portable Text block whose spans all carry `code`) renders on the sheet as a command; with JS a Copy control is added.
 
 ### Navigation
-Top-level menu in the masthead, underlined when current or an ancestor. Below 52 rem a "Menu" disclosure holds the full tree and the language links. Languages link only to actual translations. The colophon lists the full tree, the contract downloads, the meta pages, and the proofs of the page and the menu.
+Top-level menu in the masthead, underlined when current or an ancestor. Below 52 rem a "Menu" disclosure holds the full tree and the language links. Languages link to actual translations, or explicitly to the home page of a missing language; only real translations get hreflang. The colophon lists the full tree, the contract downloads, the meta pages, and the proofs of the page and the menu.
+
+## Feature pages and specimen
+
+Feature intros give the first textmedia element a large title, lead and plate; the remaining `main` elements keep a measured reading column. Commands that name an API request get the recorded response beside them. The Contract page groups schemas into four native disclosures and puts downloads first. On small screens endpoint rows stack their description below the method/path.
+
+Catalogs use the backend layout's `entries` region. Feature cards put their plate before the heading; extension entries use the same structure without a decorative image. The variation is the authored content, not another icon system.
+
+Kettenblatt is a deliberately single dark workshop world, including in specimen excerpts: warm umber ground, warm paper text, brass links, uppercase heavy headings and generous photographs. It shares the fonts and proof interaction but not the product's cool-paper palette. The explicit fictional-site label stays visible. Its dark colour scheme follows the workbench use scene, rather than a second theme toggle.
 
 ## Do's and Don'ts
 

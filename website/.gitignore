@@ -5,6 +5,7 @@ test-results/
 playwright-report/
 public/files/
 public/contracts/
+public/proofs/
 public/routes.json
 src/assets/
 .lighthouseci/

@@ -3,7 +3,7 @@ import { prefix } from './src/lib/config';
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: ['smoke.spec.ts', 'a11y.spec.ts'],
+  testMatch: ['smoke.spec.ts', 'a11y.spec.ts', 'showcases.spec.ts'],
   workers: 1,
   use: {
     baseURL: 'http://127.0.0.1:4400',

@@ -1,0 +1,20 @@
+---
+import type { HeadlessNavigationRead } from '../api/schema';
+
+export type Props = { nodes: HeadlessNavigationRead[] };
+
+// A recorded navigation response as the tree it describes: title, then slug.
+const { nodes } = Astro.props;
+const path = (url: string) => new URL(url, 'https://static.example').pathname;
+---
+
+{nodes.length > 0 && (
+  <ul class="tree">
+    {nodes.map((node) => (
+      <li>
+        <a href={path(node.url)}>{node.nav_title || node.title}</a> <code>{node.slug}</code>
+        <Astro.self nodes={node.children} />
+      </li>
+    ))}
+  </ul>
+)}

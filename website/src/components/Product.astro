@@ -31,7 +31,6 @@ const cta = region('cta');
   <div class="hero-copy">
     <h1 id="hero-title">{lead && <Mark class="hero-mark" />}{leadContent?.header || entry.page.title}</h1>
     {leadContent && <RichText value={leadContent.bodytext} class="lead" />}
-    {leadContent && assets(leadContent).map((file) => <Figure file={file} />)}
     <Actions items={actions(hero)} language={language} />
   </div>
   {lead && (
@@ -40,6 +39,7 @@ const cta = region('cta');
       <Proof recording={lead.reveal} language={language} />
     </div>
   )}
+  {leadContent && assets(leadContent).length > 0 && <div class="hero-media">{assets(leadContent).map((file) => <Figure file={file} sizes="(min-width: 86rem) 86rem, 100vw" />)}</div>}
 </section>
 {rest(hero).filter((item) => item !== lead).map((item) => <Element {...item} language={language} region="hero" />)}
 

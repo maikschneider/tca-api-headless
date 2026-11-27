@@ -8,7 +8,7 @@ import { resolve } from 'node:path';
 const root = resolve(process.env.WEBSITE_DIST ?? 'dist');
 const manifest = JSON.parse(await readFile(root + '/routes.json', 'utf8')) as { routes: { output: string; site: string; uid: number; language: string }[] };
 const pick = (site: string, uid: number, language: string) => manifest.routes.find((route) => route.site === site && route.uid === uid && route.language === language)!.output;
-const pages = [pick('website', 2000, 'en'), pick('website', 2000, 'de'), pick('website', 2001, 'en'), pick('website', 2003, 'de'), pick('kettenblatt', 3001, 'de')];
+const pages = [pick('website', 2000, 'en'), pick('website', 2000, 'de'), pick('website', 2001, 'en'), pick('website', 2003, 'de'), pick('kettenblatt', 3001, 'de'), pick('website', 2014, 'en'), pick('website', 2015, 'de'), pick('kettenblatt', 3000, 'de')];
 
 test.use({ javaScriptEnabled: true });
 
@@ -26,7 +26,7 @@ for (const scheme of ['light', 'dark'] as const) {
 
 test('keyboard reaches every proof, menu and language link with a visible focus ring', async ({ page }) => {
   await page.goto(pages[0]);
-  const targets = await page.locator('a[href], summary, button').evaluateAll((elements) => elements.filter((element) => (element as HTMLElement).offsetParent !== null).length);
+  const targets = await page.locator('a[href], summary, button').evaluateAll((elements) => elements.filter((element) => element.checkVisibility()).length);
   const seen = new Set<string>();
   for (let index = 0; index < targets + 5; index++) {
     await page.keyboard.press('Tab');
@@ -50,7 +50,7 @@ test('copy control is added with JS and copies the command', async ({ page, cont
   const copy = page.locator('.hero .copy');
   await copy.click();
   await expect(copy).toHaveText('Copied');
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('composer require maikschneider/tca-api-headless');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('composer require maikschneider/tca-api-headless:dev-main \\\n  "maikschneider/tca-api:dev-release/2.4.0 as 2.4.0"');
 });
 
 test('a refused clipboard write tells the visitor to copy by hand', async ({ page }) => {

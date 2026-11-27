@@ -1,0 +1,12 @@
+tca-api-headless requests
+
+Below the language base of a site with the site set maikschneider/tca-api-headless.
+Send Accept: application/ld+json.
+
+GET /_api/headless_pages?path=/some/page     Look up a path: at most one page, its uid
+GET /_api/headless_pages/{uid}               A page: SEO fields, meta, regions
+GET /_api/headless_navigation/{uid}          A page and its subpages, navigation.depth levels
+GET /_api/headless_navigation/{uid}?depth=3  The same with 3 levels, capped at navigation.maxDepth
+GET /_api/openapi.json                       The site's OpenAPI document
+
+German: /de/_api/... (the base of the site language)
