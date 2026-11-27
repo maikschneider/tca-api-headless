@@ -3,6 +3,7 @@ import type { HeadlessContentHeaderRead } from '../api/schema';
 import type { Entry } from '../lib/content';
 import Actions from './Actions.astro';
 import Element from './Element.astro';
+import Figure from './Figure.astro';
 import Galley from './Galley.astro';
 import Heading from './Heading.astro';
 import Mark from './Mark.astro';
@@ -18,6 +19,7 @@ const region = (name: string) => entry.blocks.find((block) => block.region === n
 const isText = (item: Entry['blocks'][number]['items'][number]) => item.content.CType === 'text' || item.content.CType === 'textmedia';
 const actions = (items: Entry['blocks'][number]['items']) => items.map((item) => item.content).filter((content): content is HeadlessContentHeaderRead => content.CType === 'header' && Boolean(content.header_link));
 const rest = (items: Entry['blocks'][number]['items']) => items.filter((item) => item.content.CType !== 'header' || !item.content.header_link);
+const assets = (content: Entry['blocks'][number]['items'][number]['content']) => content.CType === 'textmedia' ? (content.assets ?? []) : [];
 
 const hero = region('hero');
 const lead = hero.find(isText);
@@ -25,19 +27,20 @@ const leadContent = lead?.content.CType === 'text' || lead?.content.CType === 't
 const cta = region('cta');
 ---
 
-{lead && leadContent && (
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-copy">
-      <h1 id="hero-title"><Mark class="hero-mark" />{leadContent.header}</h1>
-      <RichText value={leadContent.bodytext} class="lead" />
-      <Actions items={actions(hero)} language={language} />
-    </div>
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <h1 id="hero-title">{lead && <Mark class="hero-mark" />}{leadContent?.header || entry.page.title}</h1>
+    {leadContent && <RichText value={leadContent.bodytext} class="lead" />}
+    {leadContent && assets(leadContent).map((file) => <Figure file={file} />)}
+    <Actions items={actions(hero)} language={language} />
+  </div>
+  {lead && (
     <div class="hero-proof">
       <Galley recording={lead.reveal} language={language} field="header" />
       <Proof recording={lead.reveal} language={language} />
     </div>
-  </section>
-)}
+  )}
+</section>
 {rest(hero).filter((item) => item !== lead).map((item) => <Element {...item} language={language} region="hero" />)}
 
 <section class="story">
@@ -47,6 +50,7 @@ const cta = region('cta');
         <Heading header={content.header} link={content.header_link} language={language} class="beat-title" />
         <div class="beat-body">
           <RichText value={content.bodytext} />
+          {assets(content).map((file) => <Figure file={file} />)}
           <Proof recording={reveal} language={language} />
         </div>
       </article>

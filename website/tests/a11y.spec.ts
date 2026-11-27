@@ -52,3 +52,28 @@ test('copy control is added with JS and copies the command', async ({ page, cont
   await expect(copy).toHaveText('Copied');
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('composer require maikschneider/tca-api-headless');
 });
+
+test('a refused clipboard write tells the visitor to copy by hand', async ({ page }) => {
+  await page.addInitScript(() => { navigator.clipboard.writeText = () => Promise.reject(new DOMException('denied', 'NotAllowedError')); });
+  await page.goto(pages[1]);
+  const copy = page.locator('.hero .copy');
+  await copy.click();
+  await expect(copy).toHaveText('Zum Kopieren markieren');
+});
+
+test('keyboard opens the mobile menu and reaches its pages and languages', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(pages[0]);
+  const summary = page.locator('.nav-menu > summary');
+  for (let index = 0; index < 5 && !(await summary.evaluate((element) => element === document.activeElement)); index++) await page.keyboard.press('Tab');
+  await expect(summary).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.nav-menu')).toHaveAttribute('open', '');
+  const links = page.locator('.nav-panel a');
+  const count = await links.count();
+  for (let index = 0; index < count; index++) {
+    await page.keyboard.press('Tab');
+    await expect(links.nth(index)).toBeFocused();
+  }
+  await expect(page.locator('.nav-panel .languages a[hreflang="de"]')).toBeVisible();
+});

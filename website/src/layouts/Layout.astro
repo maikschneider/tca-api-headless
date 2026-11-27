@@ -25,7 +25,7 @@ const file = (name: string) => output(`contracts/${name}`).replace(/\/$/, '');
 ---
 
 <!doctype html>
-<html lang={language} data-copy={s.copy} data-copied={s.copied}>
+<html lang={language} data-copy={s.copy} data-copied={s.copied} data-copy-failed={s.copyFailed}>
   <head>
     <Head title={meta.schema.name} language={language} />
     <meta name="robots" content={meta.robots} />
@@ -80,17 +80,20 @@ const file = (name: string) => output(`contracts/${name}`).replace(/\/$/, '');
       </div>
     </footer>
     <script is:inline>
-      document.querySelectorAll('pre[data-copy]').forEach(function (pre) {
+      // Only where the clipboard API exists; on a refused write the button says so.
+      if (navigator.clipboard) document.querySelectorAll('pre[data-copy]').forEach(function (pre) {
         var label = document.documentElement.dataset;
         var button = document.createElement('button');
+        var show = function (text) {
+          button.textContent = text;
+          setTimeout(function () { button.textContent = label.copy; }, 2400);
+        };
         button.type = 'button';
         button.className = 'copy';
+        button.setAttribute('aria-live', 'polite');
         button.textContent = label.copy;
         button.addEventListener('click', function () {
-          navigator.clipboard.writeText(pre.textContent).then(function () {
-            button.textContent = label.copied;
-            setTimeout(function () { button.textContent = label.copy; }, 1600);
-          });
+          navigator.clipboard.writeText(pre.textContent).then(function () { show(label.copied); }, function () { show(label.copyFailed); });
         });
         pre.parentElement.append(button);
       });
