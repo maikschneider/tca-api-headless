@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2086
+set -euo pipefail
+
+## Description: Reset the database and fileadmin to the website's TYPO3 content (website/typo3)
+## Usage: website-restore
+## Example: ddev website-restore
+
+readonly dbCredentials="-hdb -udb -pdb"
+readonly dbName="db"
+readonly projectPath="/var/www/html"
+readonly sourcePath="${projectPath}/website/typo3"
+readonly typo3Binary="${projectPath}/vendor/bin/typo3"
+
+# The restore drops every table: it must not run in the project of the
+# functional test fixtures (ddev init-typo3).
+if [[ "${DDEV_PROJECT}" != "tca-api-headless-website" ]]; then
+    cat >&2 <<EOF
+website-restore drops the whole database of the DDEV project "${DDEV_PROJECT}".
+Run it in a project of its own, e.g. a git worktree with an untracked
+.ddev/config.local.yaml containing "name: tca-api-headless-website".
+EOF
+    exit 1
+fi
+
+if ! "$typo3Binary" --version | grep -q 'TYPO3 CMS 14\.'; then
+    echo "website-restore needs TYPO3 14: the fixture is a dump of its schema." >&2
+    exit 1
+fi
+
+printf "Creating empty database... "
+mysql -Nse "SHOW TABLES" $dbCredentials "$dbName" | while read -r table; do
+    mysql -e "DROP TABLE \`${table}\`" $dbCredentials "$dbName"
+done
+echo "done"
+
+export TYPO3_DB_DRIVER=mysqli
+export TYPO3_DB_USERNAME=db
+export TYPO3_DB_PASSWORD=db
+export TYPO3_DB_PORT=3306
+export TYPO3_DB_HOST=db
+export TYPO3_DB_DBNAME="$dbName"
+export TYPO3_SERVER_TYPE=other
+export TYPO3_PROJECT_NAME="tca-api-headless website"
+export TYPO3_SETUP_ADMIN_USERNAME=admin
+export TYPO3_SETUP_ADMIN_PASSWORD='Passw0rd!'
+export TYPO3_SETUP_ADMIN_EMAIL=admin@example.com
+
+printf "Setting up TYPO3... "
+"$typo3Binary" setup --no-interaction --force --quiet
+"$typo3Binary" extension:setup --quiet
+echo "done"
+
+printf "Importing content... "
+mysql --default-character-set=utf8mb4 $dbCredentials "$dbName" < "${sourcePath}/content.sql"
+echo "done"
+
+printf "Copying fileadmin... "
+mkdir -p "${projectPath}/public/fileadmin"
+rsync -a --delete "${sourcePath}/fileadmin/" "${projectPath}/public/fileadmin/"
+echo "done"
+
+printf "Creating sites... "
+for site in "${sourcePath}"/sites/*/; do
+    name="$(basename "$site")"
+    rm -rf "${projectPath}/config/sites/${name}"
+    mkdir -p "${projectPath}/config/sites/${name}"
+    sed "s#http://localhost/#${DDEV_PRIMARY_URL}/#" "${site}config.yaml" > "${projectPath}/config/sites/${name}/config.yaml"
+    if [ -f "${site}settings.yaml" ]; then
+        cp "${site}settings.yaml" "${projectPath}/config/sites/${name}/settings.yaml"
+    fi
+done
+echo "done"
+
+"$typo3Binary" referenceindex:update --quiet
+"$typo3Binary" cache:flush

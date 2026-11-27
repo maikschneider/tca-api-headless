@@ -1,0 +1,18 @@
+---
+import { Code } from 'astro:components';
+import type { Reveal } from '../lib/content';
+
+export type Props = { recording: Reveal; label?: string };
+const { recording, label = 'How this was delivered' } = Astro.props;
+---
+
+<details class="reveal">
+  <summary>{label}</summary>
+  <p>Recorded at build time from TYPO3 14.3. Host replaced with <code>https://typo3.example</code>; response data otherwise unchanged.</p>
+  <h3>Request</h3>
+  <pre><code>{recording.request}</code></pre>
+  <p>Status {recording.status}{recording.pointer && <> · JSON pointer <code>{recording.pointer}</code></>}</p>
+  <h3>JSON response</h3>
+  <Code code={recording.json} lang="json" theme="github-light" />
+  {recording.type && <><h3>Generated TypeScript type</h3><Code code={recording.type} lang="typescript" theme="github-light" /></>}
+</details>

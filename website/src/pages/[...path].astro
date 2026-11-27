@@ -1,0 +1,26 @@
+---
+import { blocks } from '../components/blocks';
+import Reveal from '../components/Reveal.astro';
+import Layout from '../layouts/Layout.astro';
+import { loadBuild, type Entry } from '../lib/content';
+import { prefix } from '../lib/config';
+
+export async function getStaticPaths() {
+  const { entries } = await loadBuild();
+  return entries.map((entry) => ({ params: { path: entry.output.slice(prefix.length).replace(/^\/|\/$/g, '') || undefined }, props: { entry } }));
+}
+export type Props = { entry: Entry };
+const { entry } = Astro.props;
+---
+
+<Layout entry={entry}>
+  {entry.blocks.map(({ region, items }) => (
+    <div class="region" data-region={region}>
+      <h2 class="region-label">{region}</h2>
+      {items.map(({ content, reveal }) => {
+        const Block = blocks[content.CType] as (props: { content: typeof content }) => unknown;
+        return <div class="element"><Block content={content} /><Reveal recording={reveal} /></div>;
+      })}
+    </div>
+  ))}
+</Layout>

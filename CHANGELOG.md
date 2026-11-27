@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+### Docs
+
+- Static product website in `website/`, built from a dedicated TYPO3 content fixture (not part of the extension package).
+
 ### Added
 
 - Site set `maikschneider/tca-api-headless` with the settings `tca_api_headless.enabled`, `regions`, `navigation.depth` and `fallbackCTypes`.

@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2086
+set -euo pipefail
+
+## Description: Write the website's TYPO3 content (database rows and fileadmin) to website/typo3
+## Usage: website-export
+## Example: ddev website-export
+
+readonly dbCredentials="-hdb -udb -pdb"
+readonly dbName="db"
+readonly projectPath="/var/www/html"
+readonly targetPath="${projectPath}/website/typo3"
+readonly tables="pages tt_content backend_layout sys_file_storage sys_file sys_file_metadata sys_file_reference"
+
+if [[ "${DDEV_PROJECT}" != "tca-api-headless-website" ]]; then
+    echo "website-export requires the dedicated tca-api-headless-website project, not \"${DDEV_PROJECT}\"." >&2
+    exit 1
+fi
+
+{
+    echo "-- Content of the website's TYPO3 sites: ddev website-export writes it, ddev website-restore imports it."
+    echo "SET NAMES utf8mb4;"
+    for table in $tables; do
+        conditions="1=1"
+        for column in deleted t3ver_wsid; do
+            if mysql -Nse "SHOW COLUMNS FROM \`${table}\` LIKE '${column}'" $dbCredentials "$dbName" | grep -q .; then
+                conditions="${conditions} AND ${column}=0"
+            fi
+        done
+        echo "-- ${table}"
+        # Rows only: one INSERT per line, without the dump's session statements.
+        mysqldump $dbCredentials --compact --no-create-info --skip-extended-insert --complete-insert \
+            --order-by-primary --skip-triggers --hex-blob --where="${conditions}" "$dbName" "$table" \
+            | { grep '^INSERT ' || true; }
+    done
+    # New records get uids after the website's ranges, never colliding with the dump.
+    for table in $tables; do
+        echo "ALTER TABLE \`${table}\` AUTO_INCREMENT = 2000;"
+    done
+} > "${targetPath}/content.sql"
+echo "Wrote website/typo3/content.sql"
+
+rsync -a --delete --exclude '_processed_/' --exclude '_temp_/' \
+    "${projectPath}/public/fileadmin/" "${targetPath}/fileadmin/"
+echo "Wrote website/typo3/fileadmin/"

@@ -1,0 +1,11 @@
+---
+import type { HeadlessLink } from '../api/schema';
+import { demoHref } from '../lib/api';
+
+export type Props = { link: HeadlessLink };
+
+// Links to pages of the TYPO3 site stay inside the demo.
+const { link } = Astro.props;
+---
+
+<a href={demoHref(link.href)} target={link.target ?? undefined} title={link.title ?? undefined}><slot /></a>

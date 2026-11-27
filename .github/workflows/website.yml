@@ -1,0 +1,105 @@
+name: Website
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'website/**'
+      - 'Classes/**'
+      - 'Configuration/**'
+      - 'composer.json'
+      - '.ddev/**'
+      - '.editorconfig'
+      - '.gitattributes'
+      - 'packaging_exclude.php'
+      - '.github/workflows/website.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  website:
+    name: Static website (TYPO3 14.3)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
+      - name: Start the isolated content instance
+        run: |
+          ddev config --project-name=tca-api-headless-website --project-type=typo3 --php-version=8.4
+          ddev start
+      - name: Install and log resolved dependencies
+        run: |
+          ddev composer config --global github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+          ddev composer update --no-progress --with=typo3/cms-core:^14.3
+          ddev composer show typo3/cms-core
+          ddev composer show maikschneider/tca-api
+      - name: Restore a fresh instance, then prove the round trip twice
+        run: |
+          ddev website-restore
+          ddev restart
+          ddev website-export
+          test -z "$(git status --porcelain --untracked-files=all -- website/typo3)"
+          ddev website-restore
+          ddev website-export
+          test -z "$(git status --porcelain --untracked-files=all -- website/typo3)"
+      - name: Generate both site contracts and the reference demo contract
+        run: |
+          mkdir -p var/website var/http
+          ddev exec vendor/bin/typo3 tca-api:openapi website --output var/website/website.json
+          ddev exec vendor/bin/typo3 tca-api:openapi kettenblatt --output var/website/kettenblatt.json
+          ddev exec vendor/bin/typo3 tca-api:openapi main --output var/http/openapi.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+      - uses: oven-sh/setup-bun@v2
+      - name: Keep the reference demo working
+        working-directory: demo
+        run: |
+          bun install --frozen-lockfile
+          bun run check
+          bun run build
+      - name: Check the website and generated types
+        working-directory: website
+        run: |
+          bun install --frozen-lockfile
+          bun run types:compare
+          bun run check
+          bun test tests/unit
+      - name: Install Chromium for static smoke
+        timeout-minutes: 3
+        working-directory: website
+        run: bunx playwright install --with-deps --only-shell chromium
+      - name: Build both deployment bases from TYPO3
+        working-directory: website
+        run: |
+          export TYPO3_BASE_URL="$(ddev exec printenv DDEV_PRIMARY_URL)"
+          export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+          WEBSITE_BASE=/ bun run build
+          tar -czf ../var/website/root.tar.gz -C dist .
+          WEBSITE_BASE=/tca-api-headless/ bun run build
+          tar -czf ../var/website/website-dist.tar.gz -C dist .
+      - name: Stop TYPO3; test only the extracted artifacts
+        working-directory: website
+        run: |
+          ddev stop
+          mkdir -p ../var/website/root ../var/website/project
+          tar -xzf ../var/website/root.tar.gz -C ../var/website/root
+          tar -xzf ../var/website/website-dist.tar.gz -C ../var/website/project
+          WEBSITE_DIST=../var/website/root WEBSITE_BASE=/ bun run smoke
+          WEBSITE_DIST=../var/website/project WEBSITE_BASE=/tca-api-headless/ bun run smoke
+      - name: Check the Composer dist exclusion
+        run: |
+          git archive HEAD > var/website/package.tar
+          test "$(tar -tf var/website/package.tar | grep -c '^website/' || true)" = 0
+          tar -tf var/website/package.tar | grep '^Classes/Composition/RegionMapper.php$'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website-dist
+          path: var/website/website-dist.tar.gz
+          retention-days: 14

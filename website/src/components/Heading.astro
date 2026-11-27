@@ -1,0 +1,10 @@
+---
+import type { HeadlessLink } from '../api/schema';
+import Link from './Link.astro';
+
+export type Props = { header?: string; link?: HeadlessLink | null };
+
+const { header, link } = Astro.props;
+---
+
+{header && <h2>{link ? <Link link={link}>{header}</Link> : header}</h2>}
