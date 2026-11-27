@@ -33,6 +33,7 @@ return [
         'media' => ['groups' => ['list', 'show'], 'processor' => FileProcessor::class],
     ],
     'cache' => [
-        'enabled' => false,
+        'enabled' => true,
+        'enabledSetting' => 'tca_api_headless.cache.enabled',
     ],
 ];

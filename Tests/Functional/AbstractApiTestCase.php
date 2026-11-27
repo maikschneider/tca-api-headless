@@ -10,6 +10,9 @@ use MaikSchneider\TcaApi\Registry\ApiRegistry;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use TYPO3\CMS\Core\Context\AspectInterface;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\DateTimeAspect;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -31,6 +34,9 @@ abstract class AbstractApiTestCase extends FunctionalTestCase
         'typo3conf/ext/tca_api_headless/Tests/Functional/Fixtures/Sites' => 'typo3conf/sites',
     ];
 
+    /** @var array{mixed, mixed, mixed, AspectInterface}|null EXEC_TIME, SIM_EXEC_TIME, SIM_ACCESS_TIME and the date aspect before moveClockTo() */
+    private ?array $clock = null;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -41,6 +47,27 @@ abstract class AbstractApiTestCase extends FunctionalTestCase
         $this->get(ApiDefinitionLoader::class)->load();
 
         $this->importCSVDataSet(__DIR__ . '/Fixtures/pages.csv');
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->clock !== null) {
+            [$GLOBALS['EXEC_TIME'], $GLOBALS['SIM_EXEC_TIME'], $GLOBALS['SIM_ACCESS_TIME'], $date] = $this->clock;
+            $this->get(Context::class)->setAspect('date', $date);
+            $this->clock = null;
+        }
+        parent::tearDown();
+    }
+
+    /**
+     * Moves the clock of the date aspect and of core's start and end time
+     * restrictions, which read the simulated access time; restored after the test.
+     */
+    protected function moveClockTo(int $timestamp): void
+    {
+        $this->clock ??= [$GLOBALS['EXEC_TIME'], $GLOBALS['SIM_EXEC_TIME'], $GLOBALS['SIM_ACCESS_TIME'], $this->get(Context::class)->getAspect('date')];
+        $GLOBALS['EXEC_TIME'] = $GLOBALS['SIM_EXEC_TIME'] = $GLOBALS['SIM_ACCESS_TIME'] = $timestamp;
+        $this->get(Context::class)->setAspect('date', new DateTimeAspect(new \DateTimeImmutable('@' . $timestamp)));
     }
 
     protected function request(string $url): ResponseInterface

@@ -6,44 +6,25 @@ namespace MaikSchneider\TcaApiHeadless\Tests\Functional\Acceptance;
 
 use MaikSchneider\TcaApiHeadless\Tests\Functional\AbstractApiTestCase;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Context\AspectInterface;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\DateTimeAspect;
 
 /**
- * Without the response cache, every request reflects the records as they are:
- * edits and scheduled transitions show up on the next request without a cache
- * flush, and nothing is written to the cache. The clock is moved through the
- * date aspect and the simulated access time of core's restrictions.
+ * With the response cache off (tca_api_headless.cache.enabled unset), every
+ * request reflects the records as they are: edits and scheduled transitions
+ * show up on the next request without a cache flush, and nothing is written
+ * to the cache.
  */
 final class FreshnessTest extends AbstractApiTestCase
 {
     /** 2100-01-01, the starttime of the scheduled fixtures. */
     private const FUTURE = 4102444800;
 
-    /** @var array<string, mixed> */
-    private array $clock = [];
-
-    private AspectInterface $dateAspect;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->clock = array_intersect_key($GLOBALS, array_flip(['EXEC_TIME', 'SIM_EXEC_TIME', 'SIM_ACCESS_TIME']));
-        $this->dateAspect = $this->get(Context::class)->getAspect('date');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages_composition.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content_composition.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/pages_navigation.csv');
-    }
-
-    protected function tearDown(): void
-    {
-        foreach ($this->clock as $name => $value) {
-            $GLOBALS[$name] = $value;
-        }
-        $this->get(Context::class)->setAspect('date', $this->dateAspect);
-        parent::tearDown();
     }
 
     #[Test]
@@ -138,13 +119,6 @@ final class FreshnessTest extends AbstractApiTestCase
     private function update(string $table, int $uid, array $values): void
     {
         $this->getConnectionPool()->getConnectionForTable($table)->update($table, $values, ['uid' => $uid]);
-    }
-
-    private function moveClockTo(int $timestamp): void
-    {
-        // Core's start and end time restrictions read the simulated access time.
-        $GLOBALS['EXEC_TIME'] = $GLOBALS['SIM_EXEC_TIME'] = $GLOBALS['SIM_ACCESS_TIME'] = $timestamp;
-        $this->get(Context::class)->setAspect('date', new DateTimeAspect(new \DateTimeImmutable('@' . $timestamp)));
     }
 
     private function assertNothingCached(): void

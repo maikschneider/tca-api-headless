@@ -6,11 +6,13 @@ namespace MaikSchneider\TcaApiHeadless\Tests\Unit\Configuration;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Yaml\Yaml;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
- * Every resource of the add-on is switched on per site by its site set, is not
- * cached and exposes only the columns it lists.
+ * Every resource of the add-on is switched on per site by its site set, is
+ * cached only on sites that turn the cache on and exposes only the columns it
+ * lists.
  */
 final class ResourceDefinitionsTest extends UnitTestCase
 {
@@ -39,9 +41,20 @@ final class ResourceDefinitionsTest extends UnitTestCase
 
     #[Test]
     #[DataProvider('definitionFiles')]
-    public function theResourceIsNotCached(string $file): void
+    public function theResourceIsCachedOnlyWhereTheSiteTurnsTheCacheOn(string $file): void
     {
-        self::assertFalse($this->definition($file)['cache']['enabled'] ?? null);
+        $cache = $this->definition($file)['cache'] ?? [];
+
+        self::assertTrue($cache['enabled'] ?? null);
+        self::assertSame('tca_api_headless.cache.enabled', $cache['enabledSetting'] ?? null);
+    }
+
+    #[Test]
+    public function theCacheIsOffByDefault(): void
+    {
+        $definitions = Yaml::parseFile(__DIR__ . '/../../../Configuration/Sets/TcaApiHeadless/settings.definitions.yaml');
+
+        self::assertSame(['category' => 'TcaApiHeadless', 'type' => 'bool', 'default' => false], $definitions['settings']['tca_api_headless.cache.enabled'] ?? null);
     }
 
     #[Test]

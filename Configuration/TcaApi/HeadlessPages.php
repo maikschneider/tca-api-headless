@@ -33,6 +33,9 @@ return [
         ],
     ],
     'cache' => [
-        'enabled' => false,
+        'enabled' => true,
+        'enabledSetting' => 'tca_api_headless.cache.enabled',
+        // The path lookup (list) is answered by the path parameter.
+        'varyByParameters' => ['path'],
     ],
 ];

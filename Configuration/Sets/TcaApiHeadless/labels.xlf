@@ -39,6 +39,12 @@
 			<trans-unit id="settings.description.tca_api_headless.fallbackCTypes" resname="settings.description.tca_api_headless.fallbackCTypes">
 				<source>Content types outside the built-in catalog that are delivered with uid, CType and header only. Content of other types is left out.</source>
 			</trans-unit>
+			<trans-unit id="settings.tca_api_headless.cache.enabled" resname="settings.tca_api_headless.cache.enabled">
+				<source>Cache responses</source>
+			</trans-unit>
+			<trans-unit id="settings.description.tca_api_headless.cache.enabled" resname="settings.description.tca_api_headless.cache.enabled">
+				<source>Store page, path lookup and navigation responses in the TCA API response cache. Entries are flushed when their records change and expire when a record starts or ends.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -11,7 +11,7 @@
 ,208,4,1100,0,"header","Hidden","",1,0,"",0,0
 ,209,4,1200,0,"header","Scheduled","",0,4102444800,"",0,0
 ,210,4,1280,0,"header","Members only","",0,0,"1",0,0
-,211,22,512,0,"text","Zweiter im Hauptbereich","<p>Zweiter</p>",0,0,"",1,200
+,211,4,512,0,"text","Zweiter im Hauptbereich","<p>Zweiter</p>",0,0,"",1,200
 ,212,4,2048,0,"header","All languages","",0,0,"",-1,0
 ,220,6,256,0,"header","Content column","",0,0,"",0,0
 ,221,6,256,5,"header","Aside column","",0,0,"",0,0

@@ -10,6 +10,7 @@ use MaikSchneider\TcaApi\DataAccess\EmbedPreloader;
 use MaikSchneider\TcaApi\Filter\ExactFilter;
 use MaikSchneider\TcaApi\Filter\FilterContext;
 use MaikSchneider\TcaApi\Serializer\ResourceSerializer;
+use MaikSchneider\TcaApiHeadless\Cache\CacheDependencies;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
@@ -28,6 +29,7 @@ final readonly class RecordReader
         private ResourceSerializer $serializer,
         private FrontendGroups $frontendGroups,
         private TcaSchemaFactory $schemaFactory,
+        private CacheDependencies $cacheDependencies,
     ) {
     }
 
@@ -51,6 +53,12 @@ final readonly class RecordReader
             $constraints[] = [ExactFilter::class, new FilterContext([$languageId, -1], $config->table, 't.' . $languageField, ['type' => 'int'], $request, $config)];
             $overlayLanguage = null;
         }
+
+        // DataHandler flushes the pageId tag of the page a record is created on, moved to or changed on.
+        foreach ($pids as $pid) {
+            $this->cacheDependencies->addTag('pageId_' . $pid);
+        }
+        $this->cacheDependencies->expireWithRecords($config->table, $constraints, $config, $overlayLanguage);
 
         $rows = $this->dataRepository->findCollection($config->table, $constraints, 0, 0, ['sorting' => 'asc'], $config, $overlayLanguage);
         // The query checks the groups of the default language; a translation may restrict itself further.

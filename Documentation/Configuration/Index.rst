@@ -21,6 +21,8 @@ The site set defines these site settings. Change them in the backend module
         depth: 2
         maxDepth: 5
       fallbackCTypes: []
+      cache:
+        enabled: false
 
 ..  confval-menu::
     :name: site-settings
@@ -76,7 +78,30 @@ The site set defines these site settings. Change them in the backend module
     Content elements of other types are left out. Every entry must be a
     ``CType`` defined in TCA.
 
+..  confval:: tca_api_headless.cache.enabled
+    :name: tca-api-headless-cache-enabled
+    :type: bool
+    :default: false
+
+    Stores the responses of this extension in TCA API's response cache, see
+    :ref:`configuration-caching`.
+
+..  _configuration-caching:
+
 Caching
 =======
 
-TCA API's response cache is off for the resources of this extension.
+With :confval:`tca-api-headless-cache-enabled` set on a site, TCA API's
+response cache stores its composed pages, path lookups and navigation trees
+(default lifetime: one day). Sites without the setting are not cached.
+
+*   The lookup is cached per ``path``, the navigation per ``depth``.
+*   Editing a record in the backend flushes every response it is part of:
+    content elements created on, moved to or from, changed on or deleted from
+    a page, edits of pages and their translations, and new, moved or hidden
+    pages.
+*   A response expires when one of its records starts or ends, also a record
+    that is not visible yet: content of the page, the page itself and its
+    ancestors that extend to subpages, and the pages of a navigation tree.
+*   Changes outside records, such as site configuration, backend layouts
+    defined in records or file metadata, need a cache flush.

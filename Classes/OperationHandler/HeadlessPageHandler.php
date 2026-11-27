@@ -10,6 +10,7 @@ use MaikSchneider\TcaApi\OperationHandler\GetItemHandler;
 use MaikSchneider\TcaApi\OperationHandler\OperationHandlerInterface;
 use MaikSchneider\TcaApi\Serializer\HydraResponseBuilder;
 use MaikSchneider\TcaApi\Serializer\ResourceSerializer;
+use MaikSchneider\TcaApiHeadless\Cache\CacheDependencies;
 use MaikSchneider\TcaApiHeadless\Composition\FrontendGroups;
 use MaikSchneider\TcaApiHeadless\EventListener\BuildNavigationTree;
 use MaikSchneider\TcaApiHeadless\Navigation\NavigationDepth;
@@ -52,6 +53,7 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
         private SiteFinder $siteFinder,
         private Context $context,
         private FrontendGroups $frontendGroups,
+        private CacheDependencies $cacheDependencies,
     ) {
     }
 
@@ -101,7 +103,9 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
         $members = [];
         $pageUid = $this->resolvePath(trim($path), $request);
         if ($pageUid !== null && $this->isDeliverable($pageUid, $request)) {
-            $row = $this->dataRepository->findById($config->table, $pageUid, $config, $request->getAttribute('tca_api.language'));
+            $language = $request->getAttribute('tca_api.language');
+            $this->cacheDependencies->expireWithRecords($config->table, [], $config, $language, $pageUid);
+            $row = $this->dataRepository->findById($config->table, $pageUid, $config, $language);
             if ($row !== null) {
                 $members[] = $this->serializer->serialize($row, $config, $baseUrl, [], ['__request' => $request], operation: 'list');
             }
@@ -165,11 +169,14 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
     /**
      * The frontend's inheritance: the page's own groups, and the visibility and
      * groups of every ancestor that extends to subpages. The page's own
-     * visibility is checked by the read of the definition.
+     * visibility is checked by the read of the definition. A cached response
+     * expires when one of these ancestors starts or ends.
      */
     private function isVisibleThroughAncestors(int $pageUid): bool
     {
         $now = (int)$this->context->getPropertyFromAspect('date', 'timestamp');
+        $visible = true;
+        $transitions = [];
 
         foreach (GeneralUtility::makeInstance(RootlineUtility::class, $pageUid)->get() as $page) {
             $isPage = (int)$page['uid'] === $pageUid;
@@ -177,15 +184,23 @@ final readonly class HeadlessPageHandler implements OperationHandlerInterface
                 continue;
             }
             if (!$this->frontendGroups->grant($page['fe_group'] ?? '')) {
-                return false;
+                $visible = false;
+            }
+            if ($isPage) {
+                continue;
             }
             $starttime = (int)($page['starttime'] ?? 0);
             $endtime = (int)($page['endtime'] ?? 0);
-            if (!$isPage && (($page['hidden'] ?? false) || $starttime > $now || ($endtime !== 0 && $endtime <= $now))) {
-                return false;
+            if (($page['hidden'] ?? false) || $starttime > $now || ($endtime !== 0 && $endtime <= $now)) {
+                $visible = false;
             }
+            $transitions[] = $starttime;
+            $transitions[] = $endtime;
         }
 
-        return true;
+        $transitions = array_filter($transitions, static fn (int $time): bool => $time > $now);
+        $this->cacheDependencies->expireAt($transitions === [] ? null : min($transitions));
+
+        return $visible;
     }
 }

@@ -32,3 +32,8 @@ settings:
     category: TcaApiHeadless
     type: stringlist
     default: []
+
+  tca_api_headless.cache.enabled:
+    category: TcaApiHeadless
+    type: bool
+    default: false
