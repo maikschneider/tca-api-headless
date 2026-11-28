@@ -148,14 +148,41 @@ test('sitemap XML uses exactly emitted pages and actual language alternates', as
 for (const language of ['en', 'de']) {
   test(`mobile reflow with all disclosures open ${language}`, async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 800 });
-    for (const uid of [2000, 2003, 2009, 2010, 2011, 2012, 2013, 2014, 2015]) {
-      await page.goto(path('website', uid, language));
+    for (const route of manifest.routes.filter((item) => item.language === language)) {
+      await page.goto(route.output);
       await page.locator('main details').evaluateAll((elements) => elements.forEach((element) => element.setAttribute('open', '')));
-      expect(await page.evaluate(() => document.documentElement.scrollWidth), `${uid}/${language}`).toBeLessThanOrEqual(321);
-      if (uid === 2014) {
+      expect(await page.evaluate(() => document.documentElement.scrollWidth), route.output).toBeLessThanOrEqual(321);
+      if (route.site === 'website' && route.uid === 2014) {
         const description = await page.locator('.contract-paths td:last-child').first().boundingBox();
         expect(description!.width).toBeGreaterThan(160);
       }
+    }
+  });
+
+  test(`code wraps between words and after slashes, not inside a name ${language}`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    for (const uid of [2000, 2001]) {
+      await page.goto(path('website', uid, language));
+      const split = await page.locator('main code .run').evaluateAll((runs) => runs.filter((run) => {
+        const box = run.getBoundingClientRect();
+        return run.textContent!.length < 30 && box.height > 1.5 * parseFloat(getComputedStyle(run).lineHeight);
+      }).map((run) => run.textContent));
+      expect(split).toEqual([]);
+      expect(await page.locator('main code .run', { hasText: 'tca-api-headless:dev-main' }).count()).toBeGreaterThan(0);
+    }
+  });
+
+  test(`downloads show their file descriptions ${language}`, async ({ page }) => {
+    await page.goto(path('website', 2001, language));
+    await expect(page.locator('.files .file-description')).toHaveText(language === 'de'
+      ? ['Alle Anfragen der Erweiterung auf einer Seite', 'Der Schnellstart als Text', 'Dieselbe Datei, mit Leerzeichen im Namen']
+      : ['Every request of the extension on one page', 'The quick start as plain text', 'The same file, with a space in its name']);
+  });
+
+  test(`the specimen links back to the product site ${language}`, async ({ page }) => {
+    for (const route of manifest.routes.filter((item) => item.site === 'kettenblatt' && item.language === language)) {
+      await page.goto(route.output);
+      await expect(page.locator('.specimen-note a')).toHaveAttribute('href', path('website', 2000, language));
     }
   });
 }

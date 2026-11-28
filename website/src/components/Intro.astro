@@ -1,10 +1,10 @@
 ---
 import type { Entry } from '../lib/content';
-import { t } from '../lib/i18n';
 import Element from './Element.astro';
 import Figure from './Figure.astro';
 import Proof from './Proof.astro';
 import RichText from './RichText.astro';
+import SpecimenNote from './SpecimenNote.astro';
 
 export type Props = { entry: Entry; items: Entry['blocks'][number]['items'] };
 
@@ -21,7 +21,7 @@ const plate = content?.CType === 'textmedia' ? content.assets?.[0] : undefined;
   <div class="intro-copy">
     <h1>{content?.header || page.title}</h1>
     {content && <RichText value={content.bodytext} class="lead" />}
-    {entry.site === 'kettenblatt' && <p class="specimen-note">{t(language).specimen}</p>}
+    {entry.site === 'kettenblatt' && <SpecimenNote language={language} />}
     {lead && <Proof recording={lead.reveal} language={language} />}
   </div>
   {plate && <Figure file={plate} priority sizes="(min-width: 64rem) 42vw, 100vw" class="intro-plate" />}

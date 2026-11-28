@@ -39,6 +39,8 @@
   code, pre, kbd { font-family: var(--font-code); font-size: 0.9em; font-variant-ligatures: none; }
   pre code { font-size: inherit; }
   :not(pre) > code { background: var(--sheet); padding: 0.08em 0.32em; border-radius: var(--radius); overflow-wrap: anywhere; }
+  code .run { display: inline-block; max-width: 100%; text-indent: 0; }
+  li::marker { font-variant-numeric: normal; }
   strong { font-weight: 720; }
 
   table { width: 100%; }
@@ -182,8 +184,9 @@
   .block > dl:not(.flow) dt { font-weight: 700; }
   .block > dl:not(.flow) dd { color: var(--ink-soft); }
   .files { list-style: none; }
-  .files li { display: flex; gap: var(--space-s); align-items: baseline; padding-block: var(--space-2xs); border-block-end: var(--hairline) solid var(--rule); }
+  .files li { display: flex; flex-wrap: wrap; gap: 0 var(--space-s); align-items: baseline; padding-block: var(--space-2xs); border-block-end: var(--hairline) solid var(--rule); }
   .file-size { color: var(--ink-soft); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+  .file-description { flex-basis: 100%; color: var(--ink-soft); font-size: var(--step--1); }
   .block-fallback { padding: var(--space-m); border: var(--hairline) dashed var(--rule-strong); border-radius: var(--radius); }
 
   /* Commands: preformatted text from the API, copyable with JS. */
@@ -237,8 +240,8 @@
   .astro-code code { display: flex; flex-direction: column; overflow-wrap: anywhere; }
   .astro-code, .astro-code span { color: light-dark(var(--shiki-light), var(--shiki-dark)); }
   .astro-code span { font-style: var(--shiki-light-font-style); }
-  .astro-code .line { position: relative; }
-  .astro-code .line.marked { margin-block: 0.15rem; margin-inline: calc(-1 * var(--space-m)); padding: 0.15rem var(--space-m); background: var(--proof-wash); }
+  .astro-code .line { position: relative; padding-inline-start: calc(var(--indent, 0ch) + 2ch); text-indent: calc(-1 * (var(--indent, 0ch) + 2ch)); }
+  .astro-code .line.marked { margin-block: 0.15rem; margin-inline: calc(-1 * var(--space-m)); padding: 0.15rem var(--space-m); padding-inline-start: calc(var(--space-m) + var(--indent, 0ch) + 2ch); background: var(--proof-wash); }
   .astro-code .line.marked::before {
     content: ''; position: absolute; inset-inline-start: calc(var(--space-m) - 1.35rem); inset-block-start: 0.3em;
     width: 1rem; height: 1rem; background: var(--proof);
@@ -276,12 +279,12 @@
   .catalog { padding-block-end: var(--space-2xl); }
   .catalog-entries { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--space-xl) var(--gutter); padding-block-start: var(--space-l); border-block-start: var(--hairline) solid var(--rule-strong); }
   .card { display: flex; flex-direction: column; }
-  .card .block { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .card .block { flex: 1; display: flex; flex-direction: column; gap: var(--space-xs); }
   .card .block > h2 { font-size: var(--step-1); order: 1; }
-  .card .block > .prose { order: 2; color: var(--ink-soft); }
+  .card .block > .prose { flex: 1; display: flex; flex-direction: column; order: 2; color: var(--ink-soft); }
+  .card .block > .prose > :last-child:not(:first-child) { margin-block-start: auto; padding-block-start: var(--space-s); }
   .card .block > figure { order: 0; margin: 0 0 var(--space-2xs); }
   .card .block > figure img { aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); }
-  .card .proof { margin-block-start: auto; }
   .card h2 a { color: var(--ink); text-decoration: none; }
   .card h2 a:hover { text-decoration: underline; }
 
@@ -336,7 +339,7 @@
   .site-kettenblatt { scrollbar-color: var(--rule-strong) var(--paper); }
   .site-kettenblatt .wordmark .mark { display: none; }
   .site-kettenblatt h1, .site-kettenblatt h2, .specimen-card h2, .specimen-card h3 { text-transform: uppercase; letter-spacing: 0.02em; font-weight: 850; }
-  .site-kettenblatt .article-head h1 { font-size: var(--step-4); letter-spacing: 0.01em; max-width: none; }
+  .site-kettenblatt .article-head h1 { font-size: min(var(--step-4), 10vw); letter-spacing: 0.01em; max-width: none; }
   .site-kettenblatt .block-image, .specimen-card .block-image { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
   @media (min-width: 48rem) {
     .site-kettenblatt .block-image:has(> figure + figure), .specimen-card .block-image:has(> figure + figure) { grid-template-columns: repeat(2, minmax(0, 1fr)); }

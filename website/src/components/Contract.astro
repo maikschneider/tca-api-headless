@@ -3,6 +3,7 @@ import type { Contract as ContractData } from '../lib/requests';
 import type { Language } from '../lib/config';
 import { output } from '../lib/config';
 import { t } from '../lib/i18n';
+import Wrap from './Wrap.astro';
 
 export type Props = { contract: ContractData; language: Language };
 
@@ -23,7 +24,7 @@ const groups = ['pages', 'content', 'richtext', 'shared'] as const;
   <table class="contract-paths">
     <thead class="visually-hidden"><tr><th scope="col">{s.method}</th><th scope="col">{s.path}</th><th scope="col">{s.description}</th></tr></thead>
     <tbody>
-      {contract.paths.map((item) => <tr><td><code>{item.method}</code></td><td><code>{item.path}</code></td><td>{item.summary}</td></tr>)}
+      {contract.paths.map((item) => <tr><td><code>{item.method}</code></td><td><code><Wrap text={item.path} /></code></td><td>{item.summary}</td></tr>)}
     </tbody>
   </table>
   <p class="pane-label">{s.schemas} <span class="contract-count">{contract.schemas.length}</span></p>

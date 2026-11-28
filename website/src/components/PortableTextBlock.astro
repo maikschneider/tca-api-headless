@@ -5,6 +5,7 @@ import { t } from '../lib/i18n';
 import Contract from './Contract.astro';
 import Proof from './Proof.astro';
 import Tree from './Tree.astro';
+import Wrap from './Wrap.astro';
 
 export type Props = BlockProps;
 
@@ -22,7 +23,7 @@ const request = (node as { _request?: RequestBlock })._request;
 
 {code ? (
   <div class:list={['command', { 'has-response': request }]}>
-    <pre data-copy><code>{children.map(textOf).join('')}</code></pre>
+    <pre data-copy><code><Wrap text={children.map(textOf).join('')} /></code></pre>
     {request && (
       <div class="response">
         {request.view.kind === 'tree' && <Tree nodes={[request.view.tree]} />}

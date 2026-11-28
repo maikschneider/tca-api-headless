@@ -1,0 +1,12 @@
+---
+import type { Language } from '../lib/config';
+import { route } from '../lib/config';
+import { t } from '../lib/i18n';
+
+export type Props = { language: Language };
+
+// The specimen's way back to the product site that renders it.
+const { language } = Astro.props;
+---
+
+<p class="specimen-note">{t(language).specimenOf} <a href={route('website', language, '/')}>tca-api-headless</a>.</p>

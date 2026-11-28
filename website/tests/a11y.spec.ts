@@ -77,3 +77,30 @@ test('keyboard opens the mobile menu and reaches its pages and languages', async
   }
   await expect(page.locator('.nav-panel .languages a[hreflang="de"]')).toBeVisible();
 });
+
+test('keyboard opens a proof, reaches its full JSON and the nested schema browser', async ({ page }) => {
+  const tabTo = async (target: ReturnType<typeof page.locator>) => {
+    for (let index = 0; index < 200 && !(await target.evaluate((element) => element === document.activeElement)); index++) await page.keyboard.press('Tab');
+    await expect(target).toBeFocused();
+  };
+  await page.goto(pages[2]);
+  const proof = page.locator('main .proof-response').first();
+  await tabTo(proof.locator('> summary'));
+  await page.keyboard.press('Enter');
+  await expect(proof).toHaveAttribute('open', '');
+  await page.keyboard.press('Tab');
+  await expect(proof.locator('.proof-note a')).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Enter');
+  await expect(proof).not.toHaveAttribute('open', '');
+
+  await page.goto(pages[5]);
+  const group = page.locator('main .schema-group').first();
+  await tabTo(group.locator('> summary'));
+  await page.keyboard.press('Enter');
+  const schema = group.locator('.contract-schemas details').first();
+  await page.keyboard.press('Tab');
+  await expect(schema.locator('> summary')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(schema.locator('pre')).toBeVisible();
+});

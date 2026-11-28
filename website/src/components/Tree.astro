@@ -1,5 +1,6 @@
 ---
 import type { HeadlessNavigationRead } from '../api/schema';
+import Wrap from './Wrap.astro';
 
 export type Props = { nodes: HeadlessNavigationRead[] };
 
@@ -12,7 +13,7 @@ const path = (url: string) => new URL(url, 'https://static.example').pathname;
   <ul class="tree">
     {nodes.map((node) => (
       <li>
-        <a href={path(node.url)}>{node.nav_title || node.title}</a> <code>{node.slug}</code>
+        <a href={path(node.url)}>{node.nav_title || node.title}</a> <code><Wrap text={node.slug ?? ''} /></code>
         <Astro.self nodes={node.children} />
       </li>
     ))}

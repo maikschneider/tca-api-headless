@@ -12,6 +12,6 @@ const { content, language } = Astro.props;
 <section class="block block-uploads">
   <Heading header={content.header} link={content.header_link} language={language} />
   <ul class="files">
-    {(content.media ?? []).map((file) => <li><a href={file.publicUrl ? fileUrl(file.publicUrl) : undefined} download={file.name}>{file.name}</a>{file.fileSize ? <span class="file-size">{Math.max(1, Math.round(file.fileSize / 1024))} KB</span> : null}</li>)}
+    {(content.media ?? []).map((file) => <li><a href={file.publicUrl ? fileUrl(file.publicUrl) : undefined} download={file.name}>{file.name}</a>{file.fileSize ? <span class="file-size">{Math.max(1, Math.round(file.fileSize / 1024))} KB</span> : null}{file.metadata?.description && <span class="file-description">{file.metadata.description}</span>}</li>)}
   </ul>
 </section>
