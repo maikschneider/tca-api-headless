@@ -6,6 +6,8 @@ Hero is also the default social image. The six feature plates are reused for the
 
 The three direction comps are not shipped assets; the W2 code-led direction is retained.
 
+The hero and the six feature plates were regenerated in colour for the process-ink palette; their current prompts are under [Colour plates](#colour-plates) and in the sidecars. The first prompts below are kept as the record of the original, cooler set.
+
 ## hero
 
 Overhead documentary photograph of printed proof sheets fanned out on a backlit light table in a quiet print room. Hairline crop marks sit in the sheet margins; one sheet is lifted at a corner and reveals a precise grid of ruled empty boxes underneath. Cool daylight, paper white and slate blue tones, a single small vermilion registration mark (circle with crosshair) on one sheet. Shallow depth of field, calm, precise, editorial. Absolutely no legible text, no letters, no numbers, no logos, no brand marks.
@@ -69,3 +71,37 @@ Documentary photograph inside a small independent bicycle repair workshop, warm 
 ## k-map
 
 An abstract hand-drawn district map in ink and watercolour on warm paper: soft blocks, a river curve, a few streets and a small park, a single hand-drawn circle marking one corner, no street names, no labels, no letters, no numbers, no compass text. Flat top-down view of the paper only.
+
+## Colour plates
+
+Same print-room subjects, now in saturated process inks and coloured paper stocks, so the plates carry the cyan / magenta / yellow accents of the design system. Regenerated with the same tool, model and quality; shipped under the same fileadmin names, so no content element changed, only the files, their FAL checksums and the alternative texts. The translations plate's steel ruler carries graduation marks with glyph-like dots that are not legible at any delivered size.
+
+### hero
+
+Overhead documentary photograph of printed proof sheets fanned out on a backlit light table in a bright, quiet print room. The sheets are on coloured paper stocks (pale cyan, warm yellow, soft magenta, white) and are printed only with calm flat colour blocks, ruled boxes and fine halftone fields in cyan, magenta and yellow, no photographs; hairline crop marks sit in the margins and a printer's colour control bar of small solid cyan, magenta, yellow and black squares runs along one sheet edge. One sheet is lifted at a corner and reveals a precise grid of ruled empty boxes underneath. A single small vermilion registration mark (circle with crosshair). Large calm areas of paper, soft cool daylight, shallow depth of field, editorial. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.
+
+The first colour attempt printed stock photographs on the sheets and was too busy for the home budget (150 KB fallback). This second version was retouched once: a smudge under the lifted sheet that resembled letters was blurred out.
+
+### regions
+
+Documentary still life photograph in a bright, quiet print room, cool daylight, shallow depth of field, calm and precise editorial look, but vivid: saturated process inks (cyan, magenta, yellow) and coloured paper stocks against paper white and slate blue. A stack of translucent layout sheets on a light table, each sheet tinted a different process colour (cyan, magenta, yellow), ruled into different columns and rows and slightly offset, so where the column grids overlap the colours mix into deep blue, red and green; one region on the top sheet outlined with a thin vermilion line. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.
+
+### content
+
+Documentary still life photograph in a bright, quiet print room, cool daylight, shallow depth of field, calm and precise editorial look, but vivid: saturated process inks (cyan, magenta, yellow) and coloured paper stocks against paper white and slate blue. A shallow wooden printer's type case drawer seen from above at an angle, its many compartments neatly sorted with blank lead spacers, quads and rules; some compartments hold small blocks inked in cyan, magenta and yellow, a brayer with fresh magenta ink rests on the edge (no letterforms visible on any piece). Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.
+
+### navigation
+
+Documentary still life photograph in a bright, quiet print room, cool daylight, shallow depth of field, calm and precise editorial look, but vivid: saturated process inks (cyan, magenta, yellow) and coloured paper stocks against paper white and slate blue. A folded paper map half opened on a desk, printed in overlapping cyan, magenta and yellow inks with abstract pale blocks, thin routes and branching paths like a tree, no labels or names anywhere; a brass pin marks one junction. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.
+
+### routing
+
+Documentary still life photograph in a bright, quiet print room, cool daylight, shallow depth of field, calm and precise editorial look, but vivid: saturated process inks (cyan, magenta, yellow) and coloured paper stocks against paper white and slate blue. A long wooden index card drawer pulled open, rows of blank index cards in coloured paper stocks with bright blank tabs in cyan, magenta and yellow, one card lifted halfway out; soft side light. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.
+
+### translations
+
+Documentary still life photograph in a bright, quiet print room, cool daylight, shallow depth of field, calm and precise editorial look, but vivid: saturated process inks (cyan, magenta, yellow) and coloured paper stocks against paper white and slate blue. Two printed sheets laid side by side with an identical layout of blank colour blocks and image boxes, one sheet on vivid cyan paper and one on warm yellow paper, the blocks printed in magenta and deep blue, a thin steel ruler laid across both to show the blocks align. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.
+
+### links
+
+Documentary still life photograph in a bright, quiet print room, cool daylight, shallow depth of field, calm and precise editorial look, but vivid: saturated process inks (cyan, magenta, yellow) and coloured paper stocks against paper white and slate blue. A wooden board with small brass pins and taut fine threads stretched between them, threads crossing from one cluster of pins to another like a string map of connections; the threads are cyan, magenta and yellow, one vermilion. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.

@@ -41,6 +41,14 @@ const strings = {
     download: 'Download',
     notTranslated: 'This page has no translation in this language. The link leads to its home page.',
     home: 'home page',
+    diagrams: {
+      regions: 'Backend layout columns become the keys of regions, each holding its content elements in order.',
+      content: 'Each content type arrives in its own shape: rich text as Portable Text, lists, tables and files as data.',
+      navigation: 'The menu tree down to the default depth; the depth parameter asks for more, up to maxDepth.',
+      routing: 'A path lookup finds the page, which carries its SEO meta. An unknown path finds nothing, and the frontend answers with its 404.',
+      translations: 'One page uid in English and German: translated elements replace the default ones; in strict mode an element without a translation is left out.',
+      links: 'Page, file, mail and external typolinks all arrive as one HeadlessLink with an absolute href.',
+    },
   },
   de: {
     skip: 'Zum Inhalt',
@@ -80,6 +88,14 @@ const strings = {
     download: 'Download',
     notTranslated: 'Diese Seite hat in dieser Sprache keine Übersetzung. Der Link führt zur Startseite.',
     home: 'Startseite',
+    diagrams: {
+      regions: 'Die Spalten des Backend-Layouts werden zu Schlüsseln von regions, jeweils mit ihren Inhaltselementen in Reihenfolge.',
+      content: 'Jeder Inhaltstyp kommt in seiner eigenen Form: Rich Text als Portable Text, Listen, Tabellen und Dateien als Daten.',
+      navigation: 'Der Menübaum bis zur Standardtiefe; der Parameter depth fragt tiefer an, bis maxDepth.',
+      routing: 'Ein Pfad-Lookup findet die Seite mit ihren SEO-Metadaten. Ein unbekannter Pfad findet nichts, und das Frontend antwortet mit seiner 404.',
+      translations: 'Eine Seiten-uid auf Englisch und Deutsch: Übersetzte Elemente ersetzen die Standardelemente; im strikten Modus fällt ein Element ohne Übersetzung weg.',
+      links: 'Seiten-, Datei-, Mail- und externe Typolinks kommen alle als ein HeadlessLink mit absolutem href an.',
+    },
   },
 } as const;
 

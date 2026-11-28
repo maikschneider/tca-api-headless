@@ -1,0 +1,26 @@
+---
+// One page uid in two languages: translated elements overlay the default,
+// an element without a translation is left out (strict).
+const rows = [52, 92, 132];
+---
+
+<svg class="drawing" viewBox="0 0 400 214" width="400" height="214" aria-hidden="true" focusable="false">
+  <text class="soft" x="12" y="22">en · uid 2012</text>
+  <text class="soft" x="232" y="22">de · uid 2012</text>
+  <rect class="sheet" x="12" y="32" width="156" height="170" />
+  <rect class="sheet" x="232" y="32" width="156" height="170" />
+  {rows.map((y, index) => (
+    <g>
+      <rect class="ink" x="24" y={y - 10} width="132" height="26" />
+      {index === 2 ? (
+        <rect class="cell cell-missing" x="244" y={y - 10} width="132" height="26" />
+      ) : (
+        <>
+          <path class="line" pathLength="1" d={`M156 ${y + 3} H 244`} />
+          <rect class="ink" x="244" y={y - 10} width="132" height="26" />
+        </>
+      )}
+    </g>
+  ))}
+  <text class="soft" x="252" y="186">strict: left out</text>
+</svg>

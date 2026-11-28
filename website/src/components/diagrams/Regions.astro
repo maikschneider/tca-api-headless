@@ -1,0 +1,32 @@
+---
+// Backend layout columns become the keys of `regions`.
+const rows = [
+  { name: 'intro', y: 40, h: 36, items: 1 },
+  { name: 'main', y: 84, h: 64, items: 3 },
+  { name: 'specimen', y: 156, h: 36, items: 1 },
+];
+---
+
+<svg class="drawing" viewBox="0 0 400 214" width="400" height="214" aria-hidden="true" focusable="false">
+  <text class="soft" x="12" y="22">backend_layout</text>
+  <rect class="sheet" x="12" y="32" width="150" height="168" />
+  {rows.map((row) => (
+    <g>
+      <rect class="cell" x="20" y={row.y} width="134" height={row.h} />
+      <text x="28" y={row.y + 21}>{row.name}</text>
+    </g>
+  ))}
+  <text class="soft" x="218" y="22">"regions": &#123;</text>
+  {rows.map((row, index) => {
+    const y = 58 + index * 54;
+    return (
+      <g>
+        <path class="line" pathLength="1" d={`M154 ${row.y + row.h / 2} C 190 ${row.y + row.h / 2}, 190 ${y - 4}, 222 ${y - 4}`} />
+        <text x="230" y={y}>"{row.name}": [</text>
+        {Array.from({ length: row.items }, (_, item) => <rect class="ink" x={234 + item * 22} y={y + 8} width="16" height="16" />)}
+        <text x={238 + row.items * 22} y={y + 21}>]</text>
+      </g>
+    );
+  })}
+  <text class="soft" x="218" y="206">&#125;</text>
+</svg>

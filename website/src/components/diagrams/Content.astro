@@ -1,0 +1,26 @@
+---
+// Each content type arrives in its own shape.
+const types = [
+  { ctype: 'text', shape: 'Portable Text', glyph: 'M0 3h40M0 11h32M0 19h36' },
+  { ctype: 'bullets', shape: 'string[]', glyph: 'M0 3h2M8 3h30M0 11h2M8 11h24M0 19h2M8 19h28' },
+  { ctype: 'table', shape: '{ head, body, foot }', glyph: 'M0 0h40v22H0zM0 7h40M13 0v22M27 0v22' },
+  { ctype: 'textmedia', shape: 'FileObject[]', glyph: 'M0 0h40v22H0zM4 18l10-9 8 6 6-4 8 7' },
+];
+---
+
+<svg class="drawing" viewBox="0 0 400 214" width="400" height="214" aria-hidden="true" focusable="false">
+  <text class="soft" x="12" y="22">CType</text>
+  <text class="soft" x="232" y="22">bodytext / assets</text>
+  {types.map((type, index) => {
+    const y = 36 + index * 44;
+    return (
+      <g>
+        <rect class="cell" x="12" y={y} width="116" height="30" />
+        <text x="22" y={y + 20}>{type.ctype}</text>
+        <path class="line" pathLength="1" d={`M128 ${y + 15} H 168 M 222 ${y + 15} H 226`} />
+        <path class="glyph" d={type.glyph} transform={`translate(176 ${y + 4})`} />
+        <text x="232" y={y + 20}>{type.shape}</text>
+      </g>
+    );
+  })}
+</svg>

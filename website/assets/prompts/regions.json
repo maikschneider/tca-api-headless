@@ -1,6 +1,6 @@
 {
-"prompt": "Documentary still life photograph in a quiet print room, cool daylight, paper white and slate blue tones, shallow depth of field, calm and precise editorial look. A stack of translucent layout sheets on a light table, each sheet ruled into different columns and rows, slightly offset so the column grids overlap and line up at the edges; one region on the top sheet outlined with a thin vermilion line. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.\n",
-"createdAt": "2026-11-27T22:52:49.746Z",
+"prompt": "Documentary still life photograph in a bright, quiet print room, cool daylight, shallow depth of field, calm and precise editorial look, but vivid: saturated process inks (cyan, magenta, yellow) and coloured paper stocks against paper white and slate blue. A stack of translucent layout sheets on a light table, each sheet tinted a different process colour (cyan, magenta, yellow), ruled into different columns and rows and slightly offset, so where the column grids overlap the colours mix into deep blue, red and green; one region on the top sheet outlined with a thin vermilion line. Absolutely no legible text, no letters, no numbers, no logos, no brand marks, no trademarks.\n",
+"createdAt": "2026-11-28T09:59:38.091Z",
 "tool": "impeccable generate-image",
 "model": "gpt-image-2.5-flare"
 }

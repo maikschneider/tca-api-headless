@@ -65,9 +65,32 @@
     --rule-strong: light-dark(oklch(0.24 0.035 248 / 0.55), oklch(0.93 0.01 235 / 0.5));
     --proof: light-dark(oklch(0.53 0.19 29), oklch(0.74 0.15 30));
     --proof-wash: light-dark(oklch(0.53 0.19 29 / 0.1), oklch(0.74 0.15 30 / 0.14));
-    --link: light-dark(oklch(0.44 0.13 252), oklch(0.8 0.1 245));
+    --link: var(--blue);
     /* The darkroom field used for the closing section in both schemes. */
     --plate: light-dark(oklch(0.24 0.035 248), oklch(0.15 0.02 248));
+
+    /* Process inks. Each has three strengths: the ink itself for type and
+      strokes (AA on paper, sheet and its wash), a solid fill for graphics and
+      colour bars (never behind text), and a wash for section grounds. */
+    --cyan: light-dark(oklch(0.5 0.1 222), oklch(0.82 0.1 215));
+    --cyan-fill: light-dark(oklch(0.72 0.14 222), oklch(0.72 0.13 222));
+    --cyan-wash: light-dark(oklch(0.94 0.035 215), oklch(0.255 0.035 225));
+    --magenta: light-dark(oklch(0.5 0.19 352), oklch(0.8 0.13 352));
+    --magenta-fill: light-dark(oklch(0.6 0.23 352), oklch(0.66 0.22 352));
+    --magenta-wash: light-dark(oklch(0.945 0.03 352), oklch(0.255 0.035 352));
+    --yellow: light-dark(oklch(0.49 0.1 80), oklch(0.88 0.14 92));
+    --yellow-fill: light-dark(oklch(0.88 0.17 95), oklch(0.86 0.16 95));
+    --yellow-wash: light-dark(oklch(0.96 0.05 98), oklch(0.255 0.025 95));
+    --blue: light-dark(oklch(0.44 0.13 252), oklch(0.8 0.1 245));
+    --blue-fill: light-dark(oklch(0.5 0.17 255), oklch(0.6 0.16 255));
+    --blue-wash: light-dark(oklch(0.94 0.03 252), oklch(0.255 0.035 255));
+    --green: light-dark(oklch(0.49 0.11 160), oklch(0.82 0.12 160));
+    --green-fill: light-dark(oklch(0.66 0.15 160), oklch(0.66 0.14 160));
+    --green-wash: light-dark(oklch(0.94 0.035 160), oklch(0.255 0.03 165));
+    /* The section's ink; sections set it with data-ink. */
+    --accent: var(--blue);
+    --accent-fill: var(--blue-fill);
+    --accent-wash: var(--blue-wash);
 
     /* Type: a fluid scale for 390 to 1440 px viewports. */
     --step--1: clamp(0.84rem, 0.82rem + 0.08vw, 0.9rem);

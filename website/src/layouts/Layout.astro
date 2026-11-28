@@ -9,6 +9,7 @@ import { t } from '../lib/i18n';
 import Navigation from '../components/Navigation.astro';
 import Proof from '../components/Proof.astro';
 import Mark from '../components/Mark.astro';
+import ColourBar from '../components/ColourBar.astro';
 import Head from './Head.astro';
 import Languages from '../components/Languages.astro';
 
@@ -56,6 +57,7 @@ const file = (name: string) => output(`contracts/${name}`).replace(/\/$/, '');
       <slot />
     </main>
     <footer class="colophon">
+      <ColourBar class="colophon-bar" />
       <div class="colophon-inner">
         <div class="colophon-about">
           <a class="wordmark" href={home}><Mark />{navigation.title}</a>

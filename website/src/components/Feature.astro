@@ -1,6 +1,8 @@
 ---
 import type { Entry } from '../lib/content';
 import { t } from '../lib/i18n';
+import { pageInk } from '../lib/inks';
+import Diagram from './Diagram.astro';
 import Element from './Element.astro';
 import Intro from './Intro.astro';
 import Specimen from './Specimen.astro';
@@ -14,12 +16,20 @@ const { language } = entry;
 const s = t(language);
 const region = (name: string) => entry.blocks.find((block) => block.region === name)?.items ?? [];
 const specimen = region('specimen');
+const ink = pageInk(entry);
 ---
 
-<article class="feature">
-  <Intro entry={entry} items={region('intro')} />
-  <div class="feature-main">
-    {region('main').map((item) => <Element {...item} language={language} region="main" />)}
+<article class="feature-page" data-ink={ink}>
+  <div class="intro-band">
+    <div class="feature">
+      <Intro entry={entry} items={region('intro')} />
+    </div>
+  </div>
+  <div class="feature">
+    <Diagram uid={entry.page.uid} language={language} />
+    <div class="feature-main">
+      {region('main').map((item) => <Element {...item} language={language} region="main" />)}
+    </div>
   </div>
 </article>
 {specimen.length > 0 && (
