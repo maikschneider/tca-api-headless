@@ -1,18 +1,32 @@
 ---
 import type { Entry } from '../lib/content';
+import { entryInk, pageInk } from '../lib/inks';
 import Element from './Element.astro';
 import Intro from './Intro.astro';
+import PackageMark from './PackageMark.astro';
 
 export type Props = { entry: Entry };
 
-// The catalog layout's regions: intro, then entries as cards.
+// The catalog layout's regions: intro, then entries as cards. Each card takes
+// the ink of its position; a card without a picture gets a colour proof.
 const { entry } = Astro.props;
 const region = (name: string) => entry.blocks.find((block) => block.region === name)?.items ?? [];
+const ink = pageInk(entry);
 ---
 
-<article class="catalog">
-  <Intro entry={entry} items={region('intro')} />
-  <div class="catalog-entries">
-    {region('entries').map((item) => <Element {...item} language={entry.language} region="entries" class="card" />)}
+<article class="catalog-page" data-ink={ink}>
+  <div class="intro-band">
+    <div class="catalog">
+      <Intro entry={entry} items={region('intro')} />
+    </div>
+  </div>
+  <div class="catalog">
+    <div class="catalog-entries">
+      {region('entries').map((item, index) => (
+        <Element {...item} language={entry.language} region="entries" class="card" ink={entryInk(entry, index)}>
+          {entry.site === 'website' && item.content.CType === 'text' && item.content.header && <PackageMark name={item.content.header} />}
+        </Element>
+      ))}
+    </div>
   </div>
 </article>

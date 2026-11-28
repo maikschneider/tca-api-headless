@@ -4,7 +4,7 @@ Astro builds this product site from two TYPO3 page trees, not from copied page t
 
 ## Design
 
-[PRODUCT.md](PRODUCT.md) holds the product context and [DESIGN.md](DESIGN.md) the design system ("the proof room"): tokens in `src/styles/tokens.css`, components in `src/styles/base.css`, two self-hosted fonts in `src/fonts/`. Both colour schemes follow the system setting. `.impeccable/surfaces/` keeps the direction of the page templates for [Impeccable](https://impeccable.style). The home page is the `product` backend layout (regions `hero`, `story`, `features`, `cta`); deep dives inherit `feature` (`intro`, `main`, `specimen`), and indexes use `catalog` (`intro`, `entries`). Other layouts render as articles. Interface strings (proof labels, menu) live in `src/lib/i18n.ts`; everything else is TYPO3 content.
+[PRODUCT.md](PRODUCT.md) holds the product context and [DESIGN.md](DESIGN.md) the design system ("the proof room"): tokens in `src/styles/tokens.css`, components in `src/styles/base.css`, two self-hosted fonts in `src/fonts/`. Both colour schemes follow the system setting. Process inks give each section its colour (`src/lib/inks.ts`: a page takes the ink of its menu position); feature pages carry an inline SVG diagram (`src/components/diagrams/`), and motion is CSS-only and off under reduced motion. `.impeccable/surfaces/` keeps the direction of the page templates for [Impeccable](https://impeccable.style). The home page is the `product` backend layout (regions `hero`, `story`, `features`, `cta`); deep dives inherit `feature` (`intro`, `main`, `specimen`), and indexes use `catalog` (`intro`, `entries`). Other layouts render as articles. Interface strings (proof labels, menu) live in `src/lib/i18n.ts`; everything else is TYPO3 content.
 
 ## Showcases
 

@@ -1,0 +1,20 @@
+---
+// Small spot drawings for the home page's beats and stages. The ink fill is
+// a misregistered second plate behind the key line.
+export type Props = { name: 'tree' | 'typed' | 'contract' | 'switch' | 'braces' | 'window'; class?: string };
+const shapes = {
+  tree: { fill: 'M8 8h14v10H8z M26 22h14v10H26z M26 36h14v10H26z', line: 'M6 6h14v10H6zM24 20h14v10H24zM24 34h14v10H24zM13 16v23h11M13 25h11' },
+  typed: { fill: 'M14 10h24v30H14z', line: 'M18 6c-6 0-6 4-6 9s-4 6-6 6c2 0 6 1 6 6s0 9 6 9M30 6c6 0 6 4 6 9s4 6 6 6c-2 0-6 1-6 6s0 9 6 9' },
+  contract: { fill: 'M12 10h26v32H12z', line: 'M8 6h22l8 8v28H8zM30 6v8h8M14 22h18M14 29h18M14 36h10' },
+  switch: { fill: 'M24 16h20v16H24z', line: 'M6 14h34a10 10 0 0 1 0 20H6a10 10 0 0 1 0-20zM32 24m-6 0a6 6 0 1 0 12 0a6 6 0 1 0-12 0' },
+  braces: { fill: 'M14 12h22v24H14z', line: 'M16 8c-5 0-5 3-5 8s-3 7-5 8c2 1 5 3 5 8s0 8 5 8M32 8c5 0 5 3 5 8s3 7 5 8c-2 1-5 3-5 8s0 8-5 8M20 24h1M26 24h1' },
+  window: { fill: 'M10 16h32v24H10z', line: 'M6 8h36v30H6zM6 15h36M11 11.5h1M15 11.5h1M12 22h14M12 28h22' },
+} as const;
+const { name, class: className } = Astro.props;
+const shape = shapes[name];
+---
+
+<svg class:list={['spot', className]} viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false">
+  <path class="spot-fill" d={shape.fill} />
+  <path class="spot-line" d={shape.line} pathLength="1" />
+</svg>

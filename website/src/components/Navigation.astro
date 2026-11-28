@@ -1,6 +1,7 @@
 ---
 import type { HeadlessNavigationRead } from '../api/schema';
 import { demoHref } from '../lib/api';
+import { inkAt } from '../lib/inks';
 
 export type Props = { entries: HeadlessNavigationRead[]; current: string; flat?: boolean };
 
@@ -10,10 +11,10 @@ const { entries, current, flat = false } = Astro.props;
 {
   entries.length > 0 && (
     <ul>
-      {entries.map((entry) => {
+      {entries.map((entry, index) => {
         const href = new URL(demoHref(entry.url), 'https://static.example').pathname;
         return (
-          <li>
+          <li data-ink={inkAt(index)}>
             <a href={href} aria-current={href === current ? 'page' : undefined} class:list={[{ ancestor: href !== current && current.startsWith(href) }]}>
               {entry.nav_title || entry.title}
             </a>

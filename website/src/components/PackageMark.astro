@@ -1,0 +1,20 @@
+---
+// A colour proof for a package without a picture: three process-ink shapes,
+// placed by the package name, overprinted. Decoration only.
+export type Props = { name: string };
+const { name } = Astro.props;
+let hash = 2166136261;
+for (const char of name) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619) >>> 0;
+const pick = (shift: number, size: number) => (hash >>> shift) % size;
+const shapes = ['M0 0h28v28H0z', 'M14 0a14 14 0 1 1 0 28a14 14 0 1 1 0-28z', 'M14 0l14 28H0z', 'M0 10h28v8H0z'];
+const plates = ['cyan', 'magenta', 'yellow'].map((ink, index) => ({
+  ink,
+  d: shapes[pick(index * 5, shapes.length)],
+  x: 4 + pick(index * 7 + 2, 4) * 6,
+  y: 4 + pick(index * 3 + 11, 4) * 5,
+}));
+---
+
+<svg class="package-mark" viewBox="0 0 56 52" width="56" height="52" aria-hidden="true" focusable="false">
+  {plates.map((plate) => <path class={`plate-${plate.ink}`} d={plate.d} transform={`translate(${plate.x} ${plate.y})`} />)}
+</svg>

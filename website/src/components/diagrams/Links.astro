@@ -1,0 +1,23 @@
+---
+// Typolinks of every kind resolve to one HeadlessLink shape with an absolute href.
+const sources = ['t3://page?uid=2003', 't3://file?uid=…', 'mailto:', 'https://'];
+---
+
+<svg class="drawing" viewBox="0 0 400 214" width="400" height="214" aria-hidden="true" focusable="false">
+  <text class="soft" x="12" y="22">typolink</text>
+  {sources.map((source, index) => {
+    const y = 36 + index * 44;
+    return (
+      <g>
+        <rect class="cell" x="12" y={y} width="160" height="30" />
+        <text x="20" y={y + 20}>{source}</text>
+        <path class="line" pathLength="1" d={`M172 ${y + 15} C 210 ${y + 15}, 206 107, 244 107`} />
+      </g>
+    );
+  })}
+  <rect class="sheet" x="244" y="52" width="144" height="110" />
+  <text x="254" y="76">HeadlessLink</text>
+  <text class="soft" x="262" y="100">href</text>
+  <text class="soft" x="262" y="122">target</text>
+  <text class="soft" x="262" y="144">title</text>
+</svg>

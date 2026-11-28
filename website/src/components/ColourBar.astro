@@ -1,0 +1,12 @@
+---
+// A printer's colour control strip: solid process inks, then their tints.
+// Decoration only; it prints in sequence once where motion is allowed.
+export type Props = { class?: string };
+const { class: className } = Astro.props;
+const swatches = ['cyan', 'magenta', 'yellow', 'key', 'blue', 'green'];
+---
+
+<div class:list={['colour-bar', className]} aria-hidden="true">
+  {swatches.map((ink, index) => <span class={`swatch swatch-${ink}`} style={`--i:${index}`} />)}
+  {swatches.slice(0, 4).map((ink, index) => <span class={`swatch swatch-${ink} tint`} style={`--i:${index + swatches.length}`} />)}
+</div>

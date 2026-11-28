@@ -1,0 +1,28 @@
+---
+import type { Language } from '../lib/config';
+import { t } from '../lib/i18n';
+import Content from './diagrams/Content.astro';
+import Links from './diagrams/Links.astro';
+import Navigation from './diagrams/Navigation.astro';
+import Regions from './diagrams/Regions.astro';
+import Routing from './diagrams/Routing.astro';
+import Translations from './diagrams/Translations.astro';
+
+export type Props = { uid?: number; language: Language };
+
+// A drawn diagram of what a feature page explains, chosen by the page's uid.
+// The labels are API identifiers, so one drawing serves both languages; the
+// caption carries the explanation.
+const diagrams = { 2003: ['regions', Regions], 2009: ['content', Content], 2010: ['navigation', Navigation], 2011: ['routing', Routing], 2012: ['translations', Translations], 2013: ['links', Links] } as const;
+const { uid, language } = Astro.props;
+const diagram = uid ? diagrams[uid as keyof typeof diagrams] : undefined;
+const s = t(language);
+const [name, Drawing] = diagram ?? [];
+---
+
+{name && Drawing && (
+  <figure class="diagram">
+    <Drawing />
+    <figcaption>{s.diagrams[name]}</figcaption>
+  </figure>
+)}

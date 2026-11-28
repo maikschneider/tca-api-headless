@@ -1,0 +1,28 @@
+---
+// The menu tree with `?depth=`: the default depth, and deeper levels up to maxDepth.
+const nodes = [
+  { label: '/', depth: 0, y: 48 },
+  { label: 'quick-start', depth: 1, y: 80 },
+  { label: 'features', depth: 1, y: 112 },
+  { label: 'regions', depth: 2, y: 144 },
+  { label: 'content', depth: 2, y: 172 },
+  { label: 'contract', depth: 1, y: 204 },
+];
+const x = (depth: number) => 16 + depth * 112;
+---
+
+<svg class="drawing" viewBox="0 0 400 226" width="400" height="226" aria-hidden="true" focusable="false">
+  <path class="band" d="M112 30h112v188H112z" />
+  <path class="band band-deep" d="M224 30h112v188H224z" />
+  <text class="soft" x="120" y="22">depth=1</text>
+  <text class="soft" x="232" y="22">depth=2</text>
+  <path class="limit" d="M344 30v188" />
+  <text class="soft" x="350" y="22">max</text>
+  <path class="line" pathLength="1" d="M24 50V200H130M24 76H130M24 108H130M136 114V168H242M136 140H242" />
+  {nodes.map((node) => (
+    <g>
+      <circle class="node" cx={x(node.depth) + 8} cy={node.y - 4} r="4" />
+      <text x={x(node.depth) + 18} y={node.y}>{node.label}</text>
+    </g>
+  ))}
+</svg>

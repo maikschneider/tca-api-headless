@@ -104,3 +104,24 @@ test('keyboard opens a proof, reaches its full JSON and the nested schema browse
   await page.keyboard.press('Enter');
   await expect(schema.locator('pre')).toBeVisible();
 });
+
+// Reduced motion leaves nothing animating: no entrance, no scroll-drawn line,
+// no proof or hover transition. Full motion has them, so the check can fail.
+for (const reducedMotion of ['reduce', 'no-preference'] as const) {
+  test(`motion with prefers-reduced-motion: ${reducedMotion}`, async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion, viewport: { width: 1440, height: 900 }, javaScriptEnabled: true });
+    const page = await context.newPage();
+    const counts: number[] = [];
+    for (const path of [pages[0], pick('website', 2003, 'en'), pick('website', 2002, 'en')]) {
+      await page.goto(path);
+      await page.mouse.wheel(0, 1600);
+      await page.locator('main .proof > summary').first().click();
+      const card = page.locator('.card').first();
+      if (await card.count()) await card.hover();
+      counts.push(await page.evaluate(() => document.getAnimations().length));
+    }
+    if (reducedMotion === 'reduce') expect(counts).toEqual([0, 0, 0]);
+    else expect(counts.every((count) => count > 0), counts.join(', ')).toBeTruthy();
+    await context.close();
+  });
+}

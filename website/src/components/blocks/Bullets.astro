@@ -2,12 +2,15 @@
 import type { HeadlessContentBulletsRead } from '../../api/schema';
 import type { Language } from '../../lib/config';
 import Heading from '../Heading.astro';
+import Spot from '../Spot.astro';
+import { inkAt } from '../../lib/inks';
 
 export type Props = { content: HeadlessContentBulletsRead; language: Language; region: string };
 type Term = { term: string; definition: string };
 
 // A definition list in the product's features region reads as a flow of
-// stages; elsewhere it stays a glossary.
+// stages (TYPO3, the API, the frontend); elsewhere it stays a glossary.
+const stageSpots = ['tree', 'braces', 'window'] as const;
 const { content, language, region } = Astro.props;
 const items: (string | Term)[] = content.bodytext ?? [];
 const terms = items.filter((item): item is Term => typeof item !== 'string');
@@ -17,7 +20,9 @@ const terms = items.filter((item): item is Term => typeof item !== 'string');
   <Heading header={content.header} link={content.header_link} language={language} />
   {
     terms.length > 0 ? (
-      <dl class:list={[{ flow: region === 'features' }]}>{terms.map((item) => <div><dt>{item.term}</dt><dd>{item.definition}</dd></div>)}</dl>
+      <dl class:list={[{ flow: region === 'features' }]}>{terms.map((item, index) => region === 'features' ? (
+        <div data-ink={inkAt(index)}><dt><Spot name={stageSpots[index % stageSpots.length]} />{item.term}</dt><dd>{item.definition}</dd></div>
+      ) : <div><dt>{item.term}</dt><dd>{item.definition}</dd></div>)}</dl>
     ) : content.bullets_type === 1 ? (
       <ol>{items.map((item) => <li>{item}</li>)}</ol>
     ) : (

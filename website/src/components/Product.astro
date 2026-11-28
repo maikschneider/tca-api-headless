@@ -1,6 +1,9 @@
 ---
 import type { Entry } from '../lib/content';
+import { inkAt } from '../lib/inks';
 import Actions from './Actions.astro';
+import ColourBar from './ColourBar.astro';
+import Spot from './Spot.astro';
 import Element from './Element.astro';
 import Figure from './Figure.astro';
 import Galley from './Galley.astro';
@@ -25,11 +28,14 @@ const hero = region('hero');
 const lead = hero.find(isText);
 const leadContent = lead?.content.CType === 'text' || lead?.content.CType === 'textmedia' ? lead.content : undefined;
 const cta = region('cta');
+// The four beats in their authored order: editors, typed data, contract, opt-in.
+const beatSpots = ['tree', 'typed', 'contract', 'switch'] as const;
 ---
 
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-copy">
-    <h1 id="hero-title">{lead && <Mark class="hero-mark" />}{leadContent?.header || entry.page.title}</h1>
+    <ColourBar class="hero-bar" />
+    <h1 id="hero-title">{lead && <Mark class="hero-mark" register />}{leadContent?.header || entry.page.title}</h1>
     {leadContent && <RichText value={leadContent.bodytext} class="lead" />}
     <Actions items={actions(hero)} language={language} />
   </div>
@@ -44,10 +50,13 @@ const cta = region('cta');
 {rest(hero).filter((item) => item !== lead).map((item) => <Element {...item} language={language} region="hero" />)}
 
 <section class="story">
-  {region('story').map(({ content, reveal }) => (
+  {region('story').map(({ content, reveal }, index) => (
     content.CType === 'text' || content.CType === 'textmedia' ? (
-      <article class="beat">
-        <Heading header={content.header} link={content.header_link} language={language} class="beat-title" />
+      <article class="beat" data-ink={inkAt(index)}>
+        <div class="beat-head">
+          <Spot name={beatSpots[index % beatSpots.length]} />
+          <Heading header={content.header} link={content.header_link} language={language} class="beat-title" />
+        </div>
         <div class="beat-body">
           <RichText value={content.bodytext} />
           {assets(content).map((file) => <Figure file={file} />)}
@@ -58,8 +67,10 @@ const cta = region('cta');
   ))}
 </section>
 
-<section class="features">
-  {region('features').map((item) => <Element {...item} language={language} region="features" />)}
+<section class="features-band">
+  <div class="features">
+    {region('features').map((item) => <Element {...item} language={language} region="features" />)}
+  </div>
 </section>
 
 {cta.length > 0 && (

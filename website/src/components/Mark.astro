@@ -1,10 +1,19 @@
 ---
 // The registration mark: ties a rendered element to its line in a proof.
-export type Props = { class?: string };
-const { class: className } = Astro.props;
+// With `register`, cyan, magenta and yellow plates sit under it; they start
+// out of register and settle where motion is allowed.
+export type Props = { class?: string; register?: boolean };
+const { class: className, register = false } = Astro.props;
+const plates = register ? ['cyan', 'magenta', 'yellow'] : [];
 ---
 
-<svg class:list={['mark', className]} viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+<svg class:list={['mark', { register }, className]} viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+  {plates.map((ink) => (
+    <g class={`plate plate-${ink}`} fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="6.5" />
+      <path d="M12 1.5v21M1.5 12h21" />
+    </g>
+  ))}
   <circle cx="12" cy="12" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
   <path d="M12 1.5v21M1.5 12h21" stroke="currentColor" stroke-width="1.5" />
   <circle cx="12" cy="12" r="2.25" fill="currentColor" />

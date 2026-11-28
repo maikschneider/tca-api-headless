@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Docs
 
-- Static product website in `website/` with its own design system, bilingual feature proofs, an extension catalog and a fictional specimen site, built from a dedicated TYPO3 content fixture (not part of the extension package).
+- Static product website in `website/` with its own design system (process-ink colours, drawn diagrams, quiet motion), bilingual feature proofs, an extension catalog and a fictional specimen site, built from a dedicated TYPO3 content fixture (not part of the extension package).
 - Publishing options for the website (GitHub Pages, custom domain, other static hosts) in `website/HOSTING.md`.
 
 ### Added

@@ -1,5 +1,6 @@
 ---
 import type { Entry } from '../lib/content';
+import { pageInk } from '../lib/inks';
 import Element from './Element.astro';
 import SpecimenNote from './SpecimenNote.astro';
 
@@ -13,9 +14,10 @@ const { language, page } = entry;
 const hasAside = entry.blocks.some((block) => block.region === 'aside');
 const first = entry.blocks[0]?.items[0]?.content;
 const shown = (content: Entry['blocks'][number]['items'][number]['content']) => content === first && content.header === page.title ? { ...content, header: '' } : content;
+const ink = pageInk(entry);
 ---
 
-<article class:list={['article', { 'has-aside': hasAside }]}>
+<article class:list={['article', { 'has-aside': hasAside }]} data-ink={ink}>
   <header class="article-head">
     <h1>{page.title}</h1>
     {entry.site === 'kettenblatt' && <SpecimenNote language={language} />}
