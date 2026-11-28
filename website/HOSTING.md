@@ -51,7 +51,7 @@ URL: `https://maikschneider.github.io/tca-api-headless/`. There is no `maikschne
 3. Merge, then check the run's `deploy` job and open the URL. `/tca-api-headless/nope/` must answer with the site's 404 page.
 4. Optional: **Settings → Environments → github-pages → Deployment branches: `main` only.**
 
-Rollback: re-run **all jobs** of an older successful `main` run; it rebuilds that revision from its own fixture and deploys it. Re-running only its `deploy` job works only while that run's Pages artifact exists (`retention-days`, default 1 day). To take the site down, set the Pages source to *None*.
+Rollback: re-run **all jobs** of an older successful run that deployed: a `main` push, or with manual-only publishing a `workflow_dispatch` run (a re-run keeps its original event). It rebuilds that revision from its own fixture and deploys it. Re-running just the `deploy` job needs that run's Pages artifact (`retention-days`, default 1 day). GitHub allows re-runs for 30 days; for older revisions, revert the change in a new commit on `main`, which push-triggered publishing deploys and manual-only publishing deploys after **Run workflow** on `main`. To take the site down, set the Pages source to *None*.
 
 ## Option B: GitHub Pages with a custom domain
 
