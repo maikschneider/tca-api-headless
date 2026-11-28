@@ -13,6 +13,18 @@ const source = async (page: Page, request: APIRequestContext) => {
 };
 
 for (const language of ['en', 'de']) {
+  test(`all install snippets carry the development constraints ${language}`, async ({ page }) => {
+    for (const uid of [2000, 2001]) {
+      await page.goto(path('website', uid, language));
+      const commands = (await page.locator('main .prose code').allTextContents()).filter((text) => text.startsWith('composer require '));
+      expect(commands.length).toBeGreaterThan(0);
+      for (const command of commands) {
+        expect(command).toContain('maikschneider/tca-api-headless:dev-main');
+        expect(command).toContain('"maikschneider/tca-api:dev-release/2.4.0 as 2.4.0"');
+      }
+    }
+  });
+
   test(`recorded request examples ${language}`, async ({ page, request }) => {
     await page.goto(path('website', 2001, language));
     const panels = page.locator('main .proof-response');

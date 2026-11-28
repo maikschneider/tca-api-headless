@@ -12,7 +12,7 @@ export type Props = { item: Entry['blocks'][number]['items'][number]; targets: R
 const { item, targets, language } = Astro.props;
 const { content } = item;
 const href = content.CType === 'header' ? content.header_link?.href : undefined;
-const target = href ? targets[href] : undefined;
+const target = href ? targets[href.split(/[?#]/)[0]] : undefined;
 if (!target) throw new Error(`Specimen element ${content.uid} links to no emitted page: ${href}`);
 ---
 
