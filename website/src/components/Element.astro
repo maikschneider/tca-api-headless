@@ -4,14 +4,14 @@ import type { Reveal } from '../lib/content';
 import type { Language } from '../lib/config';
 import Proof from './Proof.astro';
 
-export type Props = { content: Content; reveal: Reveal; language: Language; region: string; class?: string };
+export type Props = { content: Content; reveal: Reveal; language: Language; region: string; class?: string; proof?: boolean };
 
 // One content element and the proof it was rendered from.
-const { content, reveal, language, region, class: className } = Astro.props;
+const { content, reveal, language, region, class: className, proof = true } = Astro.props;
 const Block = blocks[content.CType] as (props: { content: Content; language: Language; region: string }) => unknown;
 ---
 
 <div class:list={['element', `element-${content.CType}`, className]}>
   <Block content={content} language={language} region={region} />
-  <Proof recording={reveal} language={language} />
+  {proof && <Proof recording={reveal} language={language} />}
 </div>

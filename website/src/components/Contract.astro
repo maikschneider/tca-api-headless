@@ -1,0 +1,47 @@
+---
+import type { Contract as ContractData } from '../lib/requests';
+import type { Language } from '../lib/config';
+import { output } from '../lib/config';
+import { t } from '../lib/i18n';
+
+export type Props = { contract: ContractData; language: Language };
+
+// A recorded OpenAPI document as a browser: its paths, then each schema with
+// the TypeScript type generated from it. Plain text keeps the page light.
+const { contract, language } = Astro.props;
+const s = t(language);
+const file = (name: string) => output(`contracts/${name}`).replace(/\/$/, '');
+const groupName = (name: string) => name.startsWith('HeadlessContent') || ['HeadlessBulletList', 'HeadlessTable'].includes(name) ? 'content'
+  : name.startsWith('HeadlessPages') || name.startsWith('HeadlessNavigation') ? 'pages'
+    : name.startsWith('PortableText') ? 'richtext' : 'shared';
+const groups = ['pages', 'content', 'richtext', 'shared'] as const;
+---
+
+<div class="contract">
+  <p class="contract-files">{s.download}: <a href={file(`${contract.site}.json`)} type="application/json">{contract.site}.json</a> · <a href={file(`${contract.site}.d.ts`)}>{contract.site}.d.ts</a></p>
+  <p class="pane-label">{s.paths}</p>
+  <table class="contract-paths">
+    <thead class="visually-hidden"><tr><th scope="col">{s.method}</th><th scope="col">{s.path}</th><th scope="col">{s.description}</th></tr></thead>
+    <tbody>
+      {contract.paths.map((item) => <tr><td><code>{item.method}</code></td><td><code>{item.path}</code></td><td>{item.summary}</td></tr>)}
+    </tbody>
+  </table>
+  <p class="pane-label">{s.schemas} <span class="contract-count">{contract.schemas.length}</span></p>
+  <div class="schema-groups">
+    {groups.map((group) => (
+      <details class="schema-group">
+        <summary>{s.schemaGroups[group]}</summary>
+        <ul class="contract-schemas">
+          {contract.schemas.filter((schema) => groupName(schema.name) === group).map((schema) => (
+            <li>
+              <details>
+                <summary><code>{schema.name}</code></summary>
+                <pre>{schema.type}</pre>
+              </details>
+            </li>
+          ))}
+        </ul>
+      </details>
+    ))}
+  </div>
+</div>

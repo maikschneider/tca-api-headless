@@ -1,0 +1,35 @@
+---
+import type { Entry } from '../lib/content';
+import { t } from '../lib/i18n';
+import Element from './Element.astro';
+import Intro from './Intro.astro';
+import Specimen from './Specimen.astro';
+
+export type Props = { entry: Entry; targets: Record<string, Entry> };
+
+// The feature layout's regions: intro, main, specimen. A header element in the
+// specimen region links to a Kettenblatt page, which is rendered in its own look.
+const { entry, targets } = Astro.props;
+const { language } = entry;
+const s = t(language);
+const region = (name: string) => entry.blocks.find((block) => block.region === name)?.items ?? [];
+const specimen = region('specimen');
+---
+
+<article class="feature">
+  <Intro entry={entry} items={region('intro')} />
+  <div class="feature-main">
+    {region('main').map((item) => <Element {...item} language={language} region="main" />)}
+  </div>
+</article>
+{specimen.length > 0 && (
+  <section class="specimen-band" aria-labelledby="specimen-title">
+    <div class="specimen-inner">
+      <h2 id="specimen-title">{s.specimenBand}</h2>
+      <p class="specimen-intro">{s.specimen}</p>
+      <div class="specimen-cards">
+        {specimen.map((item) => <Specimen item={item} targets={targets} language={language} />)}
+      </div>
+    </div>
+  </section>
+)}

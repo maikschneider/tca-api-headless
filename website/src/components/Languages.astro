@@ -4,16 +4,21 @@ import { t } from '../lib/i18n';
 
 export type Props = { entry: Entry };
 
-// Only actual translations of the page: a missing one is not linked.
+// Every language of the site. Where the page has no translation, the link leads
+// to that language's home page and says so; hreflang marks real translations only.
 const { entry } = Astro.props;
 const s = t(entry.language);
 ---
 
-{entry.alternates.length > 1 && (
+{entry.languages.length > 1 && (
   <nav class="languages" aria-label={s.language}>
     <ul>
-      {entry.alternates.map((alternate) => (
-        <li><a href={alternate.output} lang={alternate.language} hreflang={alternate.language} aria-current={alternate.language === entry.language ? 'true' : undefined}>{s.languageName[alternate.language]}</a></li>
+      {entry.languages.map((item) => (
+        <li>
+          <a href={item.output} lang={item.language} hreflang={item.translated ? item.language : undefined} title={item.translated ? undefined : s.notTranslated} data-untranslated={item.translated ? undefined : ''} aria-current={item.language === entry.language ? 'true' : undefined}>
+            {s.languageName[item.language]}{!item.translated && <span class="languages-home"> · {t(item.language).home}</span>}
+          </a>
+        </li>
       ))}
     </ul>
   </nav>

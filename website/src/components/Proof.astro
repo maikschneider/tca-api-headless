@@ -25,9 +25,9 @@ const s = t(language);
   </summary>
   <div class="galley">
     <p class="proof-line"><span class="pane-label">{s.request}</span> <code>{recording.request}</code>{recording.pointer ? <> <code class="proof-pointer">#{recording.pointer}</code></> : where && <> <code class="proof-pointer">{where}</code></>} <span class="proof-status">{s.status} <code>{recording.status}</code></span></p>
-    <p class="proof-note">{s.recorded}</p>
+    <p class="proof-note">{s.recorded}{recording.source && <> <a href={recording.source} type="application/json">{s.fullJson}</a></>}</p>
     <div class="panes">
-      <div class="pane" data-pane="json">
+      <div class="pane" data-pane="json" data-format={recording.lang}>
         <p class="pane-label">{s.json}</p>
         <Code code={recording.json} lang={recording.lang} themes={proofThemes} defaultColor={false} wrap />
       </div>

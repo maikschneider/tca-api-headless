@@ -1,0 +1,26 @@
+---
+import type { Entry } from '../lib/content';
+import type { Language } from '../lib/config';
+import Element from './Element.astro';
+import Link from './Link.astro';
+import Proof from './Proof.astro';
+
+export type Props = { item: Entry['blocks'][number]['items'][number]; targets: Record<string, Entry>; language: Language };
+
+// An excerpt of a specimen page, placed by an editor as a header element with a
+// link to it. The page's elements are proven by the page's own proof.
+const { item, targets, language } = Astro.props;
+const { content } = item;
+const href = content.CType === 'header' ? content.header_link?.href : undefined;
+const target = href ? targets[href.split(/[?#]/)[0]] : undefined;
+if (!target) throw new Error(`Specimen element ${content.uid} links to no emitted page: ${href}`);
+---
+
+<article class="specimen-card">
+  {content.CType === 'header' && content.header_link && <h3><Link link={content.header_link} language={language}>{content.header}</Link></h3>}
+  <div class="specimen-page" lang={target.language === language ? undefined : target.language}>
+    {target.blocks.flatMap(({ region, items }) => items.map((element) => <Element {...element} language={target.language} region={region} proof={false} />))}
+  </div>
+  <Proof recording={target.reveal} language={language} />
+  <Proof recording={item.reveal} language={language} />
+</article>

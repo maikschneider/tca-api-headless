@@ -1,0 +1,18 @@
+---
+import type { Entry } from '../lib/content';
+import Element from './Element.astro';
+import Intro from './Intro.astro';
+
+export type Props = { entry: Entry };
+
+// The catalog layout's regions: intro, then entries as cards.
+const { entry } = Astro.props;
+const region = (name: string) => entry.blocks.find((block) => block.region === name)?.items ?? [];
+---
+
+<article class="catalog">
+  <Intro entry={entry} items={region('intro')} />
+  <div class="catalog-entries">
+    {region('entries').map((item) => <Element {...item} language={entry.language} region="entries" class="card" />)}
+  </div>
+</article>

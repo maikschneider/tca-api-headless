@@ -34,7 +34,7 @@
 
   a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
   a:hover { text-decoration-thickness: 2px; }
-  :focus-visible { outline: 2px solid var(--proof); outline-offset: 3px; border-radius: 1px; }
+  :focus-visible { outline: 2px solid var(--proof); outline-offset: 3px; border-radius: var(--radius); }
 
   code, pre, kbd { font-family: var(--font-code); font-size: 0.9em; font-variant-ligatures: none; }
   pre code { font-size: inherit; }
@@ -54,7 +54,7 @@
 @layer layout {
   .masthead-inner,
   .hero, .story, .features, .closing-inner,
-  .article, .colophon-inner, main > .element {
+  .article, .feature, .catalog, .specimen-inner, .colophon-inner, main > .element {
     width: min(100% - 2 * var(--gutter), var(--page));
     margin-inline: auto;
   }
@@ -93,13 +93,15 @@
 
   /* Hero: the claim beside the proof of the claim. */
   .hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--space-xl); padding-block: var(--space-xl) var(--space-2xl); }
-  .hero-copy, .hero-proof { grid-column: 1 / -1; min-width: 0; }
+  .hero-copy, .hero-proof, .hero-media { grid-column: 1 / -1; min-width: 0; }
+  .hero-media figure { margin: 0; }
+  .hero-media img { width: 100%; max-height: 36rem; object-fit: cover; border-radius: var(--radius); }
   .hero h1 { position: relative; font-size: var(--step-4); font-weight: 820; line-height: var(--leading-tight); letter-spacing: -0.038em; max-width: 12ch; }
   .hero-mark { display: none; color: var(--proof); }
   .lead { margin-block-start: var(--space-m); max-width: 46ch; color: var(--ink-soft); font-size: var(--step-1); line-height: 1.5; }
   .lead strong { color: var(--ink); }
   .lead .command { margin-block-start: var(--space-m); }
-  .lead .command pre { font-size: clamp(0.85rem, 0.75rem + 0.4vw, 1.05rem); color: var(--ink); }
+  .lead .command > pre { font-size: clamp(0.85rem, 0.75rem + 0.4vw, 1.05rem); color: var(--ink); }
   .hero .actions-group { margin-block-start: var(--space-l); }
   @media (min-width: 64rem) {
     .hero { align-items: start; }
@@ -186,9 +188,9 @@
 
   /* Commands: preformatted text from the API, copyable with JS. */
   .command { position: relative; }
-  .command pre { padding: var(--space-s) var(--space-m); padding-inline-end: 5.5rem; background: var(--sheet); border-radius: var(--radius); white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--step--1); line-height: 1.6; }
+  .command > pre { padding: var(--space-s) var(--space-m); padding-inline-end: 5.5rem; background: var(--sheet); border-radius: var(--radius); white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--step--1); line-height: 1.6; }
   @media (max-width: 40rem) {
-    .command pre { padding-inline-end: var(--space-m); padding-block-start: 3rem; }
+    .command > pre { padding-inline-end: var(--space-m); padding-block-start: 3rem; }
   }
   .copy { position: absolute; inset-block-start: 0.55rem; inset-inline-end: 0.55rem; min-height: 2rem; padding: 0.25rem 0.7rem; color: var(--ink); background: var(--paper); border: var(--hairline) solid var(--rule-strong); border-radius: var(--radius); font-size: var(--step--1); font-weight: 600; cursor: pointer; }
   .copy:hover { border-color: var(--ink); }
@@ -222,7 +224,8 @@
       var(--c) right 0 bottom 12px / 8px 1px no-repeat, var(--c) right 12px bottom 0 / 1px 8px no-repeat;
   }
   .proof[open] > .galley { animation: wipe var(--duration) var(--ease-out); }
-  .panes { display: grid; gap: var(--space-m); margin-block-start: var(--space-s); }
+  .panes { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-m); margin-block-start: var(--space-s); }
+  .pane { min-width: 0; }
   .pane-label { margin-block-end: var(--space-2xs); color: var(--ink); font-size: var(--step--1); font-weight: 680; }
 
   .galley-sheet { margin: 0; }
@@ -231,7 +234,7 @@
   .hero-proof .proof { margin-block-start: var(--space-l); }
 
   .astro-code { margin: 0; padding: 0; overflow: visible !important; background-color: transparent !important; font-size: var(--step--1); line-height: 1.6; }
-  .astro-code code { display: flex; flex-direction: column; }
+  .astro-code code { display: flex; flex-direction: column; overflow-wrap: anywhere; }
   .astro-code, .astro-code span { color: light-dark(var(--shiki-light), var(--shiki-dark)); }
   .astro-code span { font-style: var(--shiki-light-font-style); }
   .astro-code .line { position: relative; }
@@ -258,6 +261,102 @@
   }
 
   .not-found .article { min-height: 60vh; }
+
+  /* Feature and catalog pages: an intro with title, lead and plate. */
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-l); padding-block: var(--space-xl) var(--space-l); }
+  .intro h1 { font-size: var(--step-4); font-weight: 820; line-height: var(--leading-tight); letter-spacing: -0.038em; max-width: 14ch; }
+  .intro .lead { max-width: 52ch; }
+  .intro-plate { margin: 0; }
+  .intro-plate img { width: 100%; border-radius: var(--radius); }
+  @media (min-width: 64rem) {
+    .intro.has-plate { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; column-gap: var(--gutter); }
+  }
+  .feature-main { display: grid; gap: var(--space-xl); padding-block: var(--space-l) var(--space-2xl); border-block-start: var(--hairline) solid var(--rule-strong); }
+  .feature-main > .element { max-width: 54rem; }
+  .catalog { padding-block-end: var(--space-2xl); }
+  .catalog-entries { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--space-xl) var(--gutter); padding-block-start: var(--space-l); border-block-start: var(--hairline) solid var(--rule-strong); }
+  .card { display: flex; flex-direction: column; }
+  .card .block { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .card .block > h2 { font-size: var(--step-1); order: 1; }
+  .card .block > .prose { order: 2; color: var(--ink-soft); }
+  .card .block > figure { order: 0; margin: 0 0 var(--space-2xs); }
+  .card .block > figure img { aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); }
+  .card .proof { margin-block-start: auto; }
+  .card h2 a { color: var(--ink); text-decoration: none; }
+  .card h2 a:hover { text-decoration: underline; }
+
+  /* Request commands with their recorded response. */
+  .command.has-response > pre { border-end-start-radius: 0; border-end-end-radius: 0; }
+  .response { padding: var(--space-2xs) var(--space-m) 0; border: var(--hairline) solid var(--sheet); border-block-start: 0; border-radius: 0 0 var(--radius) var(--radius); }
+  .response > .proof { margin-block-start: 0; border: 0; }
+  .response > .tree, .response > .contract { padding-block: var(--space-s) var(--space-2xs); }
+  .tree { list-style: none; font-size: var(--step--1); }
+  .tree .tree { padding-inline-start: var(--space-m); border-inline-start: var(--hairline) solid var(--rule); margin-inline-start: 0.3rem; }
+  .tree li { padding-block: 0.15rem; }
+  .tree a { font-weight: 600; }
+  .tree code { color: var(--ink-soft); background: none; padding: 0; }
+  .contract { font-size: var(--step--1); }
+  .contract .pane-label { margin-block-start: var(--space-s); }
+  .contract-paths td { padding-block: var(--space-2xs); }
+  .contract-paths td:first-child, .contract-paths td:nth-child(2) { white-space: nowrap; }
+  @media (max-width: 40rem) {
+    .contract-paths tbody { display: grid; gap: var(--space-s); }
+    .contract-paths tr { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3xs) var(--space-xs); border-block-end: var(--hairline) solid var(--rule); padding-block-end: var(--space-xs); }
+    .contract-paths td { border: 0; padding: 0; }
+    .contract-paths td:nth-child(2) { white-space: normal; }
+    .contract-paths td:last-child { grid-column: 1 / -1; }
+  }
+  .schema-group { border-block-start: var(--hairline) solid var(--rule); }
+  .schema-group > summary { min-height: 2.75rem; padding-block: var(--space-2xs); font-weight: 600; cursor: pointer; }
+  .contract-count { color: var(--ink-soft); font-weight: 400; }
+  .contract-schemas { list-style: none; columns: 2 16rem; column-gap: var(--space-l); }
+  .contract-schemas li { break-inside: avoid; }
+  .contract-schemas summary { padding-block: 0.3rem; cursor: pointer; }
+  .contract-schemas summary code { background: none; padding: 0; color: var(--ink); }
+  .contract-schemas pre { margin-block: var(--space-2xs) var(--space-s); padding: var(--space-s); background: var(--sheet); border-radius: var(--radius); white-space: pre-wrap; overflow-wrap: anywhere; column-span: none; }
+  .contract-files { margin-block-start: var(--space-s); }
+
+  /* Languages without a translation of the page lead to the home page. */
+  .languages-home { font-size: 0.85em; }
+
+  /* Kettenblatt, the specimen brand: one deliberate warm, dark scheme (a
+    workshop, not a proof room), whether on its own pages or as an excerpt. */
+  .site-kettenblatt, .specimen-card {
+    color-scheme: dark;
+    --paper: oklch(0.225 0.016 65);
+    --sheet: oklch(0.285 0.02 65);
+    --ink: oklch(0.94 0.022 85);
+    --ink-soft: oklch(0.82 0.03 80);
+    --rule: oklch(0.94 0.022 85 / 0.2);
+    --rule-strong: oklch(0.94 0.022 85 / 0.5);
+    --link: oklch(0.83 0.11 65);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .site-kettenblatt { scrollbar-color: var(--rule-strong) var(--paper); }
+  .site-kettenblatt .wordmark .mark { display: none; }
+  .site-kettenblatt h1, .site-kettenblatt h2, .specimen-card h2, .specimen-card h3 { text-transform: uppercase; letter-spacing: 0.02em; font-weight: 850; }
+  .site-kettenblatt .article-head h1 { font-size: var(--step-4); letter-spacing: 0.01em; max-width: none; }
+  .site-kettenblatt .block-image, .specimen-card .block-image { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-s); }
+  @media (min-width: 48rem) {
+    .site-kettenblatt .block-image:has(> figure + figure), .specimen-card .block-image:has(> figure + figure) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .site-kettenblatt .block-image > h2, .specimen-card .block-image > h2 { grid-column: 1 / -1; }
+  .site-kettenblatt .block-image figure img, .specimen-card .block-image figure img { width: 100%; }
+  .site-kettenblatt .block-image figure, .specimen-card .block-image figure { margin: 0; }
+  .site-kettenblatt .block-fallback, .specimen-card .block-fallback { border-color: var(--link); }
+
+  .specimen-band { padding: var(--space-2xl) var(--gutter); background: var(--sheet); border-block-start: var(--hairline) solid var(--rule-strong); }
+  .specimen-inner { width: min(100%, var(--page)); }
+  .specimen-band > .specimen-inner > h2 { font-size: var(--step-3); letter-spacing: -0.03em; }
+  .specimen-intro { margin-block: var(--space-2xs) var(--space-l); color: var(--ink-soft); }
+  .specimen-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: var(--gutter); align-items: start; }
+  .specimen-card { padding: var(--space-l) var(--space-m) var(--space-s); border-radius: var(--radius); }
+  .specimen-card > h3 { font-size: var(--step-1); margin-block-end: var(--space-m); }
+  .specimen-card > h3 a { color: var(--ink); }
+  .specimen-page { display: grid; gap: var(--space-m); }
+  .specimen-page h2 { font-size: var(--step-1); }
+  .specimen-page .element + .element { margin: 0; }
 
   /* Colophon. */
   .colophon { border-block-start: var(--hairline) solid var(--rule-strong); }

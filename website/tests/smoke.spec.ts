@@ -24,7 +24,11 @@ for (const route of manifest.routes) {
     await panels.first().locator('summary').click();
     await expect(panels.first()).toHaveAttribute('open', '');
     await expect(panels.first().locator('[data-pane="json"]')).toBeVisible();
-    await expect(panels.first().locator('[data-pane="type"]')).toBeVisible();
+    if (![2014].includes(route.uid)) await expect(panels.first().locator('[data-pane="type"]')).toBeVisible();
+    for (const panel of await panels.all()) {
+      const json = await panel.locator('[data-pane="json"] pre').textContent() ?? '';
+      expect(() => JSON.parse(json.replace(/\/\* \d+ (?:elements?|items?|paths?|schemas?) \*\//g, '')), route.output).not.toThrow();
+    }
     if (route.uid === 2001) {
       expect(await page.locator('main ol li').count()).toBeGreaterThan(0);
       expect(await page.locator('main th[scope="row"]').count()).toBeGreaterThan(0);
@@ -66,9 +70,9 @@ for (const route of manifest.routes) {
     }
     const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());
     expect(schema.url).toBe(`${siteOrigin}${route.output}`);
-    const alternates = await page.locator('.masthead-inner > .languages a').evaluateAll((elements) => elements.map((element) => ({ href: element.getAttribute('href'), language: element.getAttribute('lang') })));
+    const alternates = await page.locator('.masthead-inner > .languages a').evaluateAll((elements) => elements.map((element) => ({ href: element.getAttribute('href'), language: element.getAttribute('lang'), translated: !element.hasAttribute('data-untranslated') })));
     for (const alternate of alternates) {
-      expect(manifest.routes.find((other) => other.output === alternate.href)).toMatchObject({ site: route.site, uid: route.uid, language: alternate.language });
+      expect(manifest.routes.find((other) => other.output === alternate.href)).toMatchObject({ site: route.site, uid: alternate.translated ? route.uid : route.site === 'website' ? 2000 : 3000, language: alternate.language });
     }
     expect(bad).toEqual([]);
   });

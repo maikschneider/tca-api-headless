@@ -1,5 +1,10 @@
 tca-api-headless quick start
 
-1. composer require maikschneider/tca-api-headless
+1. composer require maikschneider/tca-api-headless:dev-main "maikschneider/tca-api:dev-release/2.4.0 as 2.4.0"
 2. Add the site set maikschneider/tca-api-headless to your site.
-3. curl https://example.org/_api/headless_pages?path=/
+3. curl 'https://example.org/_api/headless_pages?path=/'
+4. Download the contract: curl -o openapi.json https://example.org/_api/openapi.json
+5. Request the returned uid: curl https://example.org/_api/headless_pages/{uid}
+6. Generate types: bunx openapi-typescript openapi.json -o src/api/schema.d.ts
+
+Both packages are in development; the explicit version constraints are needed until their stable releases.

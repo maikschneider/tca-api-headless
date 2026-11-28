@@ -5,11 +5,14 @@ import Element from './Element.astro';
 
 export type Props = { entry: Entry };
 
-// Every layout other than the product page: the title, then the regions in
-// the order the API sends them. An aside region sits beside the main one.
+// Every other layout: the title, then the regions in the order the API sends
+// them. An aside region sits beside the main one. A first element that repeats
+// the page title doesn't print it twice.
 const { entry } = Astro.props;
 const { language, page } = entry;
 const hasAside = entry.blocks.some((block) => block.region === 'aside');
+const first = entry.blocks[0]?.items[0]?.content;
+const shown = (content: Entry['blocks'][number]['items'][number]['content']) => content === first && content.header === page.title ? { ...content, header: '' } : content;
 ---
 
 <article class:list={['article', { 'has-aside': hasAside }]}>
@@ -19,7 +22,7 @@ const hasAside = entry.blocks.some((block) => block.region === 'aside');
   </header>
   {entry.blocks.map(({ region, items }) => (
     <div class:list={['region', `region-${region}`]}>
-      {items.map((item) => <Element {...item} language={language} region={region} />)}
+      {items.map((item) => <Element {...item} content={shown(item.content)} language={language} region={region} />)}
     </div>
   ))}
 </article>

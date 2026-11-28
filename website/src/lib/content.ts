@@ -1,11 +1,13 @@
 import { mkdir, readFile, writeFile, rm } from 'node:fs/promises';
-import { inventory, sites, languages, sourceBase, route, deployment, origin, type Site, type Language, type Page, type Navigation, type Content } from './config';
+import { createHash } from 'node:crypto';
+import { inventory, sites, languages, sourceBase, route, deployment, origin, prefix, type Site, type Language, type Page, type Navigation, type Content } from './config';
 import { record, recordings, atPointer, type Recording } from './recorder';
 import { pageKey, localizeFiles, rewriteHref, type LinkManifest } from './links';
 import { schemaType, typeName } from './types';
-import { elementExcerpt, pageExcerpt } from './excerpt';
+import { documentExcerpt, elementExcerpt, pageExcerpt } from './excerpt';
+import { recordRequest, requestTarget, type RequestView } from './requests';
 
-export interface Reveal { request: string; status: number; pointer: string; json: string; lang: 'json' | 'jsonc'; excerpt: string; type: string }
+export interface Reveal { request: string; status: number; pointer: string; json: string; lang: 'json' | 'jsonc'; excerpt: string; type: string; source?: string }
 export interface Entry {
   site: Site;
   language: Language;
@@ -17,6 +19,8 @@ export interface Entry {
   menuReveal: Reveal;
   blocks: { region: string; items: { content: Content; reveal: Reveal }[] }[];
   alternates: { language: Language; output: string }[];
+  /** Every language of the site: the translation, or that language's home page. */
+  languages: { language: Language; output: string; translated: boolean }[];
   meta: { title: string; output: string }[];
 }
 export interface BuildData { entries: Entry[]; missing: Reveal; pages: LinkManifest; files: LinkManifest }
@@ -28,7 +32,10 @@ const normalize = (json: string) => json.replaceAll(origin, 'https://typo3.examp
 
 async function reveal(recording: Recording, name: string, pointer = '', shorten?: (value: unknown) => string): Promise<Reveal> {
   const value = pointer ? atPointer(recording.body, pointer) : recording.body;
+  const source = `proofs/${createHash('sha256').update(recording.url).digest('hex').slice(0, 16)}.json`;
+  await writeFile(`public/${source}`, normalize(JSON.stringify(recording.body, null, 2)));
   return {
+    source: `${prefix}/${source}`,
     request: `GET ${new URL(recording.url).pathname}${new URL(recording.url).search}`,
     status: recording.status,
     pointer,
@@ -44,13 +51,37 @@ async function pageReveal(recording: Recording): Promise<Reveal> {
   return { ...await reveal(recording, 'HeadlessPagesRead'), json: normalize(pageExcerpt(recording.body as Page)), lang: 'jsonc' };
 }
 
+export interface RequestBlock { reveal: Reveal; view: RequestView; language: Language }
+type Block = { _type?: string; style?: string; children?: { text?: string; marks?: string[] }[]; _request?: RequestBlock };
+
+// Runs the single-request command blocks of an element's rich text and attaches
+// their recorded response to the block, for the rendering next to the command.
+async function attachRequests(content: Content, site: Site, language: Language): Promise<number> {
+  if (content.CType !== 'text' && content.CType !== 'textmedia') return 0;
+  let count = 0;
+  for (const block of (content.bodytext ?? []) as Block[]) {
+    const spans = block.children ?? [];
+    if (block._type !== 'block' || !spans.length || !spans.every((span) => span.marks?.includes('code'))) continue;
+    const target = requestTarget(spans.map((span) => span.text ?? '').join(''), site);
+    if (!target) continue;
+    const { recording, type, view } = await recordRequest(target);
+    const shown = view.kind === 'contract' ? documentExcerpt(recording.body as object) : type === 'HeadlessPagesRead' ? pageExcerpt(recording.body as Page) : '';
+    block._request = { reveal: { ...await reveal(recording, type), ...(shown ? { json: normalize(shown), lang: 'jsonc' as const } : {}) }, view, language };
+    count++;
+  }
+  return count;
+}
+
 export async function prepare(): Promise<void> {
   const entries: Entry[] = [];
   const pages: LinkManifest = {};
   const files: LinkManifest = {};
+  let requests = 0;
   await rm('public/files', { recursive: true, force: true });
   await rm('src/assets/files', { recursive: true, force: true });
   await mkdir('public/contracts', { recursive: true });
+  await rm('public/proofs', { recursive: true, force: true });
+  await mkdir('public/proofs', { recursive: true });
   for (const site of sites) {
     for (const extension of ['json', 'd.ts']) {
       const source = extension === 'json' ? `../var/website/${site}.json` : `src/api/${site}.d.ts`;
@@ -72,7 +103,8 @@ export async function prepare(): Promise<void> {
         const output = route(site, language, path);
         if (entries.some((entry) => entry.output === output)) throw new Error(`Duplicate output: ${output}`);
         const recording = await record(site, language, `_api/headless_pages/${uid}`);
-        const page = recording.body as Page;
+        // A copy: request blocks are attached to it, the recording stays verbatim.
+        const page = structuredClone(recording.body) as Page;
         if (page.slug !== path) throw new Error(`Wrong language/slug at ${site}/${language}:${path}`);
         const key = pageKey(new URL(path.slice(1), sourceBase(site, language)));
         if (pages[key]) throw new Error(`Duplicate source route: ${key}`);
@@ -83,10 +115,11 @@ export async function prepare(): Promise<void> {
           for (const [index, content] of contents.entries()) {
             const pointer = `/regions/${region.replaceAll('~', '~0').replaceAll('/', '~1')}/${index}`;
             items.push({ content, reveal: await reveal(recording, typeName(content.CType), pointer, elementExcerpt) });
+            requests += await attachRequests(content, site, language);
           }
           blocks.push({ region, items });
         }
-        entries.push({ site, language, path, output, page, navigation, reveal: await pageReveal(recording), menuReveal: await reveal(navigationRecord, 'HeadlessNavigationRead'), blocks, alternates: [], meta: [] });
+        entries.push({ site, language, path, output, page, navigation, reveal: await pageReveal(recording), menuReveal: await reveal(navigationRecord, 'HeadlessNavigationRead'), blocks, alternates: [], languages: [], meta: [] });
       }
       const expectedIds = new Set(Object.values(expected));
       for (const uid of discovered) if (!expectedIds.has(uid)) throw new Error(`Menu contains unlisted page ${site}/${language}:${uid}`);
@@ -109,6 +142,12 @@ export async function prepare(): Promise<void> {
   for (const entry of entries) {
     entry.meta = entries.filter((other) => other.site === entry.site && other.language === entry.language && other.path.startsWith('/meta/')).map(({ page, output }) => ({ title: page.title ?? '', output }));
     entry.alternates = entries.filter((other) => other.site === entry.site && other.page.uid === entry.page.uid).map(({ language, output }) => ({ language, output }));
+    entry.languages = languages.map((language) => {
+      const translation = entry.alternates.find((alternate) => alternate.language === language);
+      const home = entries.find((other) => other.site === entry.site && other.language === language && other.path === '/');
+      if (!translation && !home) throw new Error(`No home page for ${entry.site}/${language}`);
+      return { language, output: (translation ?? home)!.output, translated: Boolean(translation) };
+    });
     await localizeFiles(entry.page, files);
   }
   const rewrite = (value: unknown): unknown => {
@@ -134,7 +173,7 @@ export async function prepare(): Promise<void> {
   await writeFile('.cache/build.json', JSON.stringify(data));
   await writeFile('public/routes.json', JSON.stringify({ base: process.env.WEBSITE_BASE ?? '/tca-api-headless/', routes: entries.map(({ site, language, path, output, page }) => ({ site, language, path, output, uid: page.uid })) }, null, 2));
   await writeFile('.cache/recordings.json', JSON.stringify([...recordings.values()]));
-  console.log(`Prepared ${entries.length} distinct pages from ${recordings.size} recorded requests; localized ${Object.keys(files).length} files.`);
+  console.log(`Prepared ${entries.length} distinct pages from ${recordings.size} recorded requests (${requests} request blocks); localized ${Object.keys(files).length} files.`);
 }
 
 export async function loadBuild(): Promise<BuildData> {

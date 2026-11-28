@@ -3,7 +3,7 @@
 		"collect": {
 			"startServerCommand": "bun scripts/serve.ts",
 			"startServerReadyPattern": "Static files only",
-			"url": ["http://127.0.0.1:4400/tca-api-headless/", "http://127.0.0.1:4400/tca-api-headless/de/"],
+			"url": ["http://127.0.0.1:4400/tca-api-headless/", "http://127.0.0.1:4400/tca-api-headless/de/", "http://127.0.0.1:4400/tca-api-headless/features/regions/", "http://127.0.0.1:4400/tca-api-headless/contract/"],
 			"numberOfRuns": 3,
 			"settings": {
 				"chromeFlags": "--no-sandbox --headless=new"

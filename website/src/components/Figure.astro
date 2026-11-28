@@ -4,19 +4,21 @@ import type { FileObject } from '../api/schema';
 import { imageSource } from '../lib/images';
 import { imageFormat } from '../lib/formats';
 
-export type Props = { file: FileObject };
+export type Props = { file: FileObject; sizes?: string; priority?: boolean; class?: string };
 
-const { file } = Astro.props;
+// `priority` is for the first plate of a page: it may be the largest paint.
+const { file, sizes = '(max-width: 48rem) 100vw, 48rem', priority = false, class: className } = Astro.props;
+const loading = priority ? 'eager' : 'lazy';
 ---
 
 {
   file.publicUrl && (
-    <figure>
+    <figure class={className}>
       {file.mimeType?.startsWith('image/') ? (
         imageFormat(file.publicUrl) ? (
-          <Picture src={imageSource(file.publicUrl)} formats={['avif', 'webp']} widths={[480, 768, 1024, 1536]} sizes="(max-width: 48rem) 100vw, 48rem" alt={file.metadata?.alternative ?? ''} loading="lazy" />
+          <Picture src={imageSource(file.publicUrl)} formats={['avif', 'webp']} quality={75} widths={[480, 768, 1024, 1536]} sizes={sizes} alt={file.metadata?.alternative ?? ''} loading={loading} fetchpriority={priority ? 'high' : undefined} />
         ) : (
-          <img src={file.publicUrl} alt={file.metadata?.alternative ?? ''} width={file.width || undefined} height={file.height || undefined} loading="lazy" />
+          <img src={file.publicUrl} alt={file.metadata?.alternative ?? ''} width={file.width || undefined} height={file.height || undefined} loading={loading} />
         )
       ) : (
         <a href={file.publicUrl}>{file.name}</a>

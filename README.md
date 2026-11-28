@@ -19,7 +19,7 @@ curl 'https://example.org/de/_api/headless_pages?path=/ueber-uns'
 
 ## Documentation
 
-See [Documentation/](Documentation/Index.rst) for the site settings, the resources and the OpenAPI contract. [demo/](demo/README.md) holds an Astro frontend built on the generated types. [website/](website/README.md) is the static product site, built from its own TYPO3 content tree.
+See [Documentation/](Documentation/Index.rst) for the site settings, the resources and the OpenAPI contract. [demo/](demo/README.md) holds an Astro frontend built on the generated types. [website/](website/README.md) is the bilingual static product site, with feature proofs, an extension catalog and a fictional bike workshop, built from its own TYPO3 content trees.
 
 ## License
 

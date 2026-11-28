@@ -15,7 +15,7 @@ export const identity = (record: Omit<Recording, 'status' | 'body'>) => [record.
 export const display = (record: Recording) => JSON.stringify(record, null, 2).replaceAll(new URL(record.url).origin, 'https://typo3.example');
 export const recordings = new Map<string, Recording>();
 
-export async function record(site: Site, language: Language, path: string, expected = 200): Promise<Recording> {
+export async function record(site: Site, language: Language, path: string, expected: number | number[] = 200): Promise<Recording> {
   const url = new URL(path, sourceBase(site, language)).href;
   const request = { site, language, method: 'GET' as const, url };
   const key = identity(request);
@@ -33,7 +33,7 @@ export async function record(site: Site, language: Language, path: string, expec
     }
     recordings.set(key, recorded);
   }
-  if (recorded.status !== expected) throw new Error(`${key}: expected ${expected}, got ${recorded.status}`);
+  if (![expected].flat().includes(recorded.status)) throw new Error(`${key}: expected ${expected}, got ${recorded.status}`);
   return recorded;
 }
 

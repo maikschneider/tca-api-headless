@@ -1,0 +1,29 @@
+---
+import type { Entry } from '../lib/content';
+import { t } from '../lib/i18n';
+import Element from './Element.astro';
+import Figure from './Figure.astro';
+import Proof from './Proof.astro';
+import RichText from './RichText.astro';
+
+export type Props = { entry: Entry; items: Entry['blocks'][number]['items'] };
+
+// The intro region of a feature or catalog page: its first text element is the
+// page's title, lead and plate; anything after it renders as usual.
+const { entry, items } = Astro.props;
+const { language, page } = entry;
+const lead = items.find((item) => item.content.CType === 'text' || item.content.CType === 'textmedia');
+const content = lead?.content.CType === 'text' || lead?.content.CType === 'textmedia' ? lead.content : undefined;
+const plate = content?.CType === 'textmedia' ? content.assets?.[0] : undefined;
+---
+
+<header class:list={['intro', { 'has-plate': plate }]}>
+  <div class="intro-copy">
+    <h1>{content?.header || page.title}</h1>
+    {content && <RichText value={content.bodytext} class="lead" />}
+    {entry.site === 'kettenblatt' && <p class="specimen-note">{t(language).specimen}</p>}
+    {lead && <Proof recording={lead.reveal} language={language} />}
+  </div>
+  {plate && <Figure file={plate} priority sizes="(min-width: 64rem) 42vw, 100vw" class="intro-plate" />}
+</header>
+{items.filter((item) => item !== lead).map((item) => <Element {...item} language={language} region="intro" />)}

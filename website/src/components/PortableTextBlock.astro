@@ -1,16 +1,34 @@
 ---
 import type { BlockProps } from 'astro-portabletext/types';
+import type { RequestBlock } from '../lib/content';
+import { t } from '../lib/i18n';
+import Contract from './Contract.astro';
+import Proof from './Proof.astro';
+import Tree from './Tree.astro';
 
 export type Props = BlockProps;
 
 // The API has no code-block type: `<pre>` arrives as a block whose spans all
 // carry the `code` mark. Render that as a code block; anything else as text.
 // `node.children` is the marks tree here: `@span` nodes around `@text` leaves.
+// A command that is one API request carries its response, recorded at build time.
 type TreeNode = { _type: string; markType?: string; text?: string; children?: TreeNode[] };
 const { node } = Astro.props;
 const children = node.children as unknown as TreeNode[];
 const textOf = (item: TreeNode): string => item.text ?? (item.children ?? []).map(textOf).join('');
 const code = children.length > 0 && children.every((child) => child._type === '@span' && child.markType === 'code');
+const request = (node as { _request?: RequestBlock })._request;
 ---
 
-{code ? <div class="command"><pre data-copy><code>{children.map(textOf).join('')}</code></pre></div> : <p><slot /></p>}
+{code ? (
+  <div class:list={['command', { 'has-response': request }]}>
+    <pre data-copy><code>{children.map(textOf).join('')}</code></pre>
+    {request && (
+      <div class="response">
+        {request.view.kind === 'tree' && <Tree nodes={[request.view.tree]} />}
+        {request.view.kind === 'contract' && <Contract contract={request.view.contract} language={request.language} />}
+        <Proof recording={request.reveal} language={request.language} label={`${t(request.language).response} ${request.reveal.status}`} class="proof-response" />
+      </div>
+    )}
+  </div>
+) : <p><slot /></p>}
