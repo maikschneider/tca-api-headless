@@ -1,4 +1,14 @@
-import type { ThemeRegistration } from 'shiki';
+import type { ShikiTransformer, ThemeRegistration } from 'shiki';
+
+// Wrapped lines hang below their own indentation, so nesting stays readable.
+export const hangingIndent = (code: string): ShikiTransformer => {
+  const indents = code.split('\n').map((line) => line.length - line.trimStart().length);
+  return {
+    line(node, line) {
+      if (indents[line - 1]) node.properties.style = `--indent:${indents[line - 1]}ch`;
+    },
+  };
+};
 
 // Proof themes: ink for structure, process blue for values, muted punctuation.
 // Proof red stays reserved for marks. Hex values mirror tokens.css (sheet ground).

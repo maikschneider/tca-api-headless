@@ -1,0 +1,9 @@
+---
+import { codeRuns } from '../lib/wrap';
+
+export type Props = { text: string };
+
+const runs = codeRuns(Astro.props.text);
+---
+
+{runs.map((run) => /^\s/.test(run) ? run : <><span class="run">{run}</span>{run.endsWith('/') && <wbr />}</>)}

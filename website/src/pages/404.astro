@@ -20,6 +20,7 @@ const { missing } = await loadBuild();
         </header>
         <div class="prose">
           <p>The path lookup returned no page, so the build emitted none. <a href={output('')}>Back to the home page</a>.</p>
+          <p lang="de">Diese Seite gibt es nicht. <a href={output('de')} hreflang="de">Zur deutschen Startseite</a>.</p>
         </div>
         <Proof recording={missing} language="en" />
       </article>

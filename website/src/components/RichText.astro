@@ -2,6 +2,7 @@
 import { PortableText } from 'astro-portabletext';
 import type { HeadlessContentTextRead } from '../api/schema';
 import PortableTextBlock from './PortableTextBlock.astro';
+import PortableTextCode from './PortableTextCode.astro';
 import PortableTextLink from './PortableTextLink.astro';
 
 export type Props = { value: HeadlessContentTextRead['bodytext']; class?: string };
@@ -10,5 +11,5 @@ const { value, class: className } = Astro.props;
 ---
 
 <div class:list={['prose', className]}>
-  <PortableText value={value ?? []} components={{ block: { normal: PortableTextBlock }, mark: { link: PortableTextLink } }} />
+  <PortableText value={value ?? []} components={{ block: { normal: PortableTextBlock }, mark: { link: PortableTextLink, code: PortableTextCode } }} />
 </div>

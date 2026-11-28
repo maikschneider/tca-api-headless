@@ -1,0 +1,11 @@
+---
+import type { Mark } from 'astro-portabletext/types';
+import Wrap from './Wrap.astro';
+
+export type Props = { node: Mark };
+
+type TreeNode = { text?: string; children?: TreeNode[] };
+const textOf = (item: TreeNode): string => item.text ?? (item.children ?? []).map(textOf).join('');
+---
+
+<code><Wrap text={textOf(Astro.props.node as TreeNode)} /></code>

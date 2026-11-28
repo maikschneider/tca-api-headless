@@ -1,7 +1,7 @@
 ---
 import type { Entry } from '../lib/content';
-import { t } from '../lib/i18n';
 import Element from './Element.astro';
+import SpecimenNote from './SpecimenNote.astro';
 
 export type Props = { entry: Entry };
 
@@ -18,7 +18,7 @@ const shown = (content: Entry['blocks'][number]['items'][number]['content']) => 
 <article class:list={['article', { 'has-aside': hasAside }]}>
   <header class="article-head">
     <h1>{page.title}</h1>
-    {entry.site === 'kettenblatt' && <p class="specimen-note">{t(language).specimen}</p>}
+    {entry.site === 'kettenblatt' && <SpecimenNote language={language} />}
   </header>
   {entry.blocks.map(({ region, items }) => (
     <div class:list={['region', `region-${region}`]}>

@@ -4,8 +4,9 @@ import type { Reveal } from '../lib/content';
 import type { Language } from '../lib/config';
 import { pointerLabel } from '../lib/excerpt';
 import { t } from '../lib/i18n';
-import { proofThemes } from '../lib/shiki';
+import { hangingIndent, proofThemes } from '../lib/shiki';
 import Mark from './Mark.astro';
+import Wrap from './Wrap.astro';
 
 export type Props = { recording: Reveal; language: Language; label?: string; where?: string; class?: string };
 
@@ -21,20 +22,20 @@ const s = t(language);
   <summary>
     <Mark />
     <span class="proof-label">{label ?? s.proof}</span>
-    <code class="proof-request">{where || recording.request}</code>
+    <code class="proof-request"><Wrap text={where || recording.request} /></code>
   </summary>
   <div class="galley">
-    <p class="proof-line"><span class="pane-label">{s.request}</span> <code>{recording.request}</code>{recording.pointer ? <> <code class="proof-pointer">#{recording.pointer}</code></> : where && <> <code class="proof-pointer">{where}</code></>} <span class="proof-status">{s.status} <code>{recording.status}</code></span></p>
+    <p class="proof-line"><span class="pane-label">{s.request}</span> <code><Wrap text={recording.request} /></code>{recording.pointer ? <> <code class="proof-pointer">#{recording.pointer}</code></> : where && <> <code class="proof-pointer">{where}</code></>} <span class="proof-status">{s.status} <code>{recording.status}</code></span></p>
     <p class="proof-note">{s.recorded}{recording.source && <> <a href={recording.source} type="application/json">{s.fullJson}</a></>}</p>
     <div class="panes">
       <div class="pane" data-pane="json" data-format={recording.lang}>
         <p class="pane-label">{s.json}</p>
-        <Code code={recording.json} lang={recording.lang} themes={proofThemes} defaultColor={false} wrap />
+        <Code code={recording.json} lang={recording.lang} themes={proofThemes} defaultColor={false} wrap transformers={[hangingIndent(recording.json)]} />
       </div>
       {recording.type && (
         <div class="pane" data-pane="type">
           <p class="pane-label">{s.type}</p>
-          <Code code={recording.type} lang="typescript" themes={proofThemes} defaultColor={false} wrap />
+          <Code code={recording.type} lang="typescript" themes={proofThemes} defaultColor={false} wrap transformers={[hangingIndent(recording.type)]} />
         </div>
       )}
     </div>
