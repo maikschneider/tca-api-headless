@@ -15,7 +15,7 @@ The build output is plain static files: `index.html` per route, `404.html`, `.no
 
 - [ ] Replace the placeholder text of Imprint and Privacy (pages 2008 and 2018, both languages) in the TYPO3 content, then `ddev website-export` and commit `website/typo3/`.
 - [ ] Decide the origin: `maikschneider.github.io/tca-api-headless/` or a custom domain.
-- [ ] Decide when to deploy: every push to `main` (below) or manual runs only (`workflow_dispatch`).
+- [ ] Decide when to deploy: every push to `main` (the `if:` below) or manual runs only (the variant after it). The `Website` workflow already has a `workflow_dispatch` trigger.
 
 ## Option A: GitHub Pages, project page
 
@@ -47,27 +47,29 @@ URL: `https://maikschneider.github.io/tca-api-headless/`. There is no `maikschne
             uses: actions/deploy-pages@v5
     ```
 
-    The workflow keeps `permissions: contents: read` at the top; the job-level permissions above are the only extra rights.
+    The workflow keeps `permissions: contents: read` at the top; the job-level permissions above are the only extra rights. The `if:` of the deploy job publishes every push to `main`. For manual publishing only, use `if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'` instead and start it with **Actions → Website → Run workflow** on `main`.
 3. Merge, then check the run's `deploy` job and open the URL. `/tca-api-headless/nope/` must answer with the site's 404 page.
 4. Optional: **Settings → Environments → github-pages → Deployment branches: `main` only.**
 
-Rollback: re-run the deploy job of an older successful run, or set the Pages source to *None* to take the site down.
+Rollback: re-run **all jobs** of an older successful `main` run; it rebuilds that revision from its own fixture and deploys it. Re-running only its `deploy` job works only while that run's Pages artifact exists (`retention-days`, default 1 day). To take the site down, set the Pages source to *None*.
 
 ## Option B: GitHub Pages with a custom domain
 
 1. Verify the domain first: **profile Settings → Pages → Add a domain**, add the TXT record it shows, wait for *Verified*. This prevents takeover of the domain by other repositories.
-2. Do steps 1–2 of option A, but upload the root build with the domain as origin. In the "Build both deployment bases" step:
+2. Do steps 1–2 of option A, but upload the root build (`var/website/root` instead of `var/website/project`) and give the `website` job the domain as origin, so both builds and both smoke runs use it:
 
-    ```bash
-    WEBSITE_SITE=https://<domain> WEBSITE_BASE=/ bun run build
+    ```yaml
+      website:
+        env:
+          WEBSITE_SITE: https://<domain>
     ```
 
-    and upload `var/website/root` instead of `var/website/project`. The smoke tests already cover the `/` base.
-3. **Settings → Pages → Custom domain: `<domain>` → Save.** With an Actions deployment no `CNAME` file is needed (an existing one is ignored).
-4. DNS at the registrar, after step 3:
+3. Merge; the run's `deploy` job must succeed. Until step 4, the `github.io` URL serves the root build under the wrong base, so don't link it.
+4. **Settings → Pages → Custom domain: `<domain>` → Save.** With an Actions deployment no `CNAME` file is needed (an existing one is ignored).
+5. DNS at the registrar, after step 4:
     - Subdomain (`www.<domain>`, `tca-api-headless.<domain>`): `CNAME` to `maikschneider.github.io`.
     - Apex (`<domain>`): `A` records `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`; optionally `AAAA` `2606:50c0:8000::153` to `2606:50c0:8003::153`. Or an `ALIAS`/`ANAME` to `maikschneider.github.io`. No wildcard records.
-5. Check with `dig <domain> +noall +answer`, wait for the certificate, then tick **Enforce HTTPS**.
+6. Check with `dig <domain> +noall +answer`, wait for the certificate, then tick **Enforce HTTPS**. Open `https://<domain>/` and `https://<domain>/nope/` (the site's 404 page).
 
 Removing the custom domain later: remove it under Settings → Pages *before* deleting the DNS records, never the other way round.
 
