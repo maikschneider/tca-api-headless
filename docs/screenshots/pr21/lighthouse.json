@@ -1,0 +1,530 @@
+[
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/quick-start/",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/features/",
+    "scores": {
+      "performance": 95,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/features/regions/",
+    "scores": {
+      "performance": 94,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/features/content/",
+    "scores": {
+      "performance": 92,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/features/navigation/",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/features/routing-seo/",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/features/translations/",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/features/links/",
+    "scores": {
+      "performance": 95,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/contract/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/specimen/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/extensions/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/sitemap/",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/colophon/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/meta/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/meta/imprint/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/meta/privacy/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/schnellstart/",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/funktionen/",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/funktionen/regionen/",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/funktionen/inhalte/",
+    "scores": {
+      "performance": 91,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/funktionen/navigation/",
+    "scores": {
+      "performance": 90,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/funktionen/routing-seo/",
+    "scores": {
+      "performance": 96,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/funktionen/uebersetzungen/",
+    "scores": {
+      "performance": 96,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/funktionen/links/",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/vertrag/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/muster/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/erweiterungen/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/sitemap/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/meta/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/meta/impressum/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/de/meta/datenschutz/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 91,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/bikes/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/bikes/city/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/bikes/gravel/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/bikes/cargo/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/repairs/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/visit/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/workshop/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/de/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/de/raeder/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/de/raeder/stadt/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/de/raeder/gravel/",
+    "scores": {
+      "performance": 99,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/de/raeder/lasten/",
+    "scores": {
+      "performance": 98,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/de/reparatur/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  },
+  {
+    "url": "http://127.0.0.1:4400/tca-api-headless/kettenblatt/de/besuch/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "cls": 0
+  }
+]
